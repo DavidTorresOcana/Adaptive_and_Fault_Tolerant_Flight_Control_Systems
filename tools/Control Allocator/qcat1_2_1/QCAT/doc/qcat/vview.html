@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of vview</title>
+  <meta name="keywords" content="vview">
+  <meta name="description" content="VVIEW - View the attainable virtual control set.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>vview
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>VVIEW - View the attainable virtual control set.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function ratio = vview(B,plim,P) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> VVIEW - View the attainable virtual control set.
+ 
+  1) vview(B,plim)
+
+ Shows the attainable virtual control set considering actuator
+ position constraints, given by { v : v = B*u, umin &lt; u &lt; umax }.
+
+  2) ratio = vview(B,plim,P)
+ 
+ Compares the set of feasible virtual control inputs when
+
+  a) the actuator redundancy is fully utilized (as above) [blue]
+  b) a linear allocation control law u = Pv is used (BP = I) [red]
+
+ The second set is given by { v : umin &lt; P*v &lt; umax }.
+
+  Inputs:
+  -------
+ B      control effectiveness matrix (k x m)
+ plim   control position limits [min max] (m x 2)
+ P      virtual control law matrix (m x k)
+ 
+  Outputs:
+  --------
+ ratio  The ratio between the sizes (areas, volumes, ...)
+        of the two sets
+
+ The result is only graphically illustrated for k = 1, 2, or 3.
+
+ See also: <a href="vview_demo.html" class="code" title="function vview_demo">VVIEW_DEMO</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="vview_demo.html" class="code" title="function vview_demo">vview_demo</a>	VVIEW_DEMO - Demo of the VVIEW command.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function f = feasible(x,plim)</a></li><li><a href="#_sub2" class="code">function h = polyplot(face,vert,merge)</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ratio = vview(B,plim,P)</a>
+0002   
+0003 <span class="comment">% VVIEW - View the attainable virtual control set.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  1) vview(B,plim)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Shows the attainable virtual control set considering actuator</span>
+0008 <span class="comment">% position constraints, given by { v : v = B*u, umin &lt; u &lt; umax }.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  2) ratio = vview(B,plim,P)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Compares the set of feasible virtual control inputs when</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  a) the actuator redundancy is fully utilized (as above) [blue]</span>
+0015 <span class="comment">%  b) a linear allocation control law u = Pv is used (BP = I) [red]</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% The second set is given by { v : umin &lt; P*v &lt; umax }.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  Inputs:</span>
+0020 <span class="comment">%  -------</span>
+0021 <span class="comment">% B      control effectiveness matrix (k x m)</span>
+0022 <span class="comment">% plim   control position limits [min max] (m x 2)</span>
+0023 <span class="comment">% P      virtual control law matrix (m x k)</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%  Outputs:</span>
+0026 <span class="comment">%  --------</span>
+0027 <span class="comment">% ratio  The ratio between the sizes (areas, volumes, ...)</span>
+0028 <span class="comment">%        of the two sets</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% The result is only graphically illustrated for k = 1, 2, or 3.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% See also: VVIEW_DEMO</span>
+0033   
+0034 <span class="comment">% Model dimensions</span>
+0035   [k,m] = size(B);
+0036   
+0037   <span class="comment">% ------------------------------------------------</span>
+0038   <span class="comment">%  a) Find maximum attainable virtual control set</span>
+0039   <span class="comment">%     considering constraints.</span>
+0040   <span class="comment">% ------------------------------------------------</span>
+0041   
+0042   <span class="comment">% Generate matrix to index corners of feasible control set.</span>
+0043   idx = zeros(2^m,m);
+0044   M = 1:m;
+0045   <span class="keyword">for</span> i = 1:2^m;
+0046     cbin = dec2bin(i-1,m); <span class="comment">% '001'</span>
+0047     c = str2num(cbin')'; <span class="comment">% [0 0 1]</span>
+0048     c = c(end:-1:1); <span class="comment">% [1 0 0]</span>
+0049     idx(i,:) = 2*M - c;
+0050   <span class="keyword">end</span>
+0051 
+0052   <span class="comment">% Generate corner points of the feasible control set.</span>
+0053   plimT = plim';
+0054   U = plimT(idx)';
+0055 
+0056   <span class="comment">% Compute the corresponding points in the virtual control space</span>
+0057   V = B*U;
+0058 
+0059   <span class="keyword">if</span> nargin &gt; 2
+0060     
+0061     <span class="comment">% ---------------------------------------------</span>
+0062     <span class="comment">%  b) Find attainable virtual control set when</span>
+0063     <span class="comment">%     a linear control law u=Pv is used.</span>
+0064     <span class="comment">% ---------------------------------------------</span>
+0065     
+0066     <span class="comment">% We want to determine where the k-dim. hyperplane Pv</span>
+0067     <span class="comment">% intersects the m-dim. hyperbox of feasible controls.</span>
+0068     <span class="comment">% To get the corner points of this set, solve</span>
+0069     <span class="comment">% Pv = x where x has k specified entries.</span>
+0070     <span class="comment">%</span>
+0071     <span class="comment">% Example: m=3, k=1 -&gt; points will lie on surfaces</span>
+0072     <span class="comment">%          m=3, k=2 -&gt; points will lie on edges</span>
+0073     
+0074     <span class="comment">% Generate index matrix for all combinations of min and max indeces</span>
+0075     <span class="comment">% in k dimensions.</span>
+0076     sub_idx = idx(1:2^k,1:k);
+0077     
+0078     Ulin = [];
+0079     <span class="comment">% Loop over all combinations of dimensions</span>
+0080     i_dim = nchoosek(1:m,k);
+0081     <span class="keyword">for</span> i = 1:size(i_dim,1)
+0082       <span class="comment">% For each combination, compute the intersections with all</span>
+0083       <span class="comment">% possible min/max combinations.</span>
+0084       
+0085       <span class="comment">% k-dimensional min/max combinations</span>
+0086       sub_plimT = plimT(:,i_dim(i,:));
+0087       sub_u_boundary = sub_plimT(sub_idx)';
+0088       
+0089       <span class="comment">% Determine which virtual control sub_u_boundary corresponds to</span>
+0090       sub_P = P(i_dim(i,:),:);
+0091       <span class="keyword">if</span> rank(sub_P) == k <span class="comment">% Avoid &quot;parallel&quot; cases</span>
+0092         <span class="comment">% Solve sub_u_boundary = sub_P v for v</span>
+0093     v = sub_P\sub_u_boundary;
+0094     <span class="comment">% Determine the full countol vector (contains sub_u_boundary)</span>
+0095     u_boundary = P*v;
+0096     
+0097     <span class="comment">% Store feasible points</span>
+0098     i_feas = <a href="#_sub1" class="code" title="subfunction f = feasible(x,plim)">feasible</a>(u_boundary,plim);
+0099     Ulin = [Ulin u_boundary(:,i_feas)];
+0100       <span class="keyword">end</span>
+0101     <span class="keyword">end</span>
+0102 
+0103     <span class="comment">% Compute the corresponing points in the virtual control space</span>
+0104     Vlin = B*Ulin;
+0105   
+0106   <span class="keyword">end</span>
+0107     
+0108   <span class="comment">% Compute and visualize the convex hull of the set(s)</span>
+0109   clf
+0110   <span class="keyword">switch</span> k
+0111    <span class="keyword">case</span> 1
+0112     K = [min(V) max(V)];
+0113     <span class="keyword">if</span> nargin &gt; 2
+0114       Klin = [min(Vlin) max(Vlin)];
+0115       ratio = diff(Klin)/diff(K);
+0116       
+0117       <span class="comment">% Illustrate</span>
+0118       plot(K,[0 0],<span class="string">'b-o'</span>,Klin,-[0 0],<span class="string">'r-o'</span>)
+0119     <span class="keyword">else</span>
+0120       plot(K,[0 0],<span class="string">'b-o'</span>)
+0121     <span class="keyword">end</span>
+0122     xlabel(<span class="string">'v'</span>)
+0123     
+0124    <span class="keyword">case</span> 2
+0125     [K,area1] = convhull(V(1,:),V(2,:));
+0126     <span class="keyword">if</span> nargin &gt; 2
+0127       [Klin,area2] = convhull(Vlin(1,:),Vlin(2,:));
+0128       ratio = area2/area1;
+0129       
+0130       <span class="comment">% Illustrate</span>
+0131       fill(V(1,K),V(2,K),[.95 .95 1],<span class="keyword">...</span>
+0132        Vlin(1,Klin),Vlin(2,Klin),[1 1 .9])
+0133       hold on;
+0134       plot(Vlin(1,Klin),Vlin(2,Klin),<span class="string">'r'</span>,V(1,K),V(2,K),<span class="string">'b'</span>)
+0135       hold off;
+0136     <span class="keyword">else</span>
+0137       fill(V(1,K),V(2,K),[.95 .95 1]);
+0138       hold on;
+0139       plot(V(1,K),V(2,K),<span class="string">'b'</span>)
+0140       hold off;
+0141     <span class="keyword">end</span>
+0142     axis equal;
+0143     xlabel(<span class="string">'v_1'</span>)
+0144     ylabel(<span class="string">'v_2'</span>)
+0145     
+0146    <span class="keyword">otherwise</span>
+0147     [K,vol1]    = convhulln(V');
+0148     <span class="keyword">if</span> nargin &gt; 2
+0149       [Klin,vol2] = convhulln(Vlin');
+0150       ratio = vol2/vol1;
+0151     <span class="keyword">end</span>
+0152       
+0153     <span class="keyword">if</span> k == 3
+0154       <span class="comment">% Illustrate</span>
+0155       <span class="keyword">if</span> nargin &gt; 2
+0156     h = <a href="#_sub2" class="code" title="subfunction h = polyplot(face,vert,merge)">polyplot</a>(Klin,Vlin',1);
+0157     set(h,<span class="string">'EdgeColor'</span>,<span class="string">'r'</span>,<span class="string">'FaceColor'</span>,[1 1 .9]);
+0158     hold on;
+0159     <span class="comment">% Fix: Make V wireframe enclose Vlin</span>
+0160     V0 = repmat(mean(V')',1,size(V,2));
+0161     V = 1.0001*(V-V0)+V0;
+0162     h = <a href="#_sub2" class="code" title="subfunction h = polyplot(face,vert,merge)">polyplot</a>(K,V',1);
+0163     set(h,<span class="string">'EdgeColor'</span>,[.6 .6 1],<span class="string">'FaceColor'</span>,<span class="string">'none'</span>);
+0164     hold off
+0165       <span class="keyword">else</span>
+0166     h = <a href="#_sub2" class="code" title="subfunction h = polyplot(face,vert,merge)">polyplot</a>(K,V',1);
+0167     set(h,<span class="string">'EdgeColor'</span>,<span class="string">'b'</span>,<span class="string">'FaceColor'</span>,[.95 .95 1]);
+0168       <span class="keyword">end</span>
+0169       
+0170       xlabel(<span class="string">'v_1'</span>)
+0171       ylabel(<span class="string">'v_2'</span>)
+0172       zlabel(<span class="string">'v_3'</span>)
+0173       view(3);
+0174       axis equal;
+0175       axis vis3d;
+0176       grid on;
+0177     <span class="keyword">end</span>
+0178   <span class="keyword">end</span>
+0179   
+0180 <a name="_sub1" href="#_subfunctions" class="code">function f = feasible(x,plim)</a>
+0181 <span class="comment">% x   m*n</span>
+0182 <span class="comment">% lb  m</span>
+0183 <span class="comment">% ub  m</span>
+0184   
+0185   m = size(x,1);
+0186   
+0187   <span class="comment">% Mean point</span>
+0188   x0 = mean(plim,2);
+0189   
+0190   <span class="comment">% Make the mean point the origin</span>
+0191   x = x - x0*ones(1,size(x,2));
+0192   lb = plim(:,1) - x0; <span class="comment">% &lt; 0</span>
+0193   ub = plim(:,2) - x0; <span class="comment">% &gt; 0</span>
+0194   
+0195   <span class="comment">% Check for feasibility</span>
+0196   tol = 1e-5;
+0197   f = sum((diag(1./ub)*x &lt;= 1+tol) &amp; (diag(1./lb)*x &lt;= 1+tol)) == m;
+0198 
+0199 <a name="_sub2" href="#_subfunctions" class="code">function h = polyplot(face,vert,merge)</a>
+0200   
+0201   <span class="keyword">if</span> merge 
+0202     <span class="comment">% Merge adjacent, parallel triangles to get fewer lines that</span>
+0203     <span class="comment">% are not edges of the polyhedron.</span>
+0204     face4 = [];
+0205     <span class="comment">% Loop over all combinations of triangles</span>
+0206     k = 1;
+0207     <span class="keyword">while</span> k &lt; size(face,1)
+0208       l = k+1;
+0209       <span class="keyword">while</span> l &lt;= size(face,1)
+0210     iv = intersect(face(k,:),face(l,:)); <span class="comment">% Intersecting vertices</span>
+0211     <span class="keyword">if</span> length(iv) == 2 <span class="comment">% Two common vertices</span>
+0212       <span class="comment">% Are the faces parallel?</span>
+0213       niv = setxor(face(k,:),face(l,:)); <span class="comment">% Non-intersecting vertices</span>
+0214       <span class="comment">% Vectors from first common vertex to remaining three vertices</span>
+0215       A = [vert(iv(2),:)  - vert(iv(1),:);
+0216            vert(niv(1),:) - vert(iv(1),:);
+0217            vert(niv(2),:) - vert(iv(1),:)];
+0218       <span class="keyword">if</span> abs(det(A))&lt;100*eps
+0219         <span class="comment">% Vectors lie in same plane -&gt; create patch with four vertices</span>
+0220         face4 = [face4 ; iv(1) niv(1) iv(2) niv(2)];
+0221         <span class="comment">% ... and remove the two triangles</span>
+0222         face = face([1:k-1 k+1:l-1 l+1:end],:);
+0223         k = k-1;
+0224         <span class="keyword">break</span>
+0225       <span class="keyword">end</span>      
+0226     <span class="keyword">end</span>
+0227     l = l+1;
+0228       <span class="keyword">end</span> <span class="comment">% inner loop</span>
+0229       k = k+1;
+0230     <span class="keyword">end</span> <span class="comment">% outer loop</span>
+0231     h = [patch(<span class="string">'Faces'</span>,face,<span class="string">'Vertices'</span>,vert)
+0232      patch(<span class="string">'Faces'</span>,face4,<span class="string">'Vertices'</span>,vert)];
+0233   <span class="keyword">else</span>
+0234     <span class="comment">% Just plot the polyhedron made up by triangles</span>
+0235     h = patch(<span class="string">'Faces'</span>,face,<span class="string">'Vertices'</span>,vert);
+0236   <span class="keyword">end</span>
+0237   
+0238</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

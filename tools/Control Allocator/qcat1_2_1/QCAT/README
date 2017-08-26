@@ -1,0 +1,36 @@
+
+   ----------------------------------------------------------
+  | QCAT -  Quadratic Programming Control Allocation Toolbox |
+  |                                                          |
+  | Author: Ola Härkegård, www.control.isy.liu.se/~ola       |
+   ----------------------------------------------------------
+
+This toolbox provides implementations of a number of algorithms for
+control allocation based on quadratic optimization that can be found
+in the literature.
+
+The toolbox also contains functions specifically related to my own
+research:
+ o efficient active set methods for real time allocation
+ o dynamic control allocation
+ o the relationship between control allocation and LQ control
+
+To install the toolbox:
+
+0) Requirements. Developed in Matlab 6.5 running on a Unix platform
+   Should work fine also with other configurations (like Matlab 7.0).
+
+1) Download qcat.zip from http://www.control.isy.liu.se/~ola/qcat
+
+2) Extract files in your Matlab repository /home/foo/matlab/ :
+      unzip qcat.zip
+
+3) Add the qcat directory to your Matlab path:
+      addpath /home/foo/matlab/QCAT/qcat/
+
+4) Compile wlsc_alloc.c. See source code for instructions.
+
+5) Ready to use! For online help try
+    >> help qcat  [Overview of the toolbox functions]
+    >> qcatdoc    [Opens documentation including source code]
+

@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dca</title>
+  <meta name="keywords" content="dca">
+  <meta name="description" content="DCA - Compute dynamic control allocation filter.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>dca
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>DCA - Compute dynamic control allocation filter.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Gvu = dca(B,S,W1,W2,T) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DCA - Compute dynamic control allocation filter.
+
+  Gvu = dca(B,S,W1,W2,[T])
+ 
+ Computes the explicit filter solution u(t) = Gvu(q)v(t) to the
+ unconstrained dynamic control allocation problem
+
+   min  ||W1(u(t)-Sv(t))||^2 + ||W2(u(t)-u(t-T))||^2
+   u(t)
+
+   subj. to  Bu(t)=v(t)
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ S     desired steady state control distribution (m x k)
+ W1    control position weighting matrix (m x m)
+ W2    control rate weighting matrix (m x m)
+ T     sampling time [-1]
+
+  Output:
+  ------
+ Gvu   optimal filter: u(t) = Gvu(q)*v(t)
+ 
+  Example:
+
+   Gvu = dca([1 1 1],[1 0 0]',diag([0 1 1]),diag([3 2 0]),.1)
+   figure(1),step(Gvu)
+   figure(2),bodemag(Gvu)  
+
+ See also: <a href="dyn_sim.html" class="code" title="function [u,W,time,iter] = dyn_sim(B,v,plim,varargin)">DYN_SIM</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Gvu = dca(B,S,W1,W2,T)</a>
+0002   
+0003 <span class="comment">% DCA - Compute dynamic control allocation filter.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  Gvu = dca(B,S,W1,W2,[T])</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Computes the explicit filter solution u(t) = Gvu(q)v(t) to the</span>
+0008 <span class="comment">% unconstrained dynamic control allocation problem</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   min  ||W1(u(t)-Sv(t))||^2 + ||W2(u(t)-u(t-T))||^2</span>
+0011 <span class="comment">%   u(t)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   subj. to  Bu(t)=v(t)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  Inputs:</span>
+0016 <span class="comment">%  -------</span>
+0017 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0018 <span class="comment">% S     desired steady state control distribution (m x k)</span>
+0019 <span class="comment">% W1    control position weighting matrix (m x m)</span>
+0020 <span class="comment">% W2    control rate weighting matrix (m x m)</span>
+0021 <span class="comment">% T     sampling time [-1]</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%  Output:</span>
+0024 <span class="comment">%  ------</span>
+0025 <span class="comment">% Gvu   optimal filter: u(t) = Gvu(q)*v(t)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%  Example:</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   Gvu = dca([1 1 1],[1 0 0]',diag([0 1 1]),diag([3 2 0]),.1)</span>
+0030 <span class="comment">%   figure(1),step(Gvu)</span>
+0031 <span class="comment">%   figure(2),bodemag(Gvu)</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% See also: DYN_SIM.</span>
+0034   
+0035   <span class="keyword">if</span> nargin&lt;5,
+0036     T = -1;
+0037   <span class="keyword">end</span>
+0038 
+0039   <span class="comment">% Number of control inputs.</span>
+0040   m = size(B,2);
+0041   <span class="comment">% Net weighting matrix.</span>
+0042   W = sqrtm(W1^2+W2^2);
+0043   Wi = inv(W);
+0044   <span class="comment">% u(t) = ESv(t)+Fu(t-T)+Gv(t)</span>
+0045   G = Wi*pinv(B*Wi);
+0046   E = (eye(m)-G*B)*Wi^2*W1^2;
+0047   F = (eye(m)-G*B)*Wi^2*W2^2;
+0048   <span class="comment">% Control allocation transfer function.</span>
+0049   Gvu = ss(F,F*(E*S+G),eye(m),E*S+G,T);
+0050   Gvu = tf(Gvu);</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

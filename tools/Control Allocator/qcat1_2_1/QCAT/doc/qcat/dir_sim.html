@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dir_sim</title>
+  <meta name="keywords" content="dir_sim">
+  <meta name="description" content="DIR_SIM - Direct control allocation simulation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>dir_sim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>DIR_SIM - Direct control allocation simulation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,W,time] = dir_sim(B,v,plim,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DIR_SIM - Direct control allocation simulation. 
+
+  [u,W,time] = dir_sim(B,v,plim,[rlim,T],options)
+
+ Performs direct control allocation for a sequence of virtual
+ control commands stored in v. For each value of v, the control
+ signal u is determined by solving
+
+   max a   subj. to  Bu = av
+   a,u               u in U
+
+ If a &gt; 1,  u = u/a.
+
+ Here, U is the set of feasible controls only with respect to
+ the position limits. Rate limiting is (optionally) performed
+ on the allocated control vector.
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ v     commanded virtual control trajectory (k x N)
+ plim  position limits [min max] (m x 2)
+ rlim  rate limits [min max] (m x 2) ([] --&gt; no rate limits)
+ T     sampling time [1]
+
+  Options: options = option_1,value_1,option_2,value_2,...
+  --------
+ 'ui'  initial control signal
+ 'rep' no. of repetitions [1]
+
+  Outputs:
+  -------
+ u     optimal control
+ W     active constraints in u (+/- : max/min, 1/2 : position/rate)
+ time  average computation time per sample
+ 
+  Example:
+
+   load f18data
+   u=dir_sim(B,v,plim,rlim,T2);
+   figure(1),plot(tn,u*180/pi),ylabel('Controls (deg)')
+   figure(2),plot(tn,B*u,tn,v,'k--'),legend('roll','pitch','yaw')
+
+ See also: <a href="dir_alloc.html" class="code" title="function [u,a] = dir_alloc(B,v,umin,umax)">DIR_ALLOC</a>, <a href="qp_sim.html" class="code" title="function [u,W,time,iter] = qp_sim(B,v,plim,varargin)">QP_SIM</a>, <a href="dyn_sim.html" class="code" title="function [u,W,time,iter] = dyn_sim(B,v,plim,varargin)">DYN_SIM</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,W,time] = dir_sim(B,v,plim,varargin)</a>
+0002 
+0003 <span class="comment">% DIR_SIM - Direct control allocation simulation.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,W,time] = dir_sim(B,v,plim,[rlim,T],options)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Performs direct control allocation for a sequence of virtual</span>
+0008 <span class="comment">% control commands stored in v. For each value of v, the control</span>
+0009 <span class="comment">% signal u is determined by solving</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   max a   subj. to  Bu = av</span>
+0012 <span class="comment">%   a,u               u in U</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% If a &gt; 1,  u = u/a.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Here, U is the set of feasible controls only with respect to</span>
+0017 <span class="comment">% the position limits. Rate limiting is (optionally) performed</span>
+0018 <span class="comment">% on the allocated control vector.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%  Inputs:</span>
+0021 <span class="comment">%  -------</span>
+0022 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0023 <span class="comment">% v     commanded virtual control trajectory (k x N)</span>
+0024 <span class="comment">% plim  position limits [min max] (m x 2)</span>
+0025 <span class="comment">% rlim  rate limits [min max] (m x 2) ([] --&gt; no rate limits)</span>
+0026 <span class="comment">% T     sampling time [1]</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%  Options: options = option_1,value_1,option_2,value_2,...</span>
+0029 <span class="comment">%  --------</span>
+0030 <span class="comment">% 'ui'  initial control signal</span>
+0031 <span class="comment">% 'rep' no. of repetitions [1]</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%  Outputs:</span>
+0034 <span class="comment">%  -------</span>
+0035 <span class="comment">% u     optimal control</span>
+0036 <span class="comment">% W     active constraints in u (+/- : max/min, 1/2 : position/rate)</span>
+0037 <span class="comment">% time  average computation time per sample</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%  Example:</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%   load f18data</span>
+0042 <span class="comment">%   u=dir_sim(B,v,plim,rlim,T2);</span>
+0043 <span class="comment">%   figure(1),plot(tn,u*180/pi),ylabel('Controls (deg)')</span>
+0044 <span class="comment">%   figure(2),plot(tn,B*u,tn,v,'k--'),legend('roll','pitch','yaw')</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% See also: DIR_ALLOC, QP_SIM, DYN_SIM.</span>
+0047   
+0048 <span class="comment">% Different example:</span>
+0049 <span class="comment">%   B = [2 1]; t = 0:.2:10; v = 4*sin(t); plim = [-1 1;-2 1];</span>
+0050 <span class="comment">%   u = dir_sim(B,v,plim);</span>
+0051 <span class="comment">%   plot(tn,u)</span>
+0052 <span class="comment">%   plot(tn,v,'k',tn,B*u)</span>
+0053 
+0054 <span class="comment">% Number of variables</span>
+0055   [k,m] = size(B);
+0056 
+0057   <span class="comment">% Find no. of optional arguments (excluding options)</span>
+0058   iopt = length(varargin)+1;
+0059   <span class="keyword">for</span> i = 1:length(varargin)
+0060     <span class="keyword">if</span> ischar(varargin{i})
+0061       iopt = i; <span class="comment">% index of first option string</span>
+0062       <span class="keyword">break</span>;
+0063     <span class="keyword">end</span>
+0064   <span class="keyword">end</span>
+0065   narg = iopt-1;
+0066 
+0067   <span class="comment">% Set default values of optional arguments</span>
+0068   rlim = [];
+0069   T    = 1;
+0070 
+0071   <span class="comment">% Set values of submitted optional arguments</span>
+0072   <span class="keyword">for</span> i=1:narg
+0073     <span class="keyword">switch</span> i
+0074      <span class="keyword">case</span> 1, rlim = varargin{i};
+0075      <span class="keyword">case</span> 2, T      = varargin{i};
+0076     <span class="keyword">end</span>
+0077   <span class="keyword">end</span>
+0078       
+0079   <span class="comment">% Call generic control allocation simulation subroutine.</span>
+0080   [u,W,time] = <a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>(<span class="string">'dir'</span>,B,v,plim,rlim,T,<span class="string">'hot'</span>,0, <span class="keyword">...</span>
+0081              varargin{iopt:end});
+0082</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

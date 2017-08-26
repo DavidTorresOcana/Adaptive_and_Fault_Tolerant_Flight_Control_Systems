@@ -1,0 +1,699 @@
+Library {
+  Name			  "F16_Actuator_Library"
+  Version		  5.0
+  SaveDefaultBlockParams  on
+  LibraryLinkDisplay	  "none"
+  ShowLoopsOnError	  on
+  IgnoreBidirectionalLines off
+  CovSaveName		  "covdata"
+  CovMetricSettings	  "dw"
+  CovNameIncrementing	  off
+  CovHtmlReporting	  on
+  covSaveCumulativeToWorkspaceVar on
+  CovSaveSingleToWorkspaceVar on
+  CovCumulativeReport	  off
+  BlockNameDataTip	  off
+  BlockParametersDataTip  off
+  BlockDescriptionStringDataTip	off
+  ToolBar		  off
+  StatusBar		  off
+  BrowserShowLibraryLinks off
+  BrowserLookUnderMasks	  off
+  Created		  "Mon Nov 25 10:48:01 2002"
+  Creator		  "rrussell"
+  UpdateHistory		  "UpdateHistoryNever"
+  ModifiedByFormat	  "%<Auto>"
+  LastModifiedBy	  "rrussell"
+  ModifiedDateFormat	  "%<Auto>"
+  LastModifiedDate	  "Sat Jun 14 09:31:10 2003"
+  ModelVersionFormat	  "1.%<AutoIncrement:22>"
+  ConfigurationManager	  "none"
+  SimParamPage		  "Solver"
+  LinearizationMsg	  "none"
+  Profile		  off
+  ParamWorkspaceSource	  "MATLABWorkspace"
+  ExtModeMexFile	  "ext_comm"
+  ExtModeBatchMode	  off
+  ExtModeTrigType	  "manual"
+  ExtModeTrigMode	  "normal"
+  ExtModeTrigPort	  "1"
+  ExtModeTrigElement	  "any"
+  ExtModeTrigDuration	  1000
+  ExtModeTrigHoldOff	  0
+  ExtModeTrigDelay	  0
+  ExtModeTrigDirection	  "rising"
+  ExtModeTrigLevel	  0
+  ExtModeArchiveMode	  "off"
+  ExtModeAutoIncOneShot	  off
+  ExtModeIncDirWhenArm	  off
+  ExtModeAddSuffixToVar	  off
+  ExtModeWriteAllDataToWs off
+  ExtModeArmWhenConnect	  on
+  ExtModeSkipDownloadWhenConnect off
+  ExtModeLogAll		  on
+  ExtModeAutoUpdateStatusClock off
+  SimulationMode	  "normal"
+  ConsistencyChecking	  "none"
+  ArrayBoundsChecking	  "none"
+  AlgebraicLoopMsg	  "warning"
+  BlockPriorityViolationMsg "warning"
+  MinStepSizeMsg	  "warning"
+  InheritedTsInSrcMsg	  "warning"
+  DiscreteInheritContinuousMsg "warning"
+  MultiTaskRateTransMsg	  "error"
+  SingleTaskRateTransMsg  "none"
+  CheckForMatrixSingularity "none"
+  IntegerOverflowMsg	  "warning"
+  Int32ToFloatConvMsg	  "warning"
+  ParameterDowncastMsg	  "error"
+  ParameterOverflowMsg	  "error"
+  ParameterPrecisionLossMsg "warning"
+  UnderSpecifiedDataTypeMsg "none"
+  UnnecessaryDatatypeConvMsg "none"
+  VectorMatrixConversionMsg "none"
+  InvalidFcnCallConnMsg	  "error"
+  SignalLabelMismatchMsg  "none"
+  UnconnectedInputMsg	  "warning"
+  UnconnectedOutputMsg	  "warning"
+  UnconnectedLineMsg	  "warning"
+  SfunCompatibilityCheckMsg "none"
+  ProdHWDeviceType	  "Microprocessor"
+  ProdHWWordLengths	  "8,16,32,32"
+  RTWMakeCommand	  "make_rtw"
+  RTWGenerateCodeOnly	  off
+  RTWRetainRTWFile	  off
+  TLCProfiler		  off
+  TLCDebug		  off
+  TLCCoverage		  off
+  TLCAssertion		  off
+  BlockDefaults {
+    Orientation		    "right"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    NamePlacement	    "normal"
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    ShowName		    on
+  }
+  BlockParameterDefaults {
+    Block {
+      BlockType		      Gain
+      Gain		      "1"
+      Multiplication	      "Element-wise(K.*u)"
+      ShowAdditionalParam     off
+      ParameterDataTypeMode   "Same as input"
+      ParameterDataType	      "sfix(16)"
+      ParameterScalingMode    "Best Precision: Matrix-wise"
+      ParameterScaling	      "2^0"
+      OutDataTypeMode	      "Same as input"
+      OutDataType	      "sfix(16)"
+      OutScaling	      "2^0"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+    }
+    Block {
+      BlockType		      Inport
+      Port		      "1"
+      PortDimensions	      "-1"
+      SampleTime	      "-1"
+      ShowAdditionalParam     off
+      LatchInput	      off
+      DataType		      "auto"
+      OutDataType	      "sfix(16)"
+      OutScaling	      "2^0"
+      SignalType	      "auto"
+      SamplingMode	      "auto"
+      Interpolate	      on
+    }
+    Block {
+      BlockType		      Integrator
+      ExternalReset	      "none"
+      InitialConditionSource  "internal"
+      InitialCondition	      "0"
+      LimitOutput	      off
+      UpperSaturationLimit    "inf"
+      LowerSaturationLimit    "-inf"
+      ShowSaturationPort      off
+      ShowStatePort	      off
+      AbsoluteTolerance	      "auto"
+      ZeroCross		      on
+    }
+    Block {
+      BlockType		      Outport
+      Port		      "1"
+      OutputWhenDisabled      "held"
+      InitialOutput	      "[]"
+    }
+    Block {
+      BlockType		      Saturate
+      UpperLimit	      "0.5"
+      LowerLimit	      "-0.5"
+      LinearizeAsGain	      on
+      ZeroCross		      on
+    }
+    Block {
+      BlockType		      SubSystem
+      ShowPortLabels	      on
+      Permissions	      "ReadWrite"
+      RTWSystemCode	      "Auto"
+      RTWFcnNameOpts	      "Auto"
+      RTWFileNameOpts	      "Auto"
+      SimViewingDevice	      off
+      DataTypeOverride	      "UseLocalSettings"
+      MinMaxOverflowLogging   "UseLocalSettings"
+    }
+    Block {
+      BlockType		      Sum
+      IconShape		      "rectangular"
+      Inputs		      "++"
+      ShowAdditionalParam     off
+      InputSameDT	      on
+      OutDataTypeMode	      "Same as first input"
+      OutDataType	      "sfix(16)"
+      OutScaling	      "2^0"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+    }
+  }
+  AnnotationDefaults {
+    HorizontalAlignment	    "center"
+    VerticalAlignment	    "middle"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  LineDefaults {
+    FontName		    "Helvetica"
+    FontSize		    9
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  System {
+    Name		    "F16_Actuator_Library"
+    Location		    [360, 608, 1026, 868]
+    Open		    on
+    ModelBrowserVisibility  off
+    ModelBrowserWidth	    200
+    ScreenColor		    "white"
+    PaperOrientation	    "landscape"
+    PaperPositionMode	    "auto"
+    PaperType		    "usletter"
+    PaperUnits		    "inches"
+    ZoomFactor		    "100"
+    ReportName		    "simulink-default.rpt"
+    Block {
+      BlockType		      SubSystem
+      Name		      "Aileron\nActuator"
+      Ports		      [1, 1]
+      Position		      [215, 30, 315, 80]
+      TreatAsAtomicUnit	      off
+      System {
+	Name			"Aileron\nActuator"
+	Location		[441, 443, 996, 693]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  Position		  [15, 38, 45, 52]
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Command\nSaturation"
+	  Position		  [80, 30, 110, 60]
+	  UpperLimit		  "21.5"
+	  LowerLimit		  "-21.5"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  Position		  [200, 25, 250, 65]
+	  Gain			  "20.2"
+	}
+	Block {
+	  BlockType		  Integrator
+	  Name			  "Integrator\n"
+	  Ports			  [1, 1]
+	  Position		  [365, 29, 395, 61]
+	  InitialCondition	  "trim_control(2)"
+	  UpperSaturationLimit	  "21.5"
+	  LowerSaturationLimit	  "-21.5"
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Rate\nSaturation"
+	  Position		  [290, 30, 320, 60]
+	  UpperLimit		  "80"
+	  LowerLimit		  "-80"
+	}
+	Block {
+	  BlockType		  Sum
+	  Name			  "Sum"
+	  Ports			  [2, 1]
+	  Position		  [155, 35, 175, 55]
+	  ShowName		  off
+	  IconShape		  "round"
+	  Inputs		  "|+-"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  Position		  [465, 38, 495, 52]
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Command\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Command\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Sum"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Sum"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Rate\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Rate\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Integrator\n"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Integrator\n"
+	  SrcPort		  1
+	  Points		  [25, 0]
+	  Branch {
+	    DstBlock		    "Out1"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 90; -260, 0]
+	    DstBlock		    "Sum"
+	    DstPort		    2
+	  }
+	}
+      }
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Elevator\nActuator"
+      Ports		      [1, 1]
+      Position		      [30, 25, 130, 75]
+      TreatAsAtomicUnit	      off
+      System {
+	Name			"Elevator\nActuator"
+	Location		[240, 259, 823, 485]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  Position		  [15, 48, 45, 62]
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Command\nSaturation"
+	  Position		  [75, 40, 105, 70]
+	  UpperLimit		  "25"
+	  LowerLimit		  "-25"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  Position		  [200, 35, 250, 75]
+	  Gain			  "20.2"
+	}
+	Block {
+	  BlockType		  Integrator
+	  Name			  "Integrator\n"
+	  Ports			  [1, 1]
+	  Position		  [370, 40, 400, 70]
+	  InitialCondition	  "trim_control(1)"
+	  UpperSaturationLimit	  "25"
+	  LowerSaturationLimit	  "-25"
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Rate\nSaturation"
+	  Position		  [290, 40, 320, 70]
+	  UpperLimit		  "60"
+	  LowerLimit		  "-60"
+	}
+	Block {
+	  BlockType		  Sum
+	  Name			  "Sum"
+	  Ports			  [2, 1]
+	  Position		  [155, 45, 175, 65]
+	  ShowName		  off
+	  IconShape		  "round"
+	  Inputs		  "|+-"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  Position		  [465, 48, 495, 62]
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Command\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Command\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Sum"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Sum"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Rate\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Rate\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Integrator\n"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Integrator\n"
+	  SrcPort		  1
+	  Points		  [0, 0; 20, 0]
+	  Branch {
+	    DstBlock		    "Out1"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 95; -260, 0]
+	    DstBlock		    "Sum"
+	    DstPort		    2
+	  }
+	}
+      }
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "LEF\nActuator"
+      Ports		      [1, 1]
+      Position		      [390, 30, 490, 80]
+      LinkData {
+	BlockName		"Command\nSaturation"
+	DialogParameters {
+	  UpperLimit		  "25"
+	  LowerLimit		  "0"
+	}
+	BlockName		"Gain"
+	DialogParameters {
+	  Gain			  "1/0.136"
+	}
+	BlockName		"Integrator\n"
+	DialogParameters {
+	  InitialCondition	  "dLEF"
+	}
+	BlockName		"Rate\nSaturation"
+	DialogParameters {
+	  UpperLimit		  "25"
+	  LowerLimit		  "-25"
+	}
+      }
+      SourceBlock	      "F16_Actuator_Library/Aileron\nActuator"
+      SourceType	      "SubSystem"
+      ShowPortLabels	      on
+      Permissions	      "ReadWrite"
+      TreatAsAtomicUnit	      off
+      RTWSystemCode	      "Auto"
+      RTWFcnNameOpts	      "Auto"
+      RTWFileNameOpts	      "Auto"
+      SimViewingDevice	      off
+      DataTypeOverride	      "UseLocalSettings"
+      MinMaxOverflowLogging   "UseLocalSettings"
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Rudder\nActuator"
+      Ports		      [1, 1]
+      Position		      [30, 130, 130, 180]
+      TreatAsAtomicUnit	      off
+      System {
+	Name			"Rudder\nActuator"
+	Location		[370, 485, 922, 672]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  Position		  [15, 28, 45, 42]
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Command\nSaturation"
+	  Position		  [80, 20, 110, 50]
+	  UpperLimit		  "30"
+	  LowerLimit		  "-30"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  Position		  [200, 15, 250, 55]
+	  Gain			  "20.2"
+	}
+	Block {
+	  BlockType		  Integrator
+	  Name			  "Integrator\n"
+	  Ports			  [1, 1]
+	  Position		  [370, 20, 400, 50]
+	  InitialCondition	  "trim_control(3)"
+	  UpperSaturationLimit	  "30"
+	  LowerSaturationLimit	  "-30"
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Rate\nSaturation"
+	  Position		  [290, 20, 320, 50]
+	  UpperLimit		  "120"
+	  LowerLimit		  "-120"
+	}
+	Block {
+	  BlockType		  Sum
+	  Name			  "Sum"
+	  Ports			  [2, 1]
+	  Position		  [155, 25, 175, 45]
+	  ShowName		  off
+	  IconShape		  "round"
+	  Inputs		  "|+-"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  Position		  [465, 28, 495, 42]
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Command\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Command\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Sum"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Sum"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Rate\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Rate\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Integrator\n"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Integrator\n"
+	  SrcPort		  1
+	  Points		  [0, 0; 20, 0]
+	  Branch {
+	    DstBlock		    "Out1"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 90; -260, 0]
+	    DstBlock		    "Sum"
+	    DstPort		    2
+	  }
+	}
+      }
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Thrust\nModel"
+      Ports		      [1, 1]
+      Position		      [215, 130, 315, 180]
+      AncestorBlock	      "F16_Actuator_Library/Rudder\nActuator"
+      TreatAsAtomicUnit	      off
+      System {
+	Name			"Thrust\nModel"
+	Location		[370, 485, 922, 672]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  Position		  [15, 28, 45, 42]
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Command\nSaturation"
+	  Position		  [80, 20, 110, 50]
+	  UpperLimit		  "19000"
+	  LowerLimit		  "1000"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  Position		  [200, 15, 250, 55]
+	}
+	Block {
+	  BlockType		  Integrator
+	  Name			  "Integrator\n"
+	  Ports			  [1, 1]
+	  Position		  [370, 20, 400, 50]
+	  InitialCondition	  "trim_thrust"
+	  UpperSaturationLimit	  "30"
+	  LowerSaturationLimit	  "-30"
+	}
+	Block {
+	  BlockType		  Saturate
+	  Name			  "Rate\nSaturation"
+	  Position		  [290, 20, 320, 50]
+	  UpperLimit		  "10000"
+	  LowerLimit		  "-10000"
+	}
+	Block {
+	  BlockType		  Sum
+	  Name			  "Sum"
+	  Ports			  [2, 1]
+	  Position		  [155, 25, 175, 45]
+	  ShowName		  off
+	  IconShape		  "round"
+	  Inputs		  "|+-"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  Position		  [465, 28, 495, 42]
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Command\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Command\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Sum"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Sum"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Rate\nSaturation"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Rate\nSaturation"
+	  SrcPort		  1
+	  DstBlock		  "Integrator\n"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Integrator\n"
+	  SrcPort		  1
+	  Points		  [0, 0; 20, 0]
+	  Branch {
+	    DstBlock		    "Out1"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 90; -260, 0]
+	    DstBlock		    "Sum"
+	    DstPort		    2
+	  }
+	}
+      }
+    }
+  }
+}

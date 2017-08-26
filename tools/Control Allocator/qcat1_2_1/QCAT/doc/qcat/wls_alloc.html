@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wls_alloc</title>
+  <meta name="keywords" content="wls_alloc">
+  <meta name="description" content="WLS_ALLOC - Control allocation using weighted least squares.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>wls_alloc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>WLS_ALLOC - Control allocation using weighted least squares.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WLS_ALLOC - Control allocation using weighted least squares.
+
+  [u,W,iter] = wls_alloc(B,v,umin,umax,[Wv,Wu,ud,gamma,u0,W0,imax])
+
+ Solves the weighted, bounded least-squares problem
+
+   min ||Wu(u-ud)||^2 + gamma ||Wv(Bu-v)||^2
+
+   subj. to  umin &lt;= u &lt;= umax
+
+ using an active set method.
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ v     commanded virtual control (k x 1)
+ umin  lower position limits (m x 1)
+ umax  upper position limits (m x 1)
+ Wv    virtual control weighting matrix (k x k) [I]
+ Wu    control weighting matrix (m x m) [I]
+ ud    desired control (m x 1) [0]
+ gamma weight (scalar) [1e6]
+ u0    initial point (m x 1)
+ W0    initial working set (m x 1) [empty]
+ imax  max no. of iterations [100]
+ 
+  Outputs:
+  -------
+ u     optimal control
+ W     optimal active set
+ iter  no. of iterations (= no. of changes in the working set + 1)
+
+                            0 if u_i not saturated
+ Working set syntax: W_i = -1 if u_i = umin_i
+                           +1 if u_i = umax_i
+
+ See also: <a href="wlsc_alloc.html" class="code" title="">WLSC_ALLOC</a>, <a href="ip_alloc.html" class="code" title="function [u,iter] = ip_alloc(B,v,umin,umax,ud,gam,tol,imax)">IP_ALLOC</a>, <a href="fxp_alloc.html" class="code" title="function [u,iter] = fxp_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,imax)">FXP_ALLOC</a>, <a href="qp_sim.html" class="code" title="function [u,W,time,iter] = qp_sim(B,v,plim,varargin)">QP_SIM</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li><li><a href="dyn_ca_sl.html" class="code" title="function u = dyn_ca_sl(arg,B,plim,rlim,T,Wv,W1,W2,S)">dyn_ca_sl</a>	Wrapper used in the dynamic control allocation Simulink block.</li><li><a href="qp_ca_sl.html" class="code" title="function u = qp_ca_sl(arg,B,plim,rlim,T,Wv,Wu,ud,alg,imax,gam,tol)">qp_ca_sl</a>	Wrapper used in the QP control allocation Simulink block.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax)</a>
+0002   
+0003 <span class="comment">% WLS_ALLOC - Control allocation using weighted least squares.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,W,iter] = wls_alloc(B,v,umin,umax,[Wv,Wu,ud,gamma,u0,W0,imax])</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Solves the weighted, bounded least-squares problem</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   min ||Wu(u-ud)||^2 + gamma ||Wv(Bu-v)||^2</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   subj. to  umin &lt;= u &lt;= umax</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% using an active set method.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  Inputs:</span>
+0016 <span class="comment">%  -------</span>
+0017 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0018 <span class="comment">% v     commanded virtual control (k x 1)</span>
+0019 <span class="comment">% umin  lower position limits (m x 1)</span>
+0020 <span class="comment">% umax  upper position limits (m x 1)</span>
+0021 <span class="comment">% Wv    virtual control weighting matrix (k x k) [I]</span>
+0022 <span class="comment">% Wu    control weighting matrix (m x m) [I]</span>
+0023 <span class="comment">% ud    desired control (m x 1) [0]</span>
+0024 <span class="comment">% gamma weight (scalar) [1e6]</span>
+0025 <span class="comment">% u0    initial point (m x 1)</span>
+0026 <span class="comment">% W0    initial working set (m x 1) [empty]</span>
+0027 <span class="comment">% imax  max no. of iterations [100]</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%  Outputs:</span>
+0030 <span class="comment">%  -------</span>
+0031 <span class="comment">% u     optimal control</span>
+0032 <span class="comment">% W     optimal active set</span>
+0033 <span class="comment">% iter  no. of iterations (= no. of changes in the working set + 1)</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%                            0 if u_i not saturated</span>
+0036 <span class="comment">% Working set syntax: W_i = -1 if u_i = umin_i</span>
+0037 <span class="comment">%                           +1 if u_i = umax_i</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% See also: WLSC_ALLOC, IP_ALLOC, FXP_ALLOC, QP_SIM.</span>
+0040   
+0041 <span class="comment">% Number of variables</span>
+0042   m = length(umin);
+0043   
+0044   <span class="comment">% Set default values of optional arguments</span>
+0045   <span class="keyword">if</span> nargin &lt; 11
+0046     imax = 100; <span class="comment">% Heuristic value</span>
+0047     [k,m] = size(B);
+0048     <span class="keyword">if</span> nargin &lt; 10, u = (umin+umax)/2; W = zeros(m,1); <span class="keyword">end</span>
+0049     <span class="keyword">if</span> nargin &lt; 8,  gam = 1e6;       <span class="keyword">end</span>
+0050     <span class="keyword">if</span> nargin &lt; 7,  ud = zeros(m,1); <span class="keyword">end</span>
+0051     <span class="keyword">if</span> nargin &lt; 6,  Wu = eye(m);     <span class="keyword">end</span>
+0052     <span class="keyword">if</span> nargin &lt; 5,  Wv = eye(k);     <span class="keyword">end</span>
+0053   <span class="keyword">end</span>
+0054       
+0055   gam_sq = sqrt(gam);
+0056   A = [gam_sq*Wv*B ; Wu];
+0057   b = [gam_sq*Wv*v ; Wu*ud];
+0058   
+0059   <span class="comment">% Initial residual.</span>
+0060   d = b - A*u;
+0061   <span class="comment">% Determine indeces of free variables.</span>
+0062   i_free = W==0;
+0063   
+0064   <span class="comment">% Iterate until optimum is found or maximum number of iterations</span>
+0065   <span class="comment">% is reached.</span>
+0066   <span class="keyword">for</span> iter = 1:imax
+0067     <span class="comment">% ----------------------------------------</span>
+0068     <span class="comment">%  Compute optimal perturbation vector p.</span>
+0069     <span class="comment">% ----------------------------------------</span>
+0070     
+0071     <span class="comment">% Eliminate saturated variables.</span>
+0072     A_free = A(:,i_free);
+0073     <span class="comment">% Solve the reduced optimization problem for free variables.</span>
+0074     p_free = A_free\d;
+0075     <span class="comment">% Zero all perturbations corresponding to active constraints.</span>
+0076     p = zeros(m,1);
+0077     <span class="comment">% Insert perturbations from p_free into free the variables.</span>
+0078     p(i_free) = p_free;
+0079     
+0080     <span class="comment">% ----------------------------</span>
+0081     <span class="comment">%  Is the new point feasible?</span>
+0082     <span class="comment">% ----------------------------</span>
+0083     
+0084     u_opt = u + p;
+0085     infeasible = (u_opt &lt; umin) | (u_opt &gt; umax);
+0086 
+0087     <span class="keyword">if</span> ~any(infeasible(i_free))
+0088 
+0089       <span class="comment">% ----------------------------</span>
+0090       <span class="comment">%  Yes, check for optimality.</span>
+0091       <span class="comment">% ----------------------------</span>
+0092       
+0093       <span class="comment">% Update point and residual.</span>
+0094       u = u_opt;
+0095       d = d - A_free*p_free;
+0096       <span class="comment">% Compute Lagrangian multipliers.</span>
+0097       lambda = W.*(A'*d);
+0098       <span class="comment">% Are all lambda non-negative?</span>
+0099       <span class="keyword">if</span> lambda &gt;= -eps
+0100     <span class="comment">% / ------------------------ \</span>
+0101     <span class="comment">% | Optimum found, bail out. |</span>
+0102     <span class="comment">% \ ------------------------ /</span>
+0103     <span class="keyword">return</span>;
+0104       <span class="keyword">end</span>
+0105       
+0106       <span class="comment">% --------------------------------------------------</span>
+0107       <span class="comment">%  Optimum not found, remove one active constraint.</span>
+0108       <span class="comment">% --------------------------------------------------</span>
+0109       
+0110       <span class="comment">% Remove constraint with most negative lambda from the</span>
+0111       <span class="comment">% working set.</span>
+0112       [lambda_neg,i_neg] = min(lambda);
+0113       W(i_neg) = 0;
+0114       i_free(i_neg) = 1;
+0115     
+0116     <span class="keyword">else</span>
+0117       
+0118       <span class="comment">% ---------------------------------------</span>
+0119       <span class="comment">%  No, find primary bounding constraint.</span>
+0120       <span class="comment">% ---------------------------------------</span>
+0121       
+0122       <span class="comment">% Compute distances to the different boundaries. Since alpha &lt; 1</span>
+0123       <span class="comment">% is the maximum step length, initiate with ones.</span>
+0124       dist = ones(m,1);
+0125       i_min = i_free &amp; p&lt;0;
+0126       i_max = i_free &amp; p&gt;0;
+0127 
+0128       dist(i_min) = (umin(i_min) - u(i_min)) ./ p(i_min);
+0129       dist(i_max) = (umax(i_max) - u(i_max)) ./ p(i_max);
+0130 
+0131       <span class="comment">% Proportion of p to travel</span>
+0132       [alpha,i_alpha] = min(dist);
+0133       <span class="comment">% Update point and residual.</span>
+0134       u = u + alpha*p;
+0135       d = d - A_free*alpha*p_free;
+0136       
+0137       <span class="comment">% Add corresponding constraint to working set.</span>
+0138       W(i_alpha) = sign(p(i_alpha));
+0139       i_free(i_alpha) = 0;
+0140       
+0141     <span class="keyword">end</span>
+0142   
+0143   <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

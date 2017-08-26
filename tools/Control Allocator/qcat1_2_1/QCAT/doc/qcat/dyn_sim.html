@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dyn_sim</title>
+  <meta name="keywords" content="dyn_sim">
+  <meta name="description" content="DYN_SIM - Dynamic control allocation simulation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>dyn_sim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>DYN_SIM - Dynamic control allocation simulation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,W,time,iter] = dyn_sim(B,v,plim,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DYN_SIM - Dynamic control allocation simulation. 
+
+  [u,W,time,iter] = dyn_sim(B,v,plim,[rlim,T,Wv,W1,W2,S],options)
+
+ Performs dynamic control allocation for a sequence of virtual
+ control commands stored in v. For each value of v, the control
+ signal u is determined by solving
+  
+   min   ||W1(u(t)-Sv(t))||^2 + ||W2(u(t)-u(t-T))||^2
+  u in M
+
+ where M is the set of control signals solving
+
+   min   ||Wv(Bu-v)||
+  u in U
+
+ where U is the set of feasible control signals with respect to
+ position and, possibly, rate limits.
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ v     commanded virtual control trajectory (k x N)
+ plim  position limits [min max] (m x 2)
+ rlim  rate limits [min max] (m x 2) ([] --&gt; no rate limits)
+ T     sampling time [1]
+ Wv    virtual control weighting matrix (k x k) [I]
+ W1    control position weighting matrix (m x m) [I]
+ W2    control rate weighting matrix (m x m) [0]
+ S     steady state control distribution (m x k) [0]
+
+  Options: See QP_SIM
+  --------
+
+  Outputs:
+  -------
+ u     optimal control
+ W     active constraints in u (+/- : max/min, 1/2 : position/rate)
+ time  average computation time per sample
+ iter  no. of iterations
+
+  Step response example:
+
+   B = [2 1]; t = 0:.2:10; v = 1*(t&gt;1); plim = [-1 1;-1 1];
+   W1 = eye(2); W2 = diag([5 0]); S = pinv(B);
+   u = dyn_sim(B,v,plim,[],.2,1,W1,W2,S);
+   figure(1),bodemag(dca(B,S,W1,W2,.2))
+   figure(2),stairs(t,[u' v']),legend('u_1','u_2','v=2u_1+u_2')
+
+ See also: <a href="dca.html" class="code" title="function Gvu = dca(B,S,W1,W2,T)">DCA</a>, <a href="qp_sim.html" class="code" title="function [u,W,time,iter] = qp_sim(B,v,plim,varargin)">QP_SIM</a>, <a href="dir_sim.html" class="code" title="function [u,W,time] = dir_sim(B,v,plim,varargin)">DIR_SIM</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,W,time,iter] = dyn_sim(B,v,plim,varargin)</a>
+0002 
+0003 <span class="comment">% DYN_SIM - Dynamic control allocation simulation.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,W,time,iter] = dyn_sim(B,v,plim,[rlim,T,Wv,W1,W2,S],options)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Performs dynamic control allocation for a sequence of virtual</span>
+0008 <span class="comment">% control commands stored in v. For each value of v, the control</span>
+0009 <span class="comment">% signal u is determined by solving</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   min   ||W1(u(t)-Sv(t))||^2 + ||W2(u(t)-u(t-T))||^2</span>
+0012 <span class="comment">%  u in M</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% where M is the set of control signals solving</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   min   ||Wv(Bu-v)||</span>
+0017 <span class="comment">%  u in U</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% where U is the set of feasible control signals with respect to</span>
+0020 <span class="comment">% position and, possibly, rate limits.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%  Inputs:</span>
+0023 <span class="comment">%  -------</span>
+0024 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0025 <span class="comment">% v     commanded virtual control trajectory (k x N)</span>
+0026 <span class="comment">% plim  position limits [min max] (m x 2)</span>
+0027 <span class="comment">% rlim  rate limits [min max] (m x 2) ([] --&gt; no rate limits)</span>
+0028 <span class="comment">% T     sampling time [1]</span>
+0029 <span class="comment">% Wv    virtual control weighting matrix (k x k) [I]</span>
+0030 <span class="comment">% W1    control position weighting matrix (m x m) [I]</span>
+0031 <span class="comment">% W2    control rate weighting matrix (m x m) [0]</span>
+0032 <span class="comment">% S     steady state control distribution (m x k) [0]</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%  Options: See QP_SIM</span>
+0035 <span class="comment">%  --------</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%  Outputs:</span>
+0038 <span class="comment">%  -------</span>
+0039 <span class="comment">% u     optimal control</span>
+0040 <span class="comment">% W     active constraints in u (+/- : max/min, 1/2 : position/rate)</span>
+0041 <span class="comment">% time  average computation time per sample</span>
+0042 <span class="comment">% iter  no. of iterations</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%  Step response example:</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%   B = [2 1]; t = 0:.2:10; v = 1*(t&gt;1); plim = [-1 1;-1 1];</span>
+0047 <span class="comment">%   W1 = eye(2); W2 = diag([5 0]); S = pinv(B);</span>
+0048 <span class="comment">%   u = dyn_sim(B,v,plim,[],.2,1,W1,W2,S);</span>
+0049 <span class="comment">%   figure(1),bodemag(dca(B,S,W1,W2,.2))</span>
+0050 <span class="comment">%   figure(2),stairs(t,[u' v']),legend('u_1','u_2','v=2u_1+u_2')</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">% See also: DCA, QP_SIM, DIR_SIM.</span>
+0053   
+0054 <span class="comment">% Number of variables</span>
+0055   [k,m] = size(B);
+0056 
+0057   <span class="comment">% Find no. of optional arguments (excluding options)</span>
+0058   iopt = length(varargin)+1;
+0059   <span class="keyword">for</span> i = 1:length(varargin)
+0060     <span class="keyword">if</span> ischar(varargin{i})
+0061       iopt = i; <span class="comment">% index of first option string</span>
+0062       <span class="keyword">break</span>;
+0063     <span class="keyword">end</span>
+0064   <span class="keyword">end</span>
+0065   narg = iopt-1;
+0066 
+0067   <span class="comment">% Set default values of optional arguments</span>
+0068   rlim = [];
+0069   T    = 1;
+0070   Wv   = eye(k);
+0071   W1   = eye(m);
+0072   W2   = zeros(m);
+0073   S    = zeros(m,k);
+0074 
+0075   <span class="comment">% Set values of submitted optional arguments</span>
+0076   <span class="keyword">for</span> i=1:narg
+0077     <span class="keyword">switch</span> i
+0078      <span class="keyword">case</span> 1, rlim = varargin{i};
+0079      <span class="keyword">case</span> 2, T      = varargin{i};
+0080      <span class="keyword">case</span> 3, Wv      = varargin{i};
+0081      <span class="keyword">case</span> 4, W1      = varargin{i};
+0082      <span class="keyword">case</span> 5, W2      = varargin{i};
+0083      <span class="keyword">case</span> 6, S      = varargin{i};
+0084     <span class="keyword">end</span>
+0085   <span class="keyword">end</span>
+0086   
+0087   <span class="comment">% Call generic control allocation simulation subroutine.</span>
+0088   [u,W,time,iter] = <a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>(<span class="string">'dyn'</span>,B,v,plim,rlim,T,<span class="string">'Wv'</span>,Wv,<span class="string">'W1'</span>, <span class="keyword">...</span>
+0089                   W1,<span class="string">'W2'</span>,W2,<span class="string">'S'</span>,S,varargin{iopt:end});
+0090</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

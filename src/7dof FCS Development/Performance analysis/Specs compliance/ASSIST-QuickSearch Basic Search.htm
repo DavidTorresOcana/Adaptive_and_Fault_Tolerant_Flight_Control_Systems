@@ -1,0 +1,1691 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0027)http://quicksearch.dla.mil/ -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ASSIST-QuickSearch Basic Search</title>
+     <script type="text/javascript" src="./ASSIST-QuickSearch Basic Search_files/qsScripts.aspx"></script><style type="text/css"></style>
+     
+     <script type="text/javascript">
+         function setSelection(sel) {
+             try {
+                // clearTrBr()
+                 saveSelPS();
+                 saveSelectedValues('ExListBoxPA');
+                 saveSelectedValues('ExListBoxFSC');
+                 saveFSCSelectedValue();
+                 saveSelectedValue('DropDownListOrganization');
+                 saveSelectedValue('DropDownListOrganizationValue');
+                 var xsel = document.getElementById("STDDL");
+                 xsel.options[sel].selected = true;
+                 saveDates();
+             }
+             catch (e) {
+             }
+             return true;
+         }
+         function resetSelection(ddl, nogo) {
+             try {
+                 for (i = 0; i < ddl.options.length; i++) {
+                     var gogo = ddl.options[i].value;
+                     if (gogo == nogo) {
+                         ddl.options[i].selected = true;
+                     }
+                 }
+
+             }
+             catch (e) {
+             }
+             return true;
+         }
+         function selIndChange(ddl, nogo) {
+             try {
+                 var hfid = document.getElementById(ddl.id + 'A');
+                 for (i = 0; i < ddl.options.length; i++) {
+                     if (ddl.options[i].selected) {
+                         var gogo = ddl.options[i].value;
+                         if (gogo != nogo) {
+                             resetSelection(ddl, nogo);
+                             hfid.setAttribute('href', gogo + '.aspx');
+                             hfid.click();
+                             break;
+                         }
+                     }
+                 }
+             }
+             catch (e) {
+             }
+
+         }
+         function saveSelectedValues(lbid) {
+             try {
+                 var listBox = document.getElementById(lbid);
+                 var listBoxHF = document.getElementById(lbid + "HF");
+                 var listBoxHFN = document.getElementById(lbid + "HFN");
+                 listBoxHF.value = "";
+                 listBoxHFN.value = "";
+                 var count = 0;
+                 for (i = 0; i < listBox.options.length; i++) {
+                     if (listBox.options[i].selected == true) {
+                         count = count + 1;
+                     }
+                 }
+                 if (count >= 0) {
+                     var icount = 0;
+                     for (i = 0; i < listBox.options.length; i++) {
+                         if (listBox.options[i].selected == true) {
+                             icount = icount + 1;
+                             listBoxHF.value += listBox.options[i].value;
+                             listBoxHFN.value += i;
+                             if (icount < count) {
+                                 listBoxHF.value += ",";
+                                 listBoxHFN.value += ",";
+                             }
+                         }
+                     }
+                 }
+             }
+             catch (e) {
+             }
+         }
+
+         function saveFSCSelectedValue() {
+             try {
+                 var listBox = document.getElementById("DropDownListFSC");
+                 var listBoxHF = document.getElementById("ExListBoxFSCHF");
+                 var listBoxHFN = document.getElementById("ExListBoxFSCHFN");
+                 listBoxHF.value = "";
+                 listBoxHFN.value = "";
+
+                 for (i = 0; i < listBox.options.length; i++) {
+                     if (listBox.options[i].selected == true) {
+                         listBoxHF.value = listBox.options[i].value;
+                         listBoxHFN.value = i;
+                         break;
+                     }
+                 }
+
+             }
+             catch (e) {
+             }
+         }
+         function saveSelectedValue(lbid) {
+             try {
+                 var listBox = document.getElementById(lbid);
+                 var listBoxHF = document.getElementById(lbid + "HF");
+                 listBoxHF.value = "";
+
+                 for (i = 0; i < listBox.options.length; i++) {
+                     if (listBox.options[i].selected == true) {
+                         listBoxHF.value = listBox.options[i].value;
+                         break;
+                     }
+                 }
+
+             }
+             catch (e) {
+             }
+         }
+         function setSelectedValue(lbid) {
+             try {
+                 var ddl = document.getElementById(lbid);
+                 var nogo = document.getElementById(lbid + "_HFS").value;
+                 resetSelection(ddl, nogo)
+             }
+             catch (e) {
+             }
+         }
+         function setSelectedValueEx(lbid, hfid) {
+             try {
+                 var ddl = document.getElementById(lbid);
+                 var nogo = document.getElementById(hfid).value;
+                 //alert(nogo);
+                 resetSelection(ddl, nogo)
+             }
+             catch (e) {
+             }
+         }
+         function saveDates() {
+             try {
+                 document.getElementById("TextBoxBegin_Date_HFS").value = document.getElementById("TextBoxBegin_Date").value;
+                 document.getElementById("TextBoxEnd_Date_HFS").value = document.getElementById("TextBoxEnd_Date").value;
+             }
+             catch (e) {
+             }
+         }
+   </script>
+   <script type="text/javascript" language="javascript">
+
+       function jumpSavedSearches() {
+           try {
+               var page = "SavedQueries.aspx";
+               var winName = "SavedSearches";
+               var features = "width=600,height=700,scrollbars=1,toolbar=0,resizable=1,locationbar=0,status=1"
+               //              window.showModalDialog(page, winName, "dialogHeight: 341px; dialogWidth: 421px; dialogTop: 661px; dialogLeft: 1075px; edge: Raised; center: Yes; resizable: Yes; status: Yes;");
+               onTop(page, winName, features);
+           }
+           catch (e) {
+           }
+
+       }
+
+       function openWin(windowURL, windowName, windowFeatures) {
+           return window.open(windowURL, windowName, windowFeatures);
+       }
+
+       var spawn = null;
+
+       function winNow(page, winName, features) {
+           spawn = window.open(page, winName, features);
+       }
+
+       function onTop(page, winName, features) {
+           if (spawn == null || spawn.closed) {
+               winNow(page, winName, features);
+               spawn.focus();
+           }
+           else {
+               spawn.close();
+               winNow(page, winName, features);
+           }
+       }
+    </script>
+     <script type="text/javascript" language="javascript">
+         function removeTrBr(controlId) {
+             try {
+                    document.getElementById(controlId).value = document.getElementById(controlId).value.replace('<', ' ');
+              }
+             catch (ex) {
+             }
+         }
+         function clearTrBr() {
+             removeTrBr("DocumentIDTextBox");
+             removeTrBr("DocumentTitleKeyWords");
+          }
+
+     </script>
+    <script type="text/javascript" language="javascript">
+        function onlyNumbers(stext, e) {
+            var check = false;
+            try {
+                var ev = window.event ? event : e
+                var unicode = ev.charCode ? ev.charCode : ev.keyCode
+                var ch = String.fromCharCode(unicode);
+                var num = "0123456789";
+                for (var i = 0; i < num.length; i++) {
+                    if (num.charAt(i) == ch) {
+                        check = true;
+                    }
+                }
+                if (unicode == 8) {
+                    check = true;
+                }
+                ev.returnValue = check;
+            }
+            catch (ex) {
+
+            }
+            return check;
+        }
+        function numbersonly(e) {
+            var unicode = e.charCode ? e.charCode : e.keyCode;
+            if (unicode != 8) { //if the key isn't the backspace key (which we should allow)
+                if (unicode < 48 || unicode > 57) { //if not a number
+                    return false //disable key press
+                }
+            }
+        }
+
+        function isNumber(ch) {
+            try {
+                var num = "0123456789";
+                for (var i = 0; i < num.length; i++) {
+                    if (num.charAt(i) == ch) {
+                        return true;
+                    }
+                }
+            }
+            catch (ex) {
+
+            }
+            return false;
+        }
+        function isEmptyText(text) {
+            try {
+                if (text.length > 0) {
+                    return true;
+                }
+            }
+            catch (ex) {
+
+            }
+            return false;
+        }
+
+        function FinishDrag(stext) {
+            try {
+                window.event.returnValue = false;
+                var sstring = event.dataTransfer.getData("Text");
+                setIt(stext, sstring)
+
+            }
+            catch (ex) {
+                alert(ex);
+            }
+            return false;
+        }
+        function OverDrag() {
+            window.event.returnValue = false;
+            return false;
+        }
+
+        function setIt(stext, sstring) {
+            var num = '0123456789';
+            var cb = sstring;
+            var tb = 5;
+            if (tb > cb.length) {
+                tb = cb.length;
+            }
+            var check = false;
+            for (var i = 0; i < tb; i++) {
+                check = false;
+                var ch = cb.charAt(i);
+                for (var j = 0; j < num.length; j++) {
+                    if (num.charAt(j) == ch) {
+                        check = true;
+                    }
+                }
+                if (!check) {
+                    break;
+                }
+            }
+            if (check) {
+                stext.value = sstring;
+            }
+        }
+        function setZero(oSrc) {
+
+            if (oSrc.value.length == 0) {
+                sb.value = "0";
+            }
+        }
+
+        function pasteIt(sender) {
+            var check = false;
+            try {
+                var num = '0123456789';
+                var cb = window.clipboardData.getData("Text");
+                var tb = 5;
+                if (tb > cb.length)
+                    tb = cb.length;
+
+                for (i = 0; i < tb; i++) {
+                    check = false;
+                    var ch = cb.charAt(i);
+                    for (j = 0; j < num.length; j++) {
+                        if (num.charAt(j) == ch) {
+                            check = true;
+                        }
+                    }
+                    if (!check) {
+                        break;
+                    }
+                }
+                window.event.returnValue = check;
+                pasteItChangeContentExEx(sender);
+            }
+            catch (ex) {
+
+            }
+            return check;
+        }
+        function convertIt(stext) {
+            var check = "";
+            try {
+                var num = '0123456789';
+                var cb = stext;
+                var tb = 5;
+                if (tb > cb.length)
+                    tb = cb.length;
+                for (i = 0; i < tb; i++) {
+
+                    var ch = cb.charAt(i);
+                    for (j = 0; j < num.length; j++) {
+                        if (num.charAt(j) == ch) {
+                            check += ch;
+                        }
+                    }
+                }
+            }
+            catch (ex) {
+
+            }
+            return check;
+        }
+    </script>
+    <script type="text/javascript">
+
+        function resetPSPA() {
+            try {
+                document.getElementById("DropDownListPSHF").value = "";
+                setSelPS();
+                var DropDownListPS = document.getElementById("DropDownListPS");
+                document.getElementById("ExListBoxPAHFN").value = "";
+                document.getElementById("ExListBoxPAHF").value = "";
+                rebildPA(DropDownListPS)
+            }
+            catch (e)
+        { }
+
+        }
+        function fillTreatyOrgDocFormats() {
+            var selVal = "";
+            try {
+                var DropDownListTreatyOrg = document.getElementById("DropDownListTreatyOrg");
+
+                for (i = 0; i < DropDownListTreatyOrg.options.length; i++) {
+                    if (DropDownListTreatyOrg.options[i].selected) {
+                        selVal = DropDownListTreatyOrg.options[i].value;
+                        break;
+                    }
+                }
+                if (selVal != "") {
+                    var format_count = 0;
+                    for (i = 0; i < TODFC.length; i++) {
+                        if (TODFC[i] == selVal) {
+                            format_count = format_count + 1;
+                        }
+                    }
+                    var ListBoxFormats = document.getElementById("ListBoxFormats");
+                    ListBoxFormats.options.length = format_count + 1;
+                    var offset = 0;
+                    ListBoxFormats.options[offset].value = "";
+                    ListBoxFormats.options[offset].text = "                            ";
+
+                    for (i = 0; i < TODFC.length; i++) {
+                        if (TODFC[i] == selVal) {
+                            offset = offset + 1;
+                            ListBoxFormats.options[offset].value = TODFF[i];
+                            ListBoxFormats.options[offset].text = TODFF[i];
+                            ListBoxFormats.options[offset].selected = false;
+                        }
+                    }
+                }
+            }
+            catch (e) {
+            }
+            if (selVal == "") {
+                if (getTrOrgCode().length > 0) {
+                    getFormatEx();
+                }
+            }
+
+            return false;
+        }
+        function restoreAll() {
+            try {
+                //alert("restore");
+                if (document.getElementById("FromSession_HFS").value == "1") {
+                    document.getElementById("DocumentIDTextBox").value = document.getElementById("DocumentIDTextBox_HFS").value;
+                    document.getElementById("IDNumberTextBox").value = document.getElementById("IDNumberTextBox_HFS").value;
+                    document.getElementById("DocumentTitleKeyWords").value = document.getElementById("DocumentTitleKeyWords_HFS").value;
+                    setSelectedValue("DropDownListStatus");
+                    setSelectedValue("DropDownListContains");
+                    setSelectedValue("DropDownListTitleOrKeywords");
+                    try {
+                        document.getElementById("ExListBoxFSCHFN").value = document.getElementById("ExListBoxFSCHFN_HFS").value
+                        fillDropDownListFSC();
+                        setSelectedValueEx("DropDownListFSC", "ExListBoxFSCHFN_HFS");
+                    }
+                    catch(eee)
+                    {
+                    }
+                    try {
+
+                        if (document.getElementById("UseTransDateCheckBox_HFS").value == "1") {
+                            document.getElementById("UseTransDateCheckBox").checked = true;
+                        }
+                        else {
+                            document.getElementById("UseTransDateCheckBox").checked = false;
+                        }
+                        restoreLBSelection("ListBoxDocType");
+                        getFormatEx();
+                        setSelectedValue("DropDownListTreatyOrg");
+                        fillTreatyOrgDocFormats();
+                        setSelectedValue("DropDownListPS");
+                        document.getElementById("ExListBoxPAHFN").value = document.getElementById("ExListBoxPAHFN_HFS").value
+                        bildPA();
+                        document.getElementById("ExListBoxFSCHFN").value = document.getElementById("ExListBoxFSCHFN_HFS").value
+                        fillFSC();
+
+//                        fillDropDownListFSC();
+//                        setSelectedValueEx("DropDownListFSC", "ExListBoxFSCHFN_HFS");
+
+                        setSelectedValue("DropDownListOrganization");
+                        setSelectedValue("DropDownListOrganizationValue");
+                    }
+                    catch (ee) {
+                    }
+                }
+
+
+            }
+            catch (e) {
+            }
+            document.getElementById("FromSession_HFS").value = "0"
+
+        }
+        function restoreDates() {
+
+            try {
+                document.getElementById("TextBoxBegin_Date").value = document.getElementById("TextBoxBegin_Date_HFS").value;
+                document.getElementById("TextBoxEnd_Date").value = document.getElementById("TextBoxEnd_Date_HFS").value;
+            }
+            catch (e) {
+            }
+        }
+
+        function setSelPS() {
+            try {
+                var DropDownListPS = document.getElementById("DropDownListPS");
+                var DropDownListPSHFselVal = document.getElementById("DropDownListPSHF").value;
+                for (i = 0; i < DropDownListPS.options.length; i++) {
+
+                    DropDownListPS.options[i].selected = false;
+                }
+                for (i = 0; i < DropDownListPS.options.length; i++) {
+                    if (DropDownListPS.options[i].value == DropDownListPSHFselVal) {
+                        DropDownListPS.options[i].selected = true;
+                        break;
+                    }
+                }
+
+            }
+            catch (e) {
+            }
+        }
+        function saveSelPS() {
+            try {
+                var DropDownListPS = document.getElementById("DropDownListPS");
+                document.getElementById("DropDownListPSHF").value = "";
+
+                for (i = 0; i < DropDownListPS.options.length; i++) {
+                    if (DropDownListPS.options[i].selected == true) {
+                        document.getElementById("DropDownListPSHF").value = DropDownListPS.options[i].value;
+                        break;
+                    }
+                }
+            }
+            catch (e) {
+            }
+        }
+        function resetOrganization() {
+            try {
+
+                document.getElementById("DropDownListOrganizationHF").value = "";
+                document.getElementById("DropDownListOrganizationValueHF").value = "";
+                fillOrganization()
+            }
+            catch (e)
+        { }
+
+        }
+        function rebildOrganization(DropDownListOrganization) {
+            try {
+                var selServ = "";
+                var selServName = "";
+                for (i = 0; i < DropDownListOrganization.options.length; i++) {
+                    if (DropDownListOrganization.options[i].selected) {
+                        selServ = DropDownListOrganization.options[i].value;
+                        selServName = DropDownListOrganization.options[i].text;
+                        break;
+                    }
+
+                }
+                document.getElementById("DropDownListOrganizationValueHF").value = "";
+                fillOrganizationValue(selServ);
+            }
+            catch (e)
+        { }
+        }
+        function fillOrganization() {
+            try {
+                var selServ = "L";
+                var selServName = "";
+                var DropDownListOrganization = document.getElementById("DropDownListOrganization");
+                var DropDownListOrganizationHF = document.getElementById("DropDownListOrganizationHF").value;
+                if (DropDownListOrganizationHF == "") {
+
+                    DropDownListOrganization.options[0].selected = true;
+
+                }
+                else {
+                    for (i = 0; i < DropDownListOrganization.options.length; i++) {
+                        if (DropDownListOrganization.options[i].value == DropDownListOrganizationHF) {
+                            selServ = DropDownListOrganization.options[i].value;
+                            DropDownListOrganization.options[i].selected = true;
+                            break;
+                        }
+
+                    }
+                }
+                fillOrganizationValue(selServ);
+            }
+            catch (e)
+        { }
+        }
+        function fillOrganizationValue(selPS) {
+            try {
+                var ExListBoxPA = document.getElementById("DropDownListOrganizationValue");
+                var ExListBoxPAHF = document.getElementById("DropDownListOrganizationValueHF").value;
+                if ((selPS == null) || (selPS == "") || selPS == "L") {
+
+                    ExListBoxPA.options.length = docLSA.length + 1;
+
+                    ExListBoxPA.options[0].value = '';
+                    ExListBoxPA.options[0].text = 'Select LSA';
+                    for (i = 0; i < docLSA.length; i++) {
+                        var arrdocDataEntry = docLSA[i].split('$');
+                        ExListBoxPA.options[i + 1].value = arrdocDataEntry[0];
+                        ExListBoxPA.options[i + 1].text = arrdocDataEntry[1];
+                        ExListBoxPA.options[i + 1].selected = false;
+                    }
+
+                    for (i = 0; i < ExListBoxPA.length; i++) {
+                        if (ExListBoxPAHF == ExListBoxPA.options[i].value) {
+                            ExListBoxPA.options[i].selected = true;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    ExListBoxPA.options.length = PAData.length + 1;
+                    ExListBoxPA.options[0].value = '';
+                    if (selPS == "R") {
+                        ExListBoxPA.options[0].text = 'Select Reviewer ';
+                    }
+                    else {
+                        ExListBoxPA.options[0].text = 'Select Custodian ';
+                    }
+                    var icount = 0;
+                    for (i = 0; i < PAData.length; i++) {
+                        var arrdocDataEntry = PAData[i].split('$');
+                        ExListBoxPA.options[i + 1].value = arrdocDataEntry[0];
+                        ExListBoxPA.options[i + 1].text = arrdocDataEntry[2];
+                        ExListBoxPA.options[i + 1].selected = false;
+                    }
+                    //var ExListBoxPAHFN = document.getElementById("ExListBoxPAHFN").value.split(',');
+                    for (i = 0; i < ExListBoxPA.length; i++) {
+                        if (ExListBoxPAHF == ExListBoxPA.options[i].value) {
+                            ExListBoxPA.options[i].selected = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+        function rebildOrganizationFSC(DropDownListOrganizationValue) {
+
+        }
+        function rebildPA(DropDownListPS) {
+            try {
+                var selServ = "";
+                var selServName = "";
+                for (i = 0; i < DropDownListPS.options.length; i++) {
+                    if (DropDownListPS.options[i].selected) {
+                        selServ = DropDownListPS.options[i].value;
+                        selServName = DropDownListPS.options[i].text;
+                        break;
+                    }
+
+                }
+                document.getElementById("ExListBoxPAHFN").value = "";
+                document.getElementById("ExListBoxPAHF").value = "";
+                fillPAEx(selServ, selServName);
+            }
+            catch (e)
+        { }
+        }
+        function bildPA() {
+            try {
+                var selServ = "";
+                var selServName = "";
+                var DropDownListPS = document.getElementById("DropDownListPS");
+                for (i = 0; i < DropDownListPS.options.length; i++) {
+                    if (DropDownListPS.options[i].selected) {
+                        selServ = DropDownListPS.options[i].value;
+                        selServName = DropDownListPS.options[i].text;
+                        break;
+                    }
+
+                }
+                fillPAEx(selServ, selServName);
+            }
+            catch (e)
+        { }
+        }
+
+        function fillPAEx(selPS, selServName) {
+            try {
+                var ExListBoxPA = document.getElementById("ExListBoxPA");
+                var ExListBoxPAHFN = document.getElementById("ExListBoxPAHFN").value.split(',');
+                if ((selPS == null) || (selPS == "")) {
+
+                    ExListBoxPA.options.length = PAData.length + 1;
+
+                    ExListBoxPA.options[0].value = '';
+                    ExListBoxPA.options[0].text = 'Select All';
+                    for (i = 0; i < PAData.length; i++) {
+                        var arrdocDataEntry = PAData[i].split('$');
+                        ExListBoxPA.options[i + 1].value = arrdocDataEntry[0];
+                        ExListBoxPA.options[i + 1].text = arrdocDataEntry[2];
+                        ExListBoxPA.options[i + 1].selected = false;
+                    }
+
+                    for (i = 0; i < ExListBoxPAHFN.length; i++) {
+                        var sel = ExListBoxPAHFN[i];
+                        ExListBoxPA.options[sel].selected = true;
+                    }
+                }
+                else {
+
+                    var count = 0;
+                    for (i = 0; i < PAData.length; i++) {
+                        var arrdocDataEntry = PAData[i].split('$');
+                        if (arrdocDataEntry[1] == selPS) {
+                            count = count + 1;
+                        }
+                    }
+                    //var ExListBoxPA = document.getElementById("ExListBoxPA");
+                    ExListBoxPA.options.length = count + 1;
+
+                    ExListBoxPA.options[0].value = '';
+                    ExListBoxPA.options[0].text = 'Select All ' + selServName;
+                    var icount = 0;
+                    for (i = 0; i < PAData.length; i++) {
+                        var arrdocDataEntry = PAData[i].split('$');
+                        if (arrdocDataEntry[1] == selPS) {
+                            icount = icount + 1;
+                            ExListBoxPA.options[icount].value = arrdocDataEntry[0];
+                            ExListBoxPA.options[icount].text = arrdocDataEntry[2];
+                            ExListBoxPA.options[icount].selected = false;
+                        }
+                    }
+                    //var ExListBoxPAHFN = document.getElementById("ExListBoxPAHFN").value.split(',');
+                    for (i = 0; i < ExListBoxPAHFN.length; i++) {
+                        var sel = ExListBoxPAHFN[i];
+                        ExListBoxPA.options[sel].selected = true;
+                    }
+
+
+                }
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+
+
+        function fillPA() {
+            try {
+
+                var ExListBoxPA = document.getElementById("ExListBoxPA");
+                ExListBoxPA.options.length = PAData.length + 1;
+
+                ExListBoxPA.options[0].value = '';
+                ExListBoxPA.options[0].text = 'Select All';
+                for (i = 0; i < PAData.length; i++) {
+                    var arrdocDataEntry = PAData[i].split('$');
+                    ExListBoxPA.options[i + 1].value = arrdocDataEntry[0];
+                    ExListBoxPA.options[i + 1].text = arrdocDataEntry[2];
+                    ExListBoxPA.options[i + 1].selected = false;
+                }
+                var ExListBoxPAHFN = document.getElementById("ExListBoxPAHFN").value.split(',');
+                for (i = 0; i < ExListBoxPAHFN.length; i++) {
+                    var sel = ExListBoxPAHFN[i];
+                    ExListBoxPA.options[sel].selected = true;
+                }
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+
+        function resetDropDownListFSC() {
+            try {
+                //alert(FSCData.length);
+                var DropDownListFSC = document.getElementById("DropDownListFSC");
+                DropDownListFSC.options.length = FSCData.length + 1;
+                DropDownListFSC.options[0].value = '';
+                DropDownListFSC.options[0].text = 'Select All';
+                for (i = 0; i < FSCData.length; i++) {
+                    var arrdocDataEntry = FSCData[i].split('$');
+                    DropDownListFSC.options[i + 1].value = arrdocDataEntry[0];
+                    DropDownListFSC.options[i + 1].text = arrdocDataEntry[1];
+                    DropDownListFSC.options[i + 1].selected = false;
+                }
+//                var ExListBoxFSCHFN = document.getElementById("ExListBoxFSCHFN").value.split(',');
+
+//                for (i = 0; i < ExListBoxFSCHFN.length; i++) {
+//                    var sel = ExListBoxFSCHFN[i];
+//                    DropDownListFSC.options[sel].selected = true;
+//                }
+                document.getElementById("ExListBoxFSCHF").value = "";
+                document.getElementById("ExListBoxFSCHFN").value = "";
+                DropDownListFSC.options[0].selected = true;
+
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+
+
+        function fillDropDownListFSC() {
+            try {
+                //alert(FSCData.length);
+                var DropDownListFSC = document.getElementById("DropDownListFSC");
+                DropDownListFSC.options.length = FSCData.length + 1;
+                DropDownListFSC.options[0].value = '';
+                DropDownListFSC.options[0].text = 'Select All';
+                for (i = 0; i < FSCData.length; i++) {
+                    var arrdocDataEntry = FSCData[i].split('$');
+                    DropDownListFSC.options[i + 1].value = arrdocDataEntry[0];
+                    DropDownListFSC.options[i + 1].text = arrdocDataEntry[1];
+                    DropDownListFSC.options[i + 1].selected = false;
+                }
+                var ExListBoxFSCHFN = document.getElementById("ExListBoxFSCHFN").value.split(',');
+
+                for (i = 0; i < ExListBoxFSCHFN.length; i++) {
+                    var sel = ExListBoxFSCHFN[i];
+                    DropDownListFSC.options[sel].selected = true;
+                }
+
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+        function fillFSC() {
+            try {
+                //alert(FSCData.length);
+                var ExListBoxFSC = document.getElementById("ExListBoxFSC");
+                ExListBoxFSC.options.length = FSCData.length + 1;
+                ExListBoxFSC.options[0].value = '';
+                ExListBoxFSC.options[0].text = 'Select All';
+                for (i = 0; i < FSCData.length; i++) {
+                    var arrdocDataEntry = FSCData[i].split('$');
+                    ExListBoxFSC.options[i + 1].value = arrdocDataEntry[0];
+                    ExListBoxFSC.options[i + 1].text = arrdocDataEntry[1];
+                    ExListBoxFSC.options[i + 1].selected = false;
+                }
+                var ExListBoxFSCHFN = document.getElementById("ExListBoxFSCHFN").value.split(',');
+
+                for (i = 0; i < ExListBoxFSCHFN.length; i++) {
+                    var sel = ExListBoxFSCHFN[i];
+                    ExListBoxFSC.options[sel].selected = true;
+                }
+
+            }
+            catch (e) {
+                //alert(e);
+            }
+        }
+        function restoreLBSelection(lbName) {
+            try {
+                var lb = document.getElementById(lbName);
+                for (i = 0; i < lb.options.length; i++) {
+                    lb.options[i].selected = false;
+                }
+                var lbhf = document.getElementById(lbName + "_HFS");
+                var lbs = lbhf.value.split(",");
+                for (i = 0; i < lb.options.length; i++) {
+
+                    var lbval = lb.options[i].value;
+                    //alert(lbval);
+                    for (j = 0; j < lbs.length; j++) {
+                        if (lbs[j] == lbval) {
+                            lb.options[i].selected = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (e) {
+            }
+        }
+
+        function getTrOrgCode() {
+            var selVal = "";
+            try {
+                var ListBoxDocType = document.getElementById("ListBoxDocType");
+                var count = 0;
+                var selValLoc = "";
+                for (i = 0; i < ListBoxDocType.options.length; i++) {
+                    if (ListBoxDocType.options[i].selected == true) {
+                        selValLoc = ListBoxDocType.options[i].value;
+                        count = count + 1;
+                    }
+                }
+                if ((count == 1) && selValLoc == "850|895") {
+                    selVal = selValLoc;
+                }
+            }
+            catch (e) {
+
+            }
+
+            return selVal;
+        }
+        function showHideTreatyOrg() {
+            try {
+                var ListBoxDocType = document.getElementById("ListBoxDocType");
+                var count = 0;
+                var selVal = "";
+                for (i = 0; i < ListBoxDocType.options.length; i++) {
+                    if (ListBoxDocType.options[i].selected == true) {
+                        selVal = ListBoxDocType.options[i].value;
+                        count = count + 1;
+                    }
+                }
+                var DropDownListTreatyOrg_TR = document.getElementById("DropDownListTreatyOrg_TR");
+                var DropDownListTreatyOrg = document.getElementById("DropDownListTreatyOrg");
+                DropDownListTreatyOrg_TR.style.display = "none";
+                if ((count == 1) && (selVal == "850|895")) {
+                    DropDownListTreatyOrg_TR.style.display = "inline";
+                }
+                else {
+                    document.getElementById("DropDownListTreatyOrg_HFS").value = "";
+                    setSelectedValue("DropDownListTreatyOrg");
+                }
+            }
+            catch (e) {
+            }
+        }
+        function getFormatEx() {
+            try {
+                var format_count = 0;
+                var sel_items = new Array();
+                var ListBoxDocType = document.getElementById("ListBoxDocType");
+                var ListBoxFormats = document.getElementById("ListBoxFormats");
+                var count = 0;
+                for (i = 0; i < ListBoxDocType.options.length; i++) {
+                    if (ListBoxDocType.options[i].selected == true) {
+                        sel_items[count] = i;
+                        count = count + 1;
+                    }
+                }
+                for (i = 0; i < sel_items.length; i++) {
+                    var opt_item = sel_items[i];
+                    var desc = ListBoxDocType.options[opt_item].value;
+                    var arrHiLo = new Array();
+                    arrHiLo = desc.split("|");
+                    for (j = 0; j < docDataV.length; j++) {
+                        var arrdocDataEntry = docDataV[j];
+                        if (arrdocDataEntry >= arrHiLo[0] && arrdocDataEntry <= arrHiLo[1]) {
+                            format_count = format_count + 1;
+                        }
+                    }
+                }
+                ListBoxFormats.options.length = format_count + 1;
+                var offset = 0;
+                ListBoxFormats.options[offset].value = "";
+                ListBoxFormats.options[offset].text = "                            ";
+
+                for (i = 0; i < sel_items.length; i++) {
+                    opt_item = sel_items[i];
+                    desc = ListBoxDocType.options[opt_item].value;
+                    arrHiLo = new Array();
+                    arrHiLo = desc.split("|");
+                    for (j = 0; j < docDataV.length; j++) {
+                        var arrdocDataEntry = docDataV[j];
+                        if (arrdocDataEntry >= arrHiLo[0] && arrdocDataEntry <= arrHiLo[1]) {
+                            offset = offset + 1;
+                            ListBoxFormats.options[offset].value = docDataT[j];
+                            ListBoxFormats.options[offset].text = docDataT[j];
+                            ListBoxFormats.options[offset].selected = false;
+                        }
+                    }
+                }
+
+                ListBoxFormats.options[0].selected = true;
+            }
+            catch (e) {
+            }
+            showHideTreatyOrg();
+        }
+        function pasteFormat(ListBoxF) {
+            try {
+                var DocumentIDTextBox = document.getElementById("DocumentIDTextBox");
+                for (i = 0; i < ListBoxF.options.length; i++) {
+                    if (ListBoxF.options[i].selected == true) {
+                        //if (ListBoxF.options[i].value != "") 
+                        {
+                            DocumentIDTextBox.value = ListBoxF.options[i].value;
+
+                        }
+                    }
+                }
+            }
+            catch (e) {
+            }
+
+
+        }
+        function resetForm() {
+            try {
+                //alert("reset");
+                document.getElementById("DocumentIDTextBox").value = "";
+                document.getElementById("IDNumberTextBox").value = "";
+
+                resetDropDownListFSC();
+
+                var DropDownListStatus = document.getElementById("DropDownListStatus");
+                DropDownListStatus.options[0].selected = true;
+                document.getElementById("DocumentTitleKeyWords").value = "";
+                var DropDownListContains = document.getElementById("DropDownListContains");
+                DropDownListContains.options[0].selected = true;
+
+                var DropDownListTitleOrKeywords = document.getElementById("DropDownListTitleOrKeywords");
+                DropDownListTitleOrKeywords.options[0].selected = true;
+
+                document.getElementById("UseTransDateCheckBox").checked = false;
+                document.getElementById("TextBoxBegin_Date").value = document.getElementById("TextBoxBegin_Date_HF").value;
+                document.getElementById("TextBoxEnd_Date").value = document.getElementById("TextBoxEnd_Date_HF").value;
+
+                var ListBoxDocType = document.getElementById("ListBoxDocType");
+                for (i = 0; i < ListBoxDocType.options.length; i++) {
+                    ListBoxDocType.options[i].selected = false;
+                }
+                ListBoxDocType.options[0].selected = true;
+
+                getFormatEx();
+                document.getElementById("DropDownListTreatyOrg_HFS").value = "";
+                setSelectedValue("DropDownListTreatyOrg");
+                resetPSPA();
+                resetOrganization();
+
+                document.getElementById("ExListBoxFSCHFN").value = "";
+                document.getElementById("ExListBoxFSCHF").value = "";
+                fillFSC();
+                fillDropDownListFSC();
+                //setSelectedValueEx("DropDownListFSC", "ExListBoxFSCHFN_HFS");
+                
+
+            }
+            catch (e) {
+            }
+            return false;
+        }
+        function restoreSearchType() {
+            try {
+                var simpleAdvanced = "DropDownListAdvanced";
+                var DropDownListSA = document.getElementById(simpleAdvanced);
+                var selVal = document.getElementById(simpleAdvanced + "HF").value;
+                for (i = 0; i < DropDownListSA.options.length; i++) {
+                    if (DropDownListSA.options[i].value == selVal) {
+                        DropDownListSA.options[i].selected = true;
+                        break;
+                    }
+                }
+            }
+            catch (e) {
+            }
+
+        }
+        function resetFormEx() {
+            resetForm();
+            return setSelection(1);
+        }
+        function executeClientScripts() {
+
+            restoreSearchType();
+            getFormatEx();
+            fillOrganization();
+            setSelPS();
+            bildPA();
+            fillFSC();
+            fillDropDownListFSC();
+            executeRestore();
+        }
+        function executeClientScriptsEx() {
+
+            getFormatEx();
+            fillOrganization();
+            setSelPS();
+            bildPA();
+            fillFSC();
+            fillDropDownListFSC();
+            //restoreDates();
+            ///executeRestore();
+
+        }
+        function executeRestore() {
+            try {
+                document.getElementById("RestoreButton").click();
+                //document.getElementById("GetFilteredButton").click();
+
+            }
+            catch (e) {
+            }
+
+        }
+        function execC(params) {
+            try {
+                document.getElementById("Command_HFS").value = params;
+                document.getElementById("Command").click();
+            }
+            catch (e) {
+            }
+
+        }
+    
+</script>
+    <script type="text/javascript">
+        function refGo(xvalue, sel, ddl, refh) {
+            try {
+                var xsel = document.getElementById(ddl);
+                document.getElementById(refh).value = xvalue;
+                xsel.options[sel].selected = true;
+                document.getElementById("GoRefs").click();
+
+            }
+            catch (e) {
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function bodyLoaded() {
+            clearTrBr();
+            executeClientScripts();
+        }
+     </script>
+     <style type="text/css">
+    .highlight
+    {
+	    background-color:Yellow;
+	    /*font-size:70%;*/
+    }
+    </style>
+<link href="./ASSIST-QuickSearch Basic Search_files/Site.css" type="text/css" rel="stylesheet"></head>
+<body onload="javacript: bodyLoaded();">
+
+ <div>
+  <br>
+ <center>
+<table border="0" width="800">
+  <tbody><tr>
+    <td align="center" colspan="2">
+	<table border="0" cellspacing="0" cellpadding="0">
+      <tbody><tr>
+		<td align="center" valign="middle">
+		<img src="./ASSIST-QuickSearch Basic Search_files/welcome_new_top.gif" alt="ASSIST" border="0">
+		</td>
+	  </tr>
+	</tbody></table>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+    <div id="FontPanel" class="qsfont_panel" style="width:100%;">
+	
+    <div style="font-size:smaller">
+	<table width="100%" cellspacing="0" cellpadding="0" border="0">
+	  <tbody><tr>
+	    <td align="left" nowrap="nowrap">
+		        <span id="LabelDate">Database last updated: Jul 24, 2014</span>
+		</td>
+		<td align="right" nowrap="nowrap">
+        <a href="./ASSIST-QuickSearch Basic Search_files/ASSIST-QuickSearch Basic Search.htm" onmouseover="window.status=&#39;Home&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Home">Home</a>&nbsp;|&nbsp;
+        <a href="http://quicksearch.dla.mil/qsoverview.htm" target="top" onmouseover="window.status=&#39;Click here to see an overview about ASSIST.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to see an overview about ASSIST">About ASSIST</a>&nbsp;|&nbsp;
+        <a href="https://assist.dla.mil/online/start/index.cfm" target="top" onmouseover="window.status=&#39;Click here to go to ASSIST Online.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to go to ASSIST Online">ASSIST Online</a>&nbsp;|&nbsp;
+        <a href="http://www.assistdocs.com/" target="top" onmouseover="window.status=&#39;Click here to go to assistdocs.com.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to go to assistdocs.com">assistdocs.com</a>&nbsp;|&nbsp;
+        <a href="https://assist.dla.mil/wizard/index.cfm" target="top" onmouseover="window.status=&#39;Click here to go to ASSIST Shopping Wizard.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to go to ASSIST Shopping Wizard">ASSIST Shopping Wizard</a>&nbsp;|&nbsp;
+	    <a href="http://quicksearch.dla.mil/qsUpdates.aspx" onmouseover="window.status=&#39;A bi-monthly summary of changes to the ASSIST document database.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="A bi-monthly summary of changes to the ASSIST document database">ASSIST Updates</a>
+		</td>
+	  </tr>
+      </tbody></table>
+      </div>
+      
+</div>
+	</td>
+  </tr>
+<tr>
+<td colspan="2">
+<hr width="800" color="navy">
+ <table width="800" cellspacing="0" cellpadding="0">
+    <tbody><tr>
+            <td align="left">
+                <span id="LabelAlertMessage" style="color:Red;font-family:Verdana;font-size:8pt;font-weight:bold;"></span>
+            </td>
+        </tr>
+    </tbody></table>  
+    <table id="introTable" width="800" cellspacing="0" cellpadding="0">
+	<tbody><tr>
+		<td align="left">
+                <span id="LabelDiscloser" style="font-family:Verdana;font-size:8pt;"><b>ASSIST Quick Search</b>
+                    provides access to defense and federal specifications and standards indexed in the official DoD ASSIST document repository that have been approved for public release. Enter search criteria in one or more of the three search fields below.  You may limit search results by selecting optional filters from the drop-down lists, or even by specifying a range of document dates.  Click on the label next to each search field or filter for a description and sample search results.
+                </span>
+            </td>
+	</tr>
+</tbody></table>
+
+
+    <form name="form1" method="post" action="" id="form1">
+<div>
+
+
+
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="./ASSIST-QuickSearch Basic Search_files/WebResource.axd" type="text/javascript"></script>
+
+
+<script src="./ASSIST-QuickSearch Basic Search_files/ScriptResource.axd" type="text/javascript"></script>
+<script src="./ASSIST-QuickSearch Basic Search_files/ScriptResource(1).axd" type="text/javascript"></script>
+<div>
+
+	
+	
+</div>
+    <div>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ScriptManager1', 'form1', ['tUpdatePanelWhole',''], [], [], 90, '');
+//]]>
+</script>
+
+<script type="text/javascript">
+    var postbackElement;
+    Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(beginRequest);
+    Sys.WebForms.PageRequestManager.getInstance().add_pageLoaded(pageLoaded);
+    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(endRequest);
+
+    function beginRequest(sender, args) {
+        postbackElement = args.get_postBackElement();
+        //document.getElementById("UpdateProgressProject").style.display = 'block';
+    }
+    function pageLoaded(sender, args) {
+        try {
+            var updatedPanels = args.get_panelsUpdated();
+            if (typeof (postbackElement) == "undefined") {
+                return;
+            }
+            else {
+                redirect();
+            }
+        }
+        catch (e) { 
+        
+        }
+
+    }
+    function redirect() {
+        restoreAll();
+        restoreDates();
+    }
+    function endRequest(sender, args) {
+        if (args.get_error() != undefined) {
+//            var errorMessage = args.get_error().message;
+              args.set_errorHandled(true);
+//            ToggleAlertDiv('visible');
+//            $get(messageElem).innerHTML = errorMessage;
+        }
+    }
+
+    </script>
+
+<div id="ScriptPanel">
+	
+
+</div>
+
+<table id="paramTable" width="100%">
+	<tbody><tr>
+		<td align="left">
+<div id="Panel1" class="qsfont_panel" style="width:100%;">
+			
+
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+		    <tbody><tr>
+			  <td width="20">&nbsp;</td>
+			  <td width="100" align="center" bgcolor="navy" valign="middle">
+			   <span id="LabelBasicSearch" style="color:Yellow;font-family:Verdana;font-size:8pt;font-weight:bold;">Basic Search</span>
+			  </td>
+			  <td width="100" align="center" bgcolor="E1E1E1" valign="middle">
+              <a id="HyperLinkTextSearch" title="Go to Text Search" href="http://quicksearch.dla.mil/qsText.aspx" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Text Search</a>
+			  </td>
+			  <td width="380">&nbsp;</td>
+			</tr>
+</tbody></table>
+
+		</div>
+</td>
+	</tr>
+	<tr>
+		<td align="center">
+ <table cellspacing="0" cellpadding="4" frame="box" rules="none" style="border-collapse: collapse;" width="100%">
+
+                                                <tbody><tr>
+                                                    <td>
+                                                        <table width="100%" border="0" align="center">
+                                                        <tbody><tr>
+                                                        <td colspan="6">
+                                                        <table width="100%" border="0" align="center">
+                                                        <tbody><tr>
+                                                        <td align="right" nowrap="nowrap">
+                                                                    <a id="HyperLink2" title="Click here for more information about the Document ID" href="http://quicksearch.dla.mil/qshelp.htm#documentid" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Document ID:</a>
+                                                         </td>
+                                                         <td align="left">
+                                                                                <input name="DocumentIDTextBox" type="text" maxlength="49" id="DocumentIDTextBox" title="Enter Document ID" ondrop="return false;" style="font-family:Verdana;font-size:8pt;width:187px;text-transform: uppercase">
+                                                         </td>
+                                                         <td align="right" nowrap="nowrap">
+                                                                    <a id="HyperLinkIDNumber" title="&#39;Click here for more information about the Document Number" href="http://quicksearch.dla.mil/qshelp.htm#documentnumber" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Document Number:</a>
+                                                                </td>
+                                                                <td align="left" nowrap="nowrap">
+                                                                     <input name="IDNumberTextBox" type="text" maxlength="15" id="IDNumberTextBox" title="Enter Document Number" onkeypress="return onlyNumbers(this,event)" onpaste="return pasteIt(this)" ondragover="javascript:OverDrag();" ondragenter="javascript:FinishDrag(this);" ondrop="return false;" style="font-family:Verdana;font-size:8pt;">
+                                                                    
+                                                                </td>
+                                                                 <td align="right">
+                                                                    <a id="StatusHyperLink" title="Click here for more information about Status" href="http://quicksearch.dla.mil/qshelp.htm#status" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Status:</a>
+                                                                </td>
+                                                                <td align="left">
+                                                                    <select name="DropDownListStatus" id="DropDownListStatus" title="Select Document Status" style="font-family:Verdana;font-size:8pt;">
+			<option selected="selected" value="">All</option>
+			<option value="A">Active</option>
+			<option value="I">Inactive</option>
+			<option value="A&#39;,&#39;I">Active/Inactive</option>
+			<option value="I&#39;,&#39;C">Inactive/Canceled</option>
+			<option value="C">Canceled</option>
+
+		</select>
+                                                                    
+                                                                </td>
+
+                                                        </tr>
+                                                        </tbody></table>
+                                                        </td>
+                                                        </tr>
+                                                         <tr>
+                                                                <td align="right" nowrap="nowrap">
+                                                                <a id="HyperLink1" title="Click here for more information about the Title/Keywords" href="http://quicksearch.dla.mil/qshelp.htm#title" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Title/Keywords:</a>
+                                                                 </td>
+                                                                <td align="left" colspan="3" nowrap="nowrap">
+                                                               <table><tbody><tr><td nowrap="nowrap">
+                                                               <input name="DocumentTitleKeyWords" type="text" maxlength="300" id="DocumentTitleKeyWords" title="Enter comma separated words" ondrop="return false;" style="font-family:Verdana;font-size:8pt;width:400px;text-transform: uppercase">
+                                                               
+                                                                    <select name="DropDownListContains" id="DropDownListContains" style="font-family:Verdana;font-size:8pt;">
+			<option selected="selected" value="AND">All Words</option>
+			<option value="OR">Any Word</option>
+
+		</select>
+                                                                
+                                                                    <select name="DropDownListTitleOrKeywords" id="DropDownListTitleOrKeywords" style="font-family:Verdana;font-size:8pt;">
+			<option selected="selected" value="TOK">Title Or Keywords</option>
+			<option value="T">Title Only</option>
+			<option value="K">Keywords Only</option>
+
+		</select>
+                                                                </td></tr></tbody></table>                 
+                                                                </td>
+                                                            </tr>
+                                                            <tr><td colspan="5">
+<table width="100%">
+
+                                                         <tbody><tr id="trDocDate">
+			<td colspan="2">
+                                                             <table width="100%">
+                                                                 <tbody><tr>
+                                                                     <td align="right">
+                                                                         <a id="FSCAreaHyperLink" title="Click here for more information about the FSC/Area" href="http://quicksearch.dla.mil/qshelp.htm#fscarea" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">FSC/Area:</a>
+                                                                     </td>
+                                                                     <td align="left">
+                                                                         <select id="DropDownListFSC" style="font-family: Verdana; font-size: 8pt;" title="Select Federal Supply Class or Standardization Area" onchange="rebildOrganizationFSC(this)">
+                                                                         <option value="">Select All</option><option value="1005">1005 - GUNS, THROUGH 30MM</option><option value="1010">1010 - GUNS, OVER 30MM UP TO 75MM</option><option value="1015">1015 - GUNS, 75MM THROUGH 125MM</option><option value="1020">1020 - GUNS, OVER 125MM THROUGH 150MM</option><option value="1025">1025 - GUNS, OVER 150MM THROUGH 200MM</option><option value="1030">1030 - GUNS, OVER 200MM THROUGH 300MM</option><option value="1035">1035 - GUNS, OVER 300MM</option><option value="1040">1040 - CHEMICAL WEAPONS &amp; EQUIPMENT</option><option value="1045">1045 - LAUNCHERS, TORPEDO &amp; DEPTH CHA</option><option value="1055">1055 - LAUNCHERS, ROCKET AND PYROTECH</option><option value="1075">1075 - DEGAUSSING &amp; MINE-SWEEPING EQU</option><option value="1080">1080 - CAMOUFLAGE &amp; DECEPTION EQUIPME</option><option value="1090">1090 - ASSYS INTCHG BET WEAPONS IN TW</option><option value="1095">1095 - MISCELLANEOUS WEAPONS</option><option value="10GP">10GP - WEAPONS</option><option value="1105">1105 - NUCLEAR BOMBS</option><option value="1110">1110 - NUCLEAR PROJECTILES</option><option value="1115">1115 - NUCLEAR WARHEADS &amp; WARHEAD SEC</option><option value="1125">1125 - NUCLEAR DEMOLITION CHARGES</option><option value="1135">1135 - FUZING &amp; FIRING DEVICES, NUCLE</option><option value="1145">1145 - EXPLOSIVE &amp; PYROTECHNIC COMPON</option><option value="1190">1190 - SPECIALIZED TEST &amp; HANDLING EQ</option><option value="1195">1195 - MISCELLANEOUS NUCLEAR ORDNANCE</option><option value="11GP">11GP - NUCLEAR ORDNANCE</option><option value="1210">1210 - FIRE CONTROL DIRECTORS</option><option value="1220">1220 - FIRE CONTROL COMPUTING SIGHTS </option><option value="1230">1230 - FIRE CONTROL SYSTEMS, COMPLETE</option><option value="1240">1240 - OPTICAL SIGHTING &amp; RANGING EQU</option><option value="1250">1250 - FIRE CONTROL STABILIZING MECHA</option><option value="1260">1260 - FIRE CONTROL DESIGNATING &amp; IND</option><option value="1265">1265 - FIRE CONTROL TRSMTNG/RCVNG EQU</option><option value="1270">1270 - AIRCRAFT GUNNERY FIRE CONTROL </option><option value="1280">1280 - AIRCRAFT BOMBING FIRE CONTROL </option><option value="1285">1285 - FIRE CNTRL RADAR EQUIPMENT, EX</option><option value="1287">1287 - FIRE CONTROL SONAR EQUIPMENT</option><option value="1290">1290 - MISCELLANEOUS FIRE CONTROL EQU</option><option value="12GP">12GP - FIRE CONTROL EQUIPMENT</option><option value="1305">1305 - AMMUNITION, THROUGH 30MM</option><option value="1310">1310 - AMMUNITION, OVER 30MM UP TO 75</option><option value="1315">1315 - AMMUNITION, 75MM THROUGH 125MM</option><option value="1320">1320 - AMMUNITION, OVER 125MM</option><option value="1325">1325 - BOMBS</option><option value="1330">1330 - GRENADES</option><option value="1336">1336 - GUIDED MISSILE WARHEADS &amp; EXPL</option><option value="1337">1337 - GD MSL/SPC VEH EXPLO PRPLN UNI</option><option value="1338">1338 - GD MSL/SPC VEH INERT PRPLN UNI</option><option value="1340">1340 - ROCKETS, ROCKET AMMO &amp; ROCKET </option><option value="1345">1345 - LAND MINES</option><option value="1346">1346 - REMOTE MUNITIONS</option><option value="1350">1350 - UNDERWATER MINE INERT COMPONEN</option><option value="1351">1351 - UNDERWATER MINE EXPLOSIVE COMP</option><option value="1355">1355 - TORPEDO INERT COMPONENTS</option><option value="1356">1356 - TORPEDO EXPLOSIVE COMPONENTS</option><option value="1360">1360 - DEPTH CHARGE INERT COMPONENTS</option><option value="1361">1361 - DEPTH CHARGE EXPLOSIVE COMPONE</option><option value="1365">1365 - MILITARY CHEMICAL AGENTS</option><option value="1370">1370 - PYROTECHNICS</option><option value="1375">1375 - DEMOLITION MATERIALS</option><option value="1376">1376 - BULK EXPLOSIVES</option><option value="1377">1377 - CARTRIDGE/PROPELLANT ACTUATED </option><option value="1385">1385 - SURFACE EXPLOSIVE ORDNANCE DIS</option><option value="1390">1390 - FUZES &amp; PRIMERS</option><option value="1395">1395 - MISCELLANEOUS AMMUNITION</option><option value="1398">1398 - SPECIALIZED AMMO HANDLING &amp; SE</option><option value="13GP">13GP - AMMUNITION &amp; EXPLOSIVES</option><option value="1410">1410 - GUIDED MISSILES, COMPLETE</option><option value="1420">1420 - GUIDED MISSILE COMPONENTS</option><option value="1425">1425 - GUIDED MISSILE SYSTEMS, COMPLE</option><option value="1430">1430 - GUIDED MISSILE REMOTE CONTROL </option><option value="1440">1440 - LAUNCHERS, GUIDED MISSILE</option><option value="1450">1450 - GUIDED MISSILE HANDLING &amp; SERV</option><option value="14GP">14GP - GUIDED MISSILES</option><option value="1510">1510 - AIRCRAFT, FIXED WING</option><option value="1520">1520 - AIRCRAFT, ROTARY WING</option><option value="1550">1550 - DRONES</option><option value="1560">1560 - AIRFRAME STRUCTURAL COMPONENTS</option><option value="15GP">15GP - AIRCRAFT AND AIRFRAME STRUCTUR</option><option value="1610">1610 - AIRCRAFT PROPELLERS</option><option value="1615">1615 - HELICOPTER ROTOR BLADES, DRIVE</option><option value="1620">1620 - AIRCRAFT LANDING GEAR COMPONEN</option><option value="1630">1630 - AIRCRAFT WHEEL &amp; BRAKE SYSTEMS</option><option value="1640">1640 - AIRCRAFT CONTROL CABLE PRODUCT</option><option value="1650">1650 - AIRCRAFT HYDRAULIC, VACUUM &amp; D</option><option value="1660">1660 - AIRCRAFT AIR COND, HEATING &amp; P</option><option value="1670">1670 - PARCHTS;AER PK UP, DEL RECYSYS</option><option value="1680">1680 - MISCELLANEOUS AIRCRAFT ACCESSO</option><option value="16GP">16GP - AIRCRAFT COMPONENTS AND ACCESS</option><option value="1710">1710 - AIRCRAFT LANDING EQUIPMENT</option><option value="1720">1720 - AIRCRAFT LAUNCHING EQUIPMENT</option><option value="1730">1730 - AIRCRAFT GROUND SERVICING EQUI</option><option value="1740">1740 - AIRFIELD SPECIALIZED TRUCKS &amp; </option><option value="17GP">17GP - AIRCRAFT LAUNCHING, LANDING &amp; </option><option value="1905">1905 - COMBAT SHIPS &amp; LANDING VESSELS</option><option value="1910">1910 - TRANSPORT VESSELS, PASSENGER &amp;</option><option value="1915">1915 - CARGO &amp; TANKER VESSELS</option><option value="1920">1920 - FISHING VESSELS</option><option value="1925">1925 - SPECIAL SERVICE VESSELS</option><option value="1930">1930 - BARGES &amp; LIGHTERS, CARGO</option><option value="1935">1935 - BARGES &amp; LIGHTERS, SPECIAL PUR</option><option value="1940">1940 - SMALL CRAFT</option><option value="1945">1945 - PONTOONS &amp; FLOATING DOCKS</option><option value="1950">1950 - FLOATING DRYDOCKS</option><option value="1990">1990 - MISCELLANEOUS VESSELS</option><option value="19GP">19GP - SHIPS, SMALL CRAFT, PONTOONS A</option><option value="2010">2010 - SHIP &amp; BOAT PROPULSION COMPONE</option><option value="2020">2020 - RIGGING &amp; RIGGING GEAR</option><option value="2030">2030 - DECK MACHINERY</option><option value="2040">2040 - MARINE HARDWARE &amp; HULL ITEMS</option><option value="2050">2050 - BUOYS</option><option value="2090">2090 - MISCELLANEOUS SHIP &amp; MARINE EQ</option><option value="20GP">20GP - SHIP AND MARINE EQUIPMENT</option><option value="2210">2210 - LOCOMOTIVES</option><option value="2220">2220 - RAIL CARS</option><option value="2230">2230 - RIGHT-OF-WAY CONSTRUCTION &amp; MA</option><option value="2240">2240 - LOCOMOTIVE &amp; RAIL CAR ACCESSOR</option><option value="2250">2250 - TRACK MATERIALS, RAILROAD</option><option value="2310">2310 - PASSENGER MOTOR VEHICLES</option><option value="2320">2320 - TRUCKS &amp; TRUCK TRACTORS, WHEEL</option><option value="2330">2330 - TRAILERS</option><option value="2340">2340 - MOTORCYCLES, MOTOR SCOOTERS &amp; </option><option value="2350">2350 - COMBAT, ASSAULT &amp; TACTICAL VEH</option><option value="23GP">23GP - MOTOR VEHICLES, TRAILERS AND C</option><option value="2410">2410 - TRACTORS, FULL TRACK, LOW SPEE</option><option value="2420">2420 - TRACTORS, WHEELED</option><option value="2430">2430 - TRACTORS, TRACK LAYING, HIGH S</option><option value="2510">2510 - VEHICULAR CAB, BODY &amp; FRAME ST</option><option value="2520">2520 - VEHICULAR POWER TRANSMISSION C</option><option value="2530">2530 - VEHICULAR BRAKE, STEERING, AXL</option><option value="2540">2540 - VEHICULAR FURNITURE &amp; ACCESSOR</option><option value="2590">2590 - MISCELLANEOUS VEHICULAR COMPON</option><option value="25GP">25GP - VEHICULAR EQUIPMENT COMPONENTS</option><option value="2610">2610 - TIRES &amp; TUBES, PNEUMATIC, EXCE</option><option value="2620">2620 - TIRES &amp; TUBES, PNEUMATIC, AIRC</option><option value="2630">2630 - TIRES, SOLID &amp; CUSHION</option><option value="2640">2640 - TIRE REBUILDING &amp; TIRE &amp; TUBE </option><option value="26GP">26GP - TIRES &amp; TUBES</option><option value="2805">2805 - GAS RECIPROCATING ENGINES EXCE</option><option value="2810">2810 - GASOLINE RECIPROCATING ENGS, A</option><option value="2815">2815 - DIESEL ENGINES &amp; COMPONENTS</option><option value="2820">2820 - STEAM ENGINES, RECIPROCATING; </option><option value="2825">2825 - STEAM TURBINES &amp; COMPONENTS</option><option value="2835">2835 - GAS TURBINES &amp; JET ENGINES, EX</option><option value="2840">2840 - GAS TURBINES &amp; JET ENGINES, AI</option><option value="2845">2845 - ROCKET ENGINES &amp; COMPONENTS</option><option value="2895">2895 - MISCELLANEOUS ENGINES &amp; COMPON</option><option value="28GP">28GP - ENGINES, TURBINES, &amp; COMPONENT</option><option value="2910">2910 - ENGINE FUEL SYSTEM COMPONENTS;</option><option value="2915">2915 - ENGINE FUEL SYSTEM COMPONENTS;</option><option value="2920">2920 - ENGINE ELECTRICAL SYSTEM COMPO</option><option value="2925">2925 - ENGINE ELECTRICAL SYSTEM COMPO</option><option value="2930">2930 - ENGINE COOLING SYSTEM COMPONEN</option><option value="2935">2935 - ENGINE COOLING SYSTEM COMPONEN</option><option value="2940">2940 - ENGINE AIR &amp; OIL FILTERS, STRA</option><option value="2945">2945 - ENGINE AIR &amp; OIL FILTERS, STRA</option><option value="2950">2950 - TURBOSUPERCHARGERS</option><option value="2990">2990 - MISCELLANEOUS ENGINE ACCESSORI</option><option value="2995">2995 - MISCELLANEOUS ENGINE ACCESSORI</option><option value="29GP">29GP - ENGINE ACCESSORIES</option><option value="3010">3010 - TORQUE CONVERTERS &amp; SPEED CHAN</option><option value="3020">3020 - GEARS, PULLEYS, SPROCKETS &amp; TR</option><option value="3030">3030 - BELTING, DRIVE BELTS, FAN BELT</option><option value="3040">3040 - MISCELLANEOUS POWER TRANSMISSI</option><option value="3110">3110 - BEARINGS, ANTI-FRICTION, UNMOU</option><option value="3120">3120 - BEARINGS, PLAIN, UNMOUNTED</option><option value="3130">3130 - BEARINGS, MOUNTED</option><option value="31GP">31GP - BEARINGS</option><option value="3210">3210 - SAWMILL &amp; PLANING MILL MACHINE</option><option value="3220">3220 - WOODWORKING MACHINES</option><option value="3230">3230 - TOOLS &amp; ATTACHMENTS FOR WOODWO</option><option value="3405">3405 - SAWS &amp; FILING MACHINES</option><option value="3408">3408 - MACHINING CTRS &amp; WAY-TYPE MACH</option><option value="3410">3410 - ELECTRICAL &amp; ULTRASONIC EROSIO</option><option value="3411">3411 - BORING MACHINES</option><option value="3412">3412 - BROACHING MACHINES</option><option value="3413">3413 - DRILLING &amp; TAPPING MACHINES</option><option value="3414">3414 - GEAR CUTTING &amp; FINISHING MACHI</option><option value="3415">3415 - GRINDING MACHINES</option><option value="3416">3416 - LATHES</option><option value="3417">3417 - MILLING MACHINES</option><option value="3418">3418 - PLANERS &amp; SHAPERS</option><option value="3419">3419 - MISCELLANEOUS MACHINE TOOLS</option><option value="3424">3424 - METAL HEAT TREATING &amp; NON-THER</option><option value="3426">3426 - METAL FINISHING EQUIPMENT</option><option value="3431">3431 - ELECTRIC ARC WELDING EQUIPMENT</option><option value="3432">3432 - ELECTRIC RESISTANCE WELDING EQ</option><option value="3433">3433 - GAS WELDING, HEAT CUTTING &amp; MT</option><option value="3436">3436 - WELDING POSITIONERS &amp; MANIPULA</option><option value="3438">3438 - MISC WELDING EQUIPMENT</option><option value="3439">3439 - MISC WELDING, SOLDERING &amp; BRAZ</option><option value="3441">3441 - BENDING &amp; FORMING MACHINES</option><option value="3442">3442 - HYDRAULIC &amp; PNEUMATIC PRESSES,</option><option value="3443">3443 - MECHANICAL PRESSES, POWER DRIV</option><option value="3444">3444 - MANUAL PRESSES</option><option value="3445">3445 - PUNCHING &amp; SHEARING MACHINES</option><option value="3446">3446 - FORGING MACHINERY &amp; HAMMERS</option><option value="3447">3447 - WIRE &amp; METAL RIBBON FORMING MA</option><option value="3448">3448 - RIVETING MACHINES</option><option value="3449">3449 - MISC SECONDARY METAL FORMING &amp;</option><option value="3450">3450 - MACHINE TOOLS, PORTABLE</option><option value="3455">3455 - CUTTING TOOLS FOR MACHINE TOOL</option><option value="3456">3456 - CUTTING &amp; FORMING TOOLS FOR SE</option><option value="3460">3460 - MACHINE TOOL ACCESSORIES</option><option value="3461">3461 - ACCESSORIES FOR SECONDARY META</option><option value="3465">3465 - PRODUCTION JIGS, FIXTURES &amp; TE</option><option value="3470">3470 - MACHINE SHOP SETS, KITS &amp; OUTF</option><option value="34GP">34GP - METALWORKING MACHINERY</option><option value="3510">3510 - LAUNDRY &amp; DRY CLEANING EQUIPME</option><option value="3520">3520 - SHOE REPAIRING EQUIPMENT</option><option value="3530">3530 - INDUSTRIAL SEWING MACHS &amp; MOBI</option><option value="3540">3540 - WRAPPING &amp; PACKAGING MACHINERY</option><option value="3590">3590 - MISC SERVICE &amp; TRADE EQUIPMENT</option><option value="35GP">35GP - SERVICE AND TRADE EQUIPMENT</option><option value="3605">3605 - FOOD PRODUCTS MACHINERY &amp; EQUI</option><option value="3610">3610 - PRINTING, DUPLICATING &amp; BOOKBI</option><option value="3611">3611 - INDUSTRIAL MARKING MACHINES</option><option value="3615">3615 - PULP &amp; PAPER INDUSTRIES MACHIN</option><option value="3630">3630 - CLAY &amp; CONCRETE PRODUCTS INDUS</option><option value="3635">3635 - CRYSTAL &amp; GLASS INDUSTRIES MAC</option><option value="3640">3640 - TOBACCO MANUFACTURING MACHINER</option><option value="3655">3655 - GAS GENERATING &amp; DISPENSING SY</option><option value="3680">3680 - FOUNDRY MACHINERY RELATED EQUI</option><option value="3694">3694 - CLN WORK STATIONS, CNTRLD ENVR</option><option value="3695">3695 - MISC SPECIAL INDUSTRY MACHINER</option><option value="3710">3710 - SOIL PREPARATION EQUIPMENT</option><option value="3720">3720 - HARVESTING EQUIPMENT</option><option value="3740">3740 - PEST, DISEASE &amp; FROST CONTROL </option><option value="3750">3750 - GARDENING IMPLEMENTS &amp; TOOLS</option><option value="3770">3770 - SADDLERY, HARNESS, WHIPS &amp; REL</option><option value="3805">3805 - EARTH MOVING &amp; EXCAVATING EQUI</option><option value="3810">3810 - CRANES &amp; CRANE SHOVELS</option><option value="3815">3815 - CRANE &amp; CRANE SHOVEL ATTACHMEN</option><option value="3820">3820 - MINING, ROCK DRILLING, EARTH B</option><option value="3825">3825 - ROAD CLEARING &amp; CLEANING EQUIP</option><option value="3830">3830 - TRUCK &amp; TRACTOR ATCHS</option><option value="3835">3835 - PETROLEUM PRODUCTION &amp; DISTRIB</option><option value="3895">3895 - MISC CONSTRUCTION EQUIPMENT</option><option value="38GP">38GP - CONSTRUCTION, MINING, EXCAVATI</option><option value="3910">3910 - CONVEYORS</option><option value="3920">3920 - MATERIALS HANDLING EQUIPMENT, </option><option value="3930">3930 - WAREHOUSE TRUCKS &amp; TRACTORS SE</option><option value="3940">3940 - BLOCKS, TACKLE, RIGGING &amp; SLIN</option><option value="3950">3950 - WINCHES, HOIST, CRANES, AND DE</option><option value="3960">3960 - FREIGHT ELEVATORS </option><option value="3990">3990 - MISC MATERIALS HANDLING EQUIPM</option><option value="39GP">39GP - MATERIALS HANDLING EQUIPMENT</option><option value="4010">4010 - CHAIN &amp; WIRE ROPE</option><option value="4020">4020 - FBR ROPE, CORDAGE &amp; TWINE</option><option value="4030">4030 - FITTINGS FOR ROPE, CABLE &amp; CHA</option><option value="4110">4110 - REFRIGERATION EQUIPMENT</option><option value="4120">4120 - AIR CONDITIONING EQUIPMENT</option><option value="4130">4130 - REFRIGERATION &amp; AIR CONDITIONI</option><option value="4140">4140 - FANS, AIR CRCLTRS &amp; BLOWER EQU</option><option value="41GP">41GP - REFRIGERATION, AIR CONDITIONIN</option><option value="4210">4210 - FIRE FIGHTING EQUIPMENT</option><option value="4220">4220 - MARINE LIFESAVING &amp; DIVING EQU</option><option value="4230">4230 - DECONTAMINATING &amp; IMPREGNATING</option><option value="4235">4235 - HAZARDOUS MATL SPILL CONTAINME</option><option value="4240">4240 - SAFETY &amp; RESCUE EQUIPMENT</option><option value="4250">4250 - RECYCLING AND RECLAMATION EUIP</option><option value="4310">4310 - COMPRESSORS &amp; VACUUM PUMPS</option><option value="4320">4320 - POWER &amp; HAND PUMPS</option><option value="4330">4330 - CENTRIFUGALS, SPRTRS &amp; PRESS &amp;</option><option value="43GP">43GP - PUMPS AND COMPRESSORS</option><option value="4410">4410 - INDUSTRIAL BOILERS</option><option value="4420">4420 - HEAT EXCHANGERS &amp; STEAM CONDEN</option><option value="4430">4430 - INDUSTRIAL FURNACES KILNS, LEH</option><option value="4440">4440 - DRIERS, DEHYDRATORS &amp; ANHYDRAT</option><option value="4460">4460 - AIR PURIFICATION EQUIPMENT</option><option value="4470">4470 - NUCLEAR REACTORS</option><option value="44GP">44GP - FURNACE, STEAM PLANT &amp; DRYING </option><option value="4510">4510 - PLUMBING FIXTURES &amp; ACCESSORIE</option><option value="4520">4520 - SPACE HEATING EQUIPMENT &amp; DOME</option><option value="4530">4530 - FUEL BURNING EQUIPMENT UNITS</option><option value="4540">4540 - MISC PLUMBING, HEATING &amp; SANIT</option><option value="45GP">45GP - PLUMBING, HEATING AND SANITATI</option><option value="4610">4610 - WATER PURIFICATION EQUIPMENT</option><option value="4620">4620 - WATER DISTILLATION EQUIPMENT, </option><option value="4630">4630 - SEWAGE TREATMENT EQUIPMENT</option><option value="4710">4710 - PIPE, TUBE AND RIGID TUBING</option><option value="4720">4720 - HOSE AND FLEXIBLE TUBING   </option><option value="4730">4730 - HOSE, PIPE, TUBE, LUBRICATION,</option><option value="47GP">47GP - PIPE, TUBING, HOSE &amp; FITTINGS</option><option value="4810">4810 - VALVES, POWERED</option><option value="4820">4820 - VALVES, NONPOWERED</option><option value="48GP">48GP - VALVES</option><option value="4910">4910 - MOTOR VEHICLE MAINT &amp; RPR SHP </option><option value="4920">4920 - AIRCRAFT MAINT &amp; REPAIR SHOP S</option><option value="4921">4921 - TORPEDO MAINTENANCE, REPAIR, A</option><option value="4925">4925 - AMMUNITION MAINT REPAIR/CHECKO</option><option value="4927">4927 - ROCKET MAINTENANCE REPAIR &amp; CH</option><option value="4930">4930 - LUBRICATION &amp; FUEL DISPENSING </option><option value="4931">4931 - FIRE CONTROL MAINTENANCE &amp; REP</option><option value="4933">4933 - WEAPONS MAINTENANCE &amp; REPAIR S</option><option value="4935">4935 - GUIDED MISSILE MAINT, RPR &amp; CK</option><option value="4940">4940 - MISC MAINTENANCE &amp; REPAIR SHOP</option><option value="49GP">49GP - MAINTENANCE AND REPAIR SHOP EQ</option><option value="5110">5110 - HAND TOOLS, EDGED, NONPOWERED</option><option value="5120">5120 - HAND TOOLS, NONEDGED, NONPOWER</option><option value="5130">5130 - HAND TOOLS, POWER DRIVEN</option><option value="5133">5133 - DRILL BITS, CNTRBRS &amp; CNTRSNKS</option><option value="5136">5136 - TAPS, DIES &amp; COLLETS; HAND &amp; M</option><option value="5140">5140 - TOOL &amp; HARDWARE BOXES</option><option value="5180">5180 - SETS, KITS &amp; OUTFITS OF HAND T</option><option value="51GP">51GP - HAND TOOLS</option><option value="5210">5210 - MEASURING TOOLS, CRAFTSMEN'S</option><option value="5220">5220 - INSPECTION GAGES &amp; PRECISION L</option><option value="5280">5280 - SETS, KITS &amp; OUTFITS OF MEASUR</option><option value="5305">5305 - SCREWS</option><option value="5306">5306 - BOLTS</option><option value="5307">5307 - STUDS</option><option value="5310">5310 - NUTS AND WASHERS</option><option value="5315">5315 - NAILS, KEYS &amp; PINS</option><option value="5320">5320 - RIVETS</option><option value="5325">5325 - FASTENING DEVICES</option><option value="5330">5330 - PACKING &amp; GASKET MATERIALS</option><option value="5331">5331 - O-RING</option><option value="5335">5335 - METAL SCREENING</option><option value="5340">5340 - MISCELLANEOUS HARDWARE</option><option value="5342">5342 - HARDWARE, WEAPON SYSTEM</option><option value="5345">5345 - DISKS &amp; STONES, ABRASIVE</option><option value="5350">5350 - ABRASIVE MATERIALS</option><option value="5355">5355 - KNOBS &amp; POINTERS</option><option value="5360">5360 - COIL, FLAT &amp; WIRE SPRINGS</option><option value="5365">5365 - RINGS, SHIMS &amp; SPACERS</option><option value="53GP">53GP - HARDWARE &amp; ABRASIVES</option><option value="5410">5410 - PREFABRICATED &amp; PORTABLE BUILD</option><option value="5411">5411 - RIGID WALL SHELTERS</option><option value="5420">5420 - BRIDGES, FIXED &amp; FLOATING</option><option value="5430">5430 - STORAGE TANKS</option><option value="5440">5440 - SCAFFOLDING EQUIPMENT &amp; CONCRE</option><option value="5445">5445 - PREFABRICATED TOWER STRUCTURES</option><option value="5450">5450 - MISC PREFABRICATED STRUCTURES</option><option value="5510">5510 - LUMBER &amp; RELATED BASIC WOOD MT</option><option value="5520">5520 - MILLWORK</option><option value="5530">5530 - PLYWOOD &amp; VENEER</option><option value="55GP">55GP - LUMBER, MILLWORK, PLYWOOD, &amp; V</option><option value="5610">5610 - MINERAL CONSTRUCTION MATERIALS</option><option value="5620">5620 - BLDG GLASS, TILE, BRICK &amp; BLOC</option><option value="5630">5630 - PIPE AND CONDUIT, NONMETALLIC</option><option value="5640">5640 - WALLBOARD, BUILDING PAPER &amp; TH</option><option value="5650">5650 - ROOFING &amp; SIDING MATERIALS</option><option value="5660">5660 - FENCING, FENCES &amp; GATES</option><option value="5670">5670 - BUILDING COMPONENTS, PREFABRIC</option><option value="5680">5680 - MISC CONSTRUCTION MATERIALS</option><option value="56GP">56GP - CONSTRUCTION AND BUILDING MATE</option><option value="5805">5805 - TELEPHONE &amp; TELEGRAPH EQUIPMEN</option><option value="5810">5810 - COMMUNICATIONS SECURITY EQUIPM</option><option value="5815">5815 - TELETYPE &amp; FACSIMILE EQUIPMENT</option><option value="5820">5820 - RADIO &amp; TV COMM EQPT, EXCEPT A</option><option value="5821">5821 - RADIO &amp; TV COMM EQPT, AIRBORNE</option><option value="5825">5825 - RADIO NVGTN EQPT, EXCEPT AIRBO</option><option value="5826">5826 - RADIO NAVIGATION EQUIPMENT, AI</option><option value="5830">5830 - IC &amp; PA SYSTEMS, EXCEPT AIRBOR</option><option value="5831">5831 - INTERCOM &amp; PUBLIC ADDRESS SYS,</option><option value="5835">5835 - SOUND RECORDING &amp; REPRODUCING </option><option value="5836">5836 - VIDEO RECORDING &amp; REPRODUCING </option><option value="5840">5840 - RADAR EQUIPMENT, EXCEPT AIRBOR</option><option value="5841">5841 - RADAR EQUIPMENT, AIRBORNE</option><option value="5845">5845 - UNDERWATER SOUND EQUIPMENT</option><option value="5850">5850 - VISIBLE &amp; INVISIBLE LIGHT COMM</option><option value="5855">5855 - NIGHT VISION EQUIPMENT, EMITTE</option><option value="5860">5860 - STIMULATED COHERENT RADN DVCS,</option><option value="5865">5865 - ELECTRONIC CNTRMSRS &amp; QK REACT</option><option value="5895">5895 - MISC COMMUNICATION EQUIPMENT</option><option value="58GP">58GP - COMMUNICATION, DETECTION &amp; COH</option><option value="5905">5905 - RESISTORS</option><option value="5910">5910 - CAPACITORS</option><option value="5915">5915 - FILTERS &amp; NETWORKS</option><option value="5920">5920 - FUSES, ARRESTERS, ABSORBERS, A</option><option value="5925">5925 - CIRCUIT BREAKERS</option><option value="5930">5930 - SWITCHES</option><option value="5935">5935 - CONNECTORS, ELECTRICAL</option><option value="5940">5940 - LUGS, TERMINALS &amp; TERMINAL STR</option><option value="5945">5945 - RELAYS &amp; SOLENOIDS</option><option value="5950">5950 - COILS &amp; TRANSFORMERS</option><option value="5955">5955 - OSCLLTRS &amp; PIEZO-ELECTRIC CRYS</option><option value="5960">5960 - ELECTRON TUBES &amp; ASSOCIATED HA</option><option value="5961">5961 - SEMICONDUCTOR DVCS &amp; ASSOCIATE</option><option value="5962">5962 - MICROCIRCUITS, ELECTRONIC</option><option value="5963">5963 - ELECTRONIC MODULES</option><option value="5965">5965 - HEADSETS, HANDSETS, MICROPHONE</option><option value="5970">5970 - ELECTRICAL INSULATORS &amp; INSULA</option><option value="5975">5975 - ELECTRICAL HARDWARE &amp; SUPYS, E</option><option value="5977">5977 - ELECTRICAL CONTACT BRSHS &amp; ELE</option><option value="5980">5980 - OPTOELECTRONIC DVCS &amp; ASSOC HA</option><option value="5985">5985 - ANTENNAS, WAVEGUIDES, AND RELA</option><option value="5990">5990 - SYNCHROS &amp; RESOLVERS</option><option value="5995">5995 - CABLE, CORD &amp; WIRE ASSYS: COMM</option><option value="5996">5996 - AMPLIFIERS</option><option value="5998">5998 - ELEC/ELEX ASSYS; BDS, CDS &amp; AS</option><option value="5999">5999 - MISC ELECTRICAL &amp; ELECTRONIC C</option><option value="59GP">59GP - ELECTRICAL &amp; ELECTRONIC EQUIPM</option><option value="6010">6010 - FIBER OPTIC CONDUCTORS</option><option value="6015">6015 - FIBER OPTIC CABLES</option><option value="6020">6020 - FIBER OPTIC CABLE ASSYS &amp; HARN</option><option value="6021">6021 - FIBER OPTICS SWITCHES</option><option value="6030">6030 - FIBER OPTIC DEVICES</option><option value="6032">6032 - FIBER OPTIC LIGHT SOURCES AND </option><option value="6035">6035 - FIBER OPTIC LIGHT TRANSFER &amp; I</option><option value="6060">6060 - FIBER OPTIC INTERCONNECTORS</option><option value="6070">6070 - FIBER OPTIC ACSYS &amp; SUPPLIES</option><option value="6080">6080 - FIBER OPTIC KITS &amp; SETS</option><option value="6099">6099 - MISC FIBER OPTIC COMPONENTS</option><option value="60GP">60GP - FIBER OPTICS MATERIALS, COMPON</option><option value="6105">6105 - MOTORS, ELECTRICAL</option><option value="6110">6110 - ELECTRICAL CONTROL EQUIPMENT</option><option value="6115">6115 - GENERATORS &amp; GENERATOR SETS, E</option><option value="6116">6116 - FUEL CELL POWER UNITS, CMPTS &amp;</option><option value="6120">6120 - TRANSFORMERS: DISTR &amp; POWER ST</option><option value="6125">6125 - CONVERTERS, ELCTRCL, ROTATING</option><option value="6130">6130 - CONVERTERS, ELECTRICAL, NONROT</option><option value="6135">6135 - BATTERIES, NONRECHARGEABLE</option><option value="6140">6140 - BATTERIES, RECHARGEABLE</option><option value="6145">6145 - WIRE &amp; CABLE, ELECTRICAL</option><option value="6150">6150 - MISC ELECTRIC POWER &amp; DISTR EQ</option><option value="6160">6160 - MISC BATTERY RETAINING FIXTURE</option><option value="61GP">61GP - ELECTRIC WIRE AND POWER DISTRI</option><option value="6210">6210 - INDOOR &amp; OUTDOOR ELEC LIGHTING</option><option value="6220">6220 - ELECTRIC VEHICULAR LIGHTS &amp; FI</option><option value="6230">6230 - ELECTRIC PORTABLE &amp; HAND LIGHT</option><option value="6240">6240 - ELECTRIC LAMPS</option><option value="6250">6250 - BALLASTS, LAMPHOLDERS &amp; STARTE</option><option value="6260">6260 - NONELECTRICAL LIGHTING FIXTURE</option><option value="62GP">62GP - LIGHTING FIXTURES &amp; LAMPS</option><option value="6310">6310 - TRAFFIC &amp; TRANSIT SIGNAL SYSTE</option><option value="6320">6320 - SHIPBOARD ALARM &amp; SIGNAL SYSTE</option><option value="6340">6340 - AIRCRAFT ALARM &amp; SIGNAL SYSTEM</option><option value="6350">6350 - MISC ALARM, SIGNAL &amp; SECURITY </option><option value="63GP">63GP - ALARM, SIGNAL, &amp; SECURITY DETE</option><option value="6505">6505 - DRUGS &amp; BIOLOGICALS</option><option value="6508">6508 - MEDICATED COSMETICS &amp; TOILETRI</option><option value="6510">6510 - SURGICAL DRESSING MATERIALS</option><option value="6515">6515 - MEDICAL &amp; SURGICAL INSTS EQPT </option><option value="6520">6520 - DENTAL INSTRUMENTS, EQPT &amp; SUP</option><option value="6525">6525 - X-RAY EQPT &amp; SUPYS: MED, DENTA</option><option value="6530">6530 - HOSPITAL FURNITURE, EQPT, UTEN</option><option value="6532">6532 - HOSPITAL &amp; SURGICAL CLOTHING &amp;</option><option value="6540">6540 - OPHTHALMIC INSTRUMENTS, EQUIPM</option><option value="6545">6545 - RPLNSHBL FIELD MED SETS, KITS </option><option value="6550">6550 - IN VITRO DIAG SUBS, RGNTS, TST</option><option value="65GP">65GP - MEDICAL, DENTAL &amp; VETERINARY E</option><option value="6605">6605 - NAVIGATIONAL INSTRUMENTS</option><option value="6610">6610 - FLIGHT INSTRUMENTS</option><option value="6615">6615 - AUTO PILOT MECHANISMS &amp; ARBRN </option><option value="6620">6620 - ENGINE INSTRUMENTS</option><option value="6625">6625 - ELECTRICAL &amp; ELECTRONIC PROP M</option><option value="6630">6630 - CHEMICAL ANALYSIS INSTRUMENTS</option><option value="6635">6635 - PHYSICAL PROPERTIES TESTING EQ</option><option value="6636">6636 - ENVIRONMENTAL CHMBRS &amp; RELATED</option><option value="6640">6640 - LABORATORY EQUIPMENT &amp; SUPPLIE</option><option value="6645">6645 - TIME MEASURING INSTS</option><option value="6650">6650 - OPTICAL INSTS, TST EQPT CMPTS </option><option value="6655">6655 - GEOPHYSICAL INSTS</option><option value="6660">6660 - METEOROLOGICAL INSTS &amp; APPARAT</option><option value="6665">6665 - HAZARD-DETECTING INSTRUMENTS A</option><option value="6670">6670 - SCALES &amp; BALANCES</option><option value="6675">6675 - DRAFTING, SURVEYING &amp; MAPPING </option><option value="6680">6680 - LIQ/GAS FLO, LQ LVL &amp; MECH MTN</option><option value="6685">6685 - PRESS, TEMP &amp; HUMIDITY MEASURI</option><option value="6695">6695 - COMBINATION &amp; MISC INSTRUMENTS</option><option value="66GP">66GP - INSTRUMENTS AND LABORATORY EQU</option><option value="6710">6710 - CAMERAS, MOTION PICTURE</option><option value="6720">6720 - CAMERAS, STILL PICTURE</option><option value="6730">6730 - PHOTOGRAPHIC PROJECTION EQUIPM</option><option value="6740">6740 - PHOTOGRAPHIC DEVELOPING &amp; FINI</option><option value="6750">6750 - PHOTOGRAPHIC SUPPLIES</option><option value="6760">6760 - PHOTOGRAPHIC EQUIPMENT &amp; ACCES</option><option value="6770">6770 - FILM PROCESSED</option><option value="6780">6780 - PHOTOGRAPHIC SETS, KITS &amp; OUTF</option><option value="67GP">67GP - PHOTOGRAPHIC EQUIPMENT</option><option value="6810">6810 - CHEMICALS</option><option value="6820">6820 - DYES</option><option value="6830">6830 - GASES, COMPRESSED &amp; LIQUEFIED</option><option value="6840">6840 - PEST CNTRL AGENTS &amp; DISINFECTA</option><option value="6850">6850 - MISCELLANEOUS CHEMICAL SPECIAL</option><option value="6910">6910 - TRAINING AIDS</option><option value="6920">6920 - ARMAMENT TRAINING DEVICES</option><option value="6930">6930 - OPERATIONAL TRAINING DEVICES</option><option value="6940">6940 - COMMUNICATION TRAINING DEVICES</option><option value="69GP">69GP - TRAINING AIDS AND DEVICES</option><option value="7010">7010 - ADPE SYSTEM CONFIGURATION</option><option value="7021">7021 - ADP CENTRAL PROCESSING UNIT (C</option><option value="7025">7025 - ADP INPUT/OUTPUT &amp; STORAGE DEV</option><option value="7035">7035 - ADP SUPPORT EQUIPMENT</option><option value="7045">7045 - ADP SUPPLIES</option><option value="7105">7105 - HOUSEHOLD FURNITURE</option><option value="7110">7110 - OFFICE FURNITURE</option><option value="7125">7125 - CABINETS, LOCKERS, BINS &amp; SHEL</option><option value="7195">7195 - MISC FURNITURE &amp; FIXTURES</option><option value="71GP">71GP - FURNITURE</option><option value="7210">7210 - HOUSEHOLD FURNISHINGS</option><option value="7220">7220 - FLOOR COVERINGS</option><option value="7230">7230 - DRAPES, AWNINGS &amp; SHADES</option><option value="7240">7240 - HOUSEHOLD &amp; COMMERCIAL UTILITY</option><option value="7290">7290 - MISC HOUSEHOLD &amp; COMMERCIAL FU</option><option value="72GP">72GP - HOUSEHOLD AND COMMERCIAL FURNI</option><option value="7310">7310 - FOOD COOKING, BAKING &amp; SERVING</option><option value="7320">7320 - KITCHEN EQUIPMENT &amp; APPLIANCES</option><option value="7330">7330 - KITCHEN HAND TOOLS &amp; UTENSILS</option><option value="7340">7340 - CUTLERY &amp; FLATWARE</option><option value="7350">7350 - TABLEWARE</option><option value="7360">7360 - SETS, KITS, OUTFITS, FOOD PREP</option><option value="73GP">73GP - FOOD PREPARATION &amp; SERVING EQU</option><option value="7420">7420 - ACCOUNTING &amp; CALCULATING MACHI</option><option value="7430">7430 - TYPEWRITERS &amp; OFFICE TYPE COMP</option><option value="7435">7435 - OFFICE INFORMATION SYSTEM EQUI</option><option value="7450">7450 - OFFICE TYPE SND RCRDNG REPRODU</option><option value="7460">7460 - VISIBLE RECORD EQUIPMENT</option><option value="7490">7490 - MISC OFFICE MACHINES</option><option value="74GP">74GP - OFFICE MACHINE, TEXT PROCESSIN</option><option value="7510">7510 - OFFICE SUPPLIES</option><option value="7520">7520 - OFFICE DEVICES &amp; ACCESSORIES</option><option value="7530">7530 - STATIONERY &amp; RECORD FORMS</option><option value="7610">7610 - BOOKS &amp; PAMPHLETS</option><option value="7650">7650 - DRAWINGS &amp; SPECIFICATIONS</option><option value="7660">7660 - SHEET &amp; BOOK MUSIC</option><option value="7670">7670 - MICROFILM, PROCESSED</option><option value="7690">7690 - MISC PRINTED MATTER</option><option value="76GP">76GP - BOOKS, MAPS AND OTHER PUBLICAT</option><option value="7710">7710 - MUSICAL INSTRUMENTS</option><option value="7720">7720 - MUSICAL INSTRUMENT PARTS &amp; ACC</option><option value="7740">7740 - PHONOGRAPH RECORDS</option><option value="7810">7810 - ATHLETIC &amp; SPORTING EQUIPMENT</option><option value="7820">7820 - GAMES, TOYS &amp; WHEELED GOODS</option><option value="7830">7830 - RECREATIONAL &amp; GYMNASTIC EQPT</option><option value="78GP">78GP - RECREATIONAL AND ATHLETIC EQUI</option><option value="7910">7910 - FLOOR POLISHERS &amp; VACUUM CLEAN</option><option value="7920">7920 - BROOMS, BRUSHES, MOPS &amp; SPONGE</option><option value="7930">7930 - CLEANING/POLISHING CMPNDS &amp; PR</option><option value="79GP">79GP - CLEANING EQUIPMENT &amp; SUPPLIES</option><option value="8010">8010 - PAINTS, DOPES, VARNISHES &amp; REL</option><option value="8020">8020 - PAINT &amp; ARTISTS' BRUSHES</option><option value="8030">8030 - PRSRVTV &amp; SEALING COMPOUNDS</option><option value="8040">8040 - ADHESIVES</option><option value="8105">8105 - BAGS &amp; SACKS</option><option value="8110">8110 - DRUMS AND CANS</option><option value="8115">8115 - BOXES, CARTONS &amp; CRATES</option><option value="8120">8120 - COMMERCIAL &amp; INDUSTRIAL GAS CY</option><option value="8125">8125 - BOTTLES &amp; JARS</option><option value="8130">8130 - REELS &amp; SPOOLS</option><option value="8135">8135 - PACKAGING &amp; PACKING BULK MATER</option><option value="8140">8140 - AMMO &amp; NUCLEAR ORD BOXES, PKGS</option><option value="8145">8145 - SPECIALIZED SHIPPING &amp; STORAGE</option><option value="8150">8150 - FREIGHT CONTAINERS</option><option value="81GP">81GP - CONTAINERS, PACKAGING AND PACK</option><option value="8305">8305 - TEXTILE FABRICS</option><option value="8310">8310 - YARN AND THREAD</option><option value="8315">8315 - NOTIONS &amp; APPAREL FINDINGS</option><option value="8320">8320 - PADDING &amp; STUFFING MATERIALS</option><option value="8325">8325 - FUR MATERIALS</option><option value="8330">8330 - LEATHER</option><option value="8335">8335 - SHOE FINDINGS &amp; SOLING MTRLS</option><option value="8340">8340 - TENTS &amp; TARPAULINS</option><option value="8345">8345 - FLAGS &amp; PENNANTS</option><option value="83GP">83GP - TEXTILES, LTHR, FURS, APRL &amp; S</option><option value="8405">8405 - OUTERWEAR, MEN'S</option><option value="8410">8410 - OUTERWEAR, WOMEN'S</option><option value="8415">8415 - CLOTHING, SPECIAL PURPOSE</option><option value="8420">8420 - UNDERWEAR &amp; NIGHTWEAR, MEN'S</option><option value="8425">8425 - UNDERWEAR &amp; NIGHTWEAR, WOMEN'S</option><option value="8430">8430 - FOOTWEAR, MEN'S</option><option value="8435">8435 - FOOTWEAR, WOMEN'S</option><option value="8440">8440 - HOSIERY, HANDWEAR, &amp; CLTHNG AC</option><option value="8445">8445 - HOSIERY, HANDWEAR, &amp; CLOTHING </option><option value="8450">8450 - CHILDRENS &amp; INFANTS' APPAREL &amp;</option><option value="8455">8455 - BADGES &amp; INSIGNIA</option><option value="8460">8460 - LUGGAGE</option><option value="8465">8465 - INDIVIDUAL EQUIPMENT</option><option value="8470">8470 - ARMOR, PERSONAL</option><option value="8475">8475 - SPECIALIZED FLIGHT CLOTHING &amp; </option><option value="84GP">84GP - CLOTHING, INDIVIDUAL EQUIPMENT</option><option value="8510">8510 - PERFUMES, TOILET PREPS &amp; POWDE</option><option value="8520">8520 - TOILET SOAP, SHAVING PREPS &amp; D</option><option value="8530">8530 - PERSONAL TOILETRY ARTICLES</option><option value="8540">8540 - TOILETRY PAPER PRODUCTS</option><option value="8710">8710 - FORAGE &amp; FEED</option><option value="8720">8720 - FERTILIZERS</option><option value="8730">8730 - SEEDS &amp; NURSERY STOCK</option><option value="8810">8810 - LIVE ANIMALS, RAISED FOR FOOD</option><option value="8905">8905 - MEAT, POULTRY &amp; FISH</option><option value="8910">8910 - DAIRY FOODS &amp; EGGS</option><option value="8915">8915 - FRUITS &amp; VEGETABLES</option><option value="8920">8920 - BAKERY &amp; CEREAL PRODUCTS</option><option value="8925">8925 - SUGAR, CONFECTIONERY &amp; NUTS</option><option value="8930">8930 - JAMS, JELLIES, &amp; PRESERVES</option><option value="8935">8935 - SOUPS &amp; BOUILLONS</option><option value="8940">8940 - SPECIAL DIETARY FOODS &amp; FOOD S</option><option value="8945">8945 - FOOD OILS &amp; FATS</option><option value="8950">8950 - CONDIMENTS &amp; RELATED PRODUCTS</option><option value="8955">8955 - COFFEE, TEA &amp; COCOA</option><option value="8960">8960 - BEVERAGES, NONALCOHOLIC</option><option value="8970">8970 - COMPOSITE FOOD PACKAGES</option><option value="89GP">89GP - SUBSISTENCE</option><option value="9110">9110 - FUELS, SOLID</option><option value="9130">9130 - LIQ PROPELLANTS &amp; FUELS, PETRO</option><option value="9135">9135 - LIQUID PROPELLANT FUELS &amp; OXID</option><option value="9140">9140 - FUEL OILS</option><option value="9150">9150 - OILS &amp; GREASES: CUTNG, LUBE &amp; </option><option value="9160">9160 - MISCELLANEOUS WAXES, OILS &amp; FA</option><option value="91GP">91GP - FUELS, LUBRICANTS, OILS &amp; WAXE</option><option value="9310">9310 - PAPER &amp; PAPERBOARD</option><option value="9320">9320 - RUBBER FABRICATED MATERIALS</option><option value="9330">9330 - PLASTICS FABRICATED MATERIALS</option><option value="9340">9340 - GLASS FABRICATED MATERIALS</option><option value="9350">9350 - REFRACTORIES &amp; FIRE SURFACING </option><option value="9390">9390 - MISC FABRICATED NONMETALLIC MT</option><option value="93GP">93GP - NONMETALLIC FABRICATED MATERIA</option><option value="9420">9420 - FIBERS: VEGETABLE, ANIMAL &amp; SY</option><option value="9430">9430 - MISC CRUDE ANIMAL PRODUCTS, IN</option><option value="9440">9440 - MISC CRUDE AGRI &amp; FORESTRY PRO</option><option value="9450">9450 - NONMETALLIC SCRAP, EXCEPT TEXT</option><option value="9505">9505 - WIRE, NONELECTRICAL, IRON &amp; ST</option><option value="9510">9510 - BARS &amp; RODS, IRON &amp; STEEL</option><option value="9515">9515 - PLATE, SHEET, STRIP &amp; FOIL; IR</option><option value="9520">9520 - STRUCTURAL SHAPES, IRON &amp; STEE</option><option value="9525">9525 - WIRE, NONELECTRICAL, NONFERROU</option><option value="9530">9530 - BARS &amp; RODS, NONFRRS BASE META</option><option value="9535">9535 - PLATE, SHEET, STRIP &amp; FOIL: NO</option><option value="9540">9540 - STRUCTURAL SHAPES, NONFERROUS </option><option value="9545">9545 - PLATE, SHEET, STRIP, FOIL &amp; WI</option><option value="95GP">95GP - METAL BARS, SHEETS, &amp; SHAPES</option><option value="9610">9610 - ORES</option><option value="9620">9620 - MINERALS, NATURAL &amp; SYNTHETIC</option><option value="9630">9630 - ADDITIVE METAL MTRLS &amp; MASTER </option><option value="9640">9640 - IRON &amp; STEEL PRMRY &amp; SEMIFINIS</option><option value="9650">9650 - NONFERROUS BASE MTL REFNRY &amp; I</option><option value="9660">9660 - PRECIOUS METALS PRIMARY FORMS</option><option value="96GP">96GP - ORES, MINERALS AND THEIR PRIMA</option><option value="9905">9905 - SIGNS, AD DISPLAYS &amp; ID PLATES</option><option value="9910">9910 - JEWELRY</option><option value="9920">9920 - SMOKERS' ARTICLES &amp; MATCHES</option><option value="9925">9925 - ECCLESIASTICAL EQPT, FURNISHIN</option><option value="9930">9930 - MEMORIALS; CEMETERIAL &amp; MORTUA</option><option value="9999">9999 - MISCELLANEOUS ITEMS</option><option value="99GP">99GP - MISCELLANEOUS</option><option value="ADMN">ADMN - ADMINISTRATIVE DATA</option><option value="ATTS">ATTS - AUTOMATIC TEST TECHNOLOGY STAN</option><option value="CMPS">CMPS - COMPOSITES TECHNOLOGY</option><option value="DCPS">DCPS - DATA COMMUNICATIONS PROTOCOL S</option><option value="DRPR">DRPR - DRAWING PRACTICES</option><option value="EDRS">EDRS - DOD ENGINEERING DATA REPRODUCT</option><option value="EGDS">EGDS - ENGINEERING DATA SYSTEMS</option><option value="EMCS">EMCS - ELECTROMAGNETIC COMPATIBILITY</option><option value="ENVR">ENVR - ENVIRONMENTAL REQUIREMENTS AND</option><option value="FACR">FACR - FACILITIES ENGINEERING &amp; DESIG</option><option value="FNCL">FNCL - FINANCIAL DATA</option><option value="FORG">FORG - FORGINGS</option><option value="GINT">GINT - GEOSPATIAL INTELLIGENCE TECHNO</option><option value="HFAC">HFAC - HUMAN FACTORS</option><option value="INST">INST - INFORMATION STANDARDS AND TECH</option><option value="IPSC">IPSC - INFORMATION PROCESSING STANDAR</option><option value="ISDA">ISDA - INTERNATIONAL STANDARDIZATION </option><option value="ISDD">ISDD - INTERNATIONAL STANDARDIZATION </option><option value="ISDF">ISDF - INTERNATIONAL STANDARDIZATION </option><option value="ISDN">ISDN - INTERNATIONAL STANDARDIZATION </option><option value="MCCR">MCCR - MISSION CRITICAL COMPUTER RESO</option><option value="MECA">MECA - METAL CASTINGS</option><option value="MFFP">MFFP - METAL FINISHES AND FINISHING P</option><option value="MGMT">MGMT - MANAGEMENT</option><option value="MISC">MISC - MISCELLANEOUS</option><option value="MSSM">MSSM - MODELING &amp; SIMULATION STANDARD</option><option value="NDTI">NDTI - NONDESTRUCTIVE TESTING &amp; INSPE</option><option value="NUOR">NUOR - NUCLEAR ORDNANCE</option><option value="PACK">PACK - PACKING, PACKAGING, PRESERVATI</option><option value="PSSS">PSSS - Product Support Standards and </option><option value="QCIC">QCIC - QUALITY CONTROL/ASSURANCE &amp; IN</option><option value="SAFT">SAFT - SYSTEM SAFETY</option><option value="SESS">SESS - SYSTEMS ENGINEERING STANDARDS </option><option value="SOLD">SOLD - SOLDERING</option><option value="SPVT">SPVT - SPACE VEHICLE TECHNOLOGY</option><option value="STDZ">STDZ - STANDARDIZATION</option><option value="TCSP">TCSP - TECHNICAL SUPPORT</option><option value="TCSS">TCSS - TELECOMMUNICATIONS SYSTEMS STA</option><option value="TELE">TELE - FEDERAL TELECOMMUNICATIONS STA</option><option value="THDS">THDS - SCREW THREADS</option><option value="THJM">THJM - THERMAL JOINING OF METALS (EXC</option><option value="TMSS">TMSS - TECHNICAL MANUAL SPECS &amp; STAND</option></select>
+                                                                         
+ 
+                                                                         <input type="hidden" name="ExListBoxFSCHF" id="ExListBoxFSCHF" value="1510">
+                                                                         <input type="hidden" name="ExListBoxFSCHFN" id="ExListBoxFSCHFN" value="73">
+                                                                     </td>
+                                                                 </tr>
+                                                             </tbody></table>
+                                                             </td>
+			<td align="right">
+                                                             <table width="100%">
+                                                               <tbody><tr>
+                                                               <td>
+                                                                    <span title="Check to use Document Date"><input id="UseTransDateCheckBox" type="checkbox" name="UseTransDateCheckBox"></span>
+                                                                     </td>
+                                                                   <td nowrap="nowrap">
+                                                                    <a id="TransactionDateHyperLink" title="Click here for more information about the Document Date" href="http://quicksearch.dla.mil/qshelp.htm#Document_Date" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Document Date:</a>
+                                                                   </td>
+                                                                </tr>
+                                                              </tbody></table>
+                                                                </td>
+			<td align="left">
+                                                               <table width="100%">
+                                                               <tbody><tr>
+                                                               <td>
+                                                                    <input name="TextBoxBegin_Date" type="text" value="25-Jul-2013" maxlength="11" id="TextBoxBegin_Date" title="Enter first date" style="font-family:Verdana;font-size:8pt;width:94px;">
+                                                                        <input type="hidden" name="TextBoxBegin_Date_HF" id="TextBoxBegin_Date_HF" value="25-Jul-2013">
+                                                                   </td>
+                                                                   <td>
+                                                                    <span id="Label3" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Between</span>
+                                                                    </td>
+                                                                   <td>
+                                                                    <input name="TextBoxEnd_Date" type="text" value="25-Jul-2014" maxlength="11" id="TextBoxEnd_Date" title="Enter second date" style="font-family:Verdana;font-size:8pt;width:94px;">
+                                                                    <input type="hidden" name="TextBoxEnd_Date_HF" id="TextBoxEnd_Date_HF" value="25-Jul-2014">
+                                                                </td>
+                                                                </tr>
+                                                            </tbody></table>
+                                                            </td>
+		</tr>
+		   
+
+</tbody></table>
+</td></tr>
+
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                        </tbody></table>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+</td>
+	</tr>
+</tbody></table>
+
+<div id="UpdatePanelWhole">
+<div id="ResultsPanel">
+	
+<script type="text/javascript">
+    //executeClientScriptsEx();
+</script>
+<input type="hidden" name="FromSession_HFS" id="FromSession_HFS" value="0">
+<input type="hidden" name="DocumentIDTextBox_HFS" id="DocumentIDTextBox_HFS">
+<input type="hidden" name="IDNumberTextBox_HFS" id="IDNumberTextBox_HFS">
+<input type="hidden" name="DropDownListStatus_HFS" id="DropDownListStatus_HFS">
+<input type="hidden" name="DocumentTitleKeyWords_HFS" id="DocumentTitleKeyWords_HFS">
+<input type="hidden" name="DropDownListContains_HFS" id="DropDownListContains_HFS">
+<input type="hidden" name="DropDownListTitleOrKeywords_HFS" id="DropDownListTitleOrKeywords_HFS">
+<input type="hidden" name="DropDownListOrganization_HFS" id="DropDownListOrganization_HFS">
+<input type="hidden" name="DropDownListOrganizationValue_HFS" id="DropDownListOrganizationValue_HFS">
+
+<input type="hidden" name="DropDownListPS_HFS" id="DropDownListPS_HFS">
+<input type="hidden" name="ExListBoxPAHFN_HFS" id="ExListBoxPAHFN_HFS">
+<input type="hidden" name="ExListBoxFSCHFN_HFS" id="ExListBoxFSCHFN_HFS">
+
+<input type="hidden" name="ListBoxDocType_HFS" id="ListBoxDocType_HFS">
+<input type="hidden" name="DropDownListTreatyOrg_HFS" id="DropDownListTreatyOrg_HFS">
+
+<input type="hidden" name="UseTransDateCheckBox_HFS" id="UseTransDateCheckBox_HFS">
+<input type="hidden" name="TextBoxBegin_Date_HFS" id="TextBoxBegin_Date_HFS" value="25-Jul-2013">
+<input type="hidden" name="TextBoxEnd_Date_HFS" id="TextBoxEnd_Date_HFS" value="25-Jul-2014">
+
+<input type="hidden" name="Command_HFS" id="Command_HFS">
+
+
+                                            <center>
+                                                       
+                                                                                    
+                                                                                    <input type="submit" name="GetFilteredButton" value="Search" onclick="javascript:return setSelection(1);" id="GetFilteredButton" style="font-family:Verdana;font-size:8pt;">
+                                                                                    <input type="submit" name="ResetButton" value="Reset" onclick="javascript: return resetFormEx();" id="ResetButton" style="font-family:Verdana;font-size:8pt;">
+                                                                                    
+                                                                                    <div style="display:none;">
+                                                                                    <input type="submit" name="RestoreButton" value="Restore" onclick="javascript:return setSelection(1);" id="RestoreButton" style="font-family:Verdana;font-size:8pt;width:140px;">
+                                                                                    <input type="submit" name="Command" value="Command" onclick="javascript:return setSelection(1);" id="Command" style="font-family:Verdana;font-size:8pt;width:140px;">
+                                                                                    </div>
+                                            <br>
+                                    
+                                     
+                                    
+                                    
+
+                                            <span id="LabelResult" style="color:Navy;font-family:Verdana;font-size:8pt;font-weight:bold;">Total records: 39</span>
+                                            </center>
+                                            <br>
+<table width="100%" border="0">
+<tbody><tr> 
+<td>  
+   <div>
+		<table class="gridviewDef" cellspacing="0" rules="all" border="1" id="DocumentSearchFilters" style="width:100%;border-collapse:collapse;">
+			<tbody><tr class="grid_header" style="white-space:nowrap;">
+				<th scope="col" style="white-space:nowrap;">Filter</th><th scope="col" style="white-space:nowrap;">Values</th>
+			</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+				<td align="right" style="color:Navy;font-weight:bold;width:20%;white-space:nowrap;">FSC/Area:</td><td align="left">1510</td>
+			</tr>
+		</tbody></table>
+	</div>
+</td>
+</tr>
+</tbody></table> 
+
+<div id="GridViewPanel">
+		
+<table width="100%" border="0">
+<tbody><tr> 
+<td align="left">  
+    
+    <input type="hidden" name="HiddenFieldSortOrder" id="HiddenFieldSortOrder" value="seqno asc,Status asc,fsc_code asc,Prep_Acty asc,doc_date asc,TITLE asc,image_exists asc,rev_refs_count asc,tot_refs_count asc,QPL_REQ desc,active_projects desc"> 
+  
+    <div>
+			<table class="gridviewDef" cellspacing="0" rules="all" border="1" id="GV" style="width:100%;border-collapse:collapse;">
+				<tbody><tr class="grid_header" style="color:Yellow;white-space:nowrap;">
+					<th title="Click here to sort by Images" scope="col" style="white-space:nowrap;"><a href="javascript:__doPostBack('GV','Sort$image_exists')" style="color:Yellow;">Img</a></th><th title="Click here to sort by Document ID" scope="col" style="white-space:nowrap;"><a href="javascript:__doPostBack('GV','Sort$seqno')" style="color:Yellow;">Document ID</a></th><th title="Click here to sort by Status" scope="col" style="white-space:nowrap;"><a href="javascript:__doPostBack('GV','Sort$Status')" style="color:Yellow;">Status</a></th><th title="Click here to sort by FSC/Area" scope="col" style="white-space:nowrap;"><a href="javascript:__doPostBack('GV','Sort$fsc_code')" style="color:Yellow;">FSC/<br>Area</a></th><th title="Click here to sort by Document Date" scope="col" style="white-space:nowrap;"><a href="javascript:__doPostBack('GV','Sort$doc_date')" style="color:Yellow;">Doc Date</a></th><th title="Click here to sort by Title" scope="col" style="white-space:nowrap;"><a href="javascript:__doPostBack('GV','Sort$TITLE')" style="color:Yellow;">Title</a></th>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=6973" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=6973" target="_self" title="Go to the Document Details.">MIL-A-8421F NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">28-May-1987</td><td align="left">Air Transportability Requirements, General Specification for (Future Acquisition use MIL-STD-1791)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7133" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7133" target="_self" title="Go to the Document Details.">MIL-D-8708C</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">12-Aug-1991</td><td align="left">Demonstration: Aircraft Weapon Systems, General Specification for</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7351" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7351" target="_self" title="Go to the Document Details.">MIL-A-8860B</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">20-May-1987</td><td align="left">Airplane Strength and Rigidity, General Specification for</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7353" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7353" target="_self" title="Go to the Document Details.">MIL-A-8861B(1)</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">05-Dec-1994</td><td align="left">Airplane Strength and Rigidity Flight Loads</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7355" target="_self" title="Go to the Document Details.">N</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7355" target="_self" title="Go to the Document Details.">MIL-A-8862</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">18-May-1960</td><td align="left">Airplane Strength and Rigidity-Landplane Landing and Ground Handling Loads (Use MIL-A-8863)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7356" target="_self" title="Go to the Document Details.">N</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7356" target="_self" title="Go to the Document Details.">MIL-A-008862A</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">12-Jul-1974</td><td align="left">Airplane Strength and Rigidity, Landing and Ground Handling Loads (S/S by MIL-A-8863)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7357" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7357" target="_self" title="Go to the Document Details.">MIL-A-8863C</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">19-Jul-1993</td><td align="left">Airplane Strength and Rigidity Ground Loads for  Navy Acquired Airplanes</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7358" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7358" target="_self" title="Go to the Document Details.">MIL-A-8864 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">10-Jun-1982</td><td align="left">Airplane Strength and Rigidity Water and Handling Loads for Sea Planes (No S/S Document)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7359" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7359" target="_self" title="Go to the Document Details.">MIL-A-8865B</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">20-May-1987</td><td align="left">Airplane Strength and Rigidity Miscellaneous Loads</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7361" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7361" target="_self" title="Go to the Document Details.">MIL-A-8866C NOT 1</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">03-Oct-1994</td><td align="left">Airplane Strength and Rigidity Reliability Requirements, Repeated Loads, Fatigue and Damage Tolerance</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7363" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7363" target="_self" title="Go to the Document Details.">MIL-A-8867C(1) NOT 1</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">03-Oct-1994</td><td align="left">Airplane Strength and Rigidity Ground Tests</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7365" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7365" target="_self" title="Go to the Document Details.">MIL-A-8868B(1) NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">04-May-1998</td><td align="left">Airplane Strength and Rigidity Data and Reports (No S/S Document)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7366" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7366" target="_self" title="Go to the Document Details.">MIL-A-8869B NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">20-Jun-1994</td><td align="left">Airplane Strength and Rigidity Nuclear Weapons Effects</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7368" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7368" target="_self" title="Go to the Document Details.">MIL-A-8870C</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">25-Mar-1993</td><td align="left">Airplane Strength and Rigidity Vibration, Flutter, and Divergence</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7370" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7370" target="_self" title="Go to the Document Details.">MIL-A-8871A NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">18-May-1987</td><td align="left">Airplane Strength and Rigidity Flight and Ground Operations Tests (for Future Procure. (see MIL-A-87221)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7379" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7379" target="_self" title="Go to the Document Details.">MIL-A-8892 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">18-May-1987</td><td align="left">Airplane Strength and Rigidity, Vibration (for Future Procure. (See MIL-A-87221)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7380" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=7380" target="_self" title="Go to the Document Details.">MIL-A-8893 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">18-May-1987</td><td align="left">Airplane Strength and Rigidity, Sonic Fatigue (for Future Procure. (See MIL-A-87221)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=86011" target="_self" title="Go to the Document Details.">N</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=86011" target="_self" title="Go to the Document Details.">MIL-P-11747</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">14-Feb-1952</td><td align="left">PAINTING, MARKING, AND INSIGNIA FOR U. S. ARMY AIRCRAFT, GENERAL SPECIFICATION FOR.</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=17946" target="_self" title="Go to the Document Details.">N</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=17946" target="_self" title="Go to the Document Details.">MIL-F-25352 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">15-Jun-1955</td><td align="left">Flutter, Divergence, and Reversal in Aircraft, Prevention of (Supersedes 1817)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=33774" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=33774" target="_self" title="Go to the Document Details.">MIL-A-83444 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">27-Mar-1987</td><td align="left">Airplane Damage Tolerance Requirements (For Future Procurements -(S/S by MIL-A-87221)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=34042" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=34042" target="_self" title="Go to the Document Details.">MIL-F-83691B NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">31-May-1996</td><td align="left">Flight Test Demonstration Requirements for Departure Resistance and Post-Departure Characteristics of Piloted Airplanes (No S/S Document)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=35252" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=35252" target="_self" title="Go to the Document Details.">MIL-A-87221 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">08-Jun-1990</td><td align="left">Aircraft Structures General Specification for (S/S by AFGS-87221)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=67832" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=67832" target="_self" title="Go to the Document Details.">MIL-E-87235(1) NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">15-Mar-1989</td><td align="left">Emergency Escape, Aircraft (S/S by AFGS-87235)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=71132" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=71132" target="_self" title="Go to the Document Details.">MIL-N-87237(1) NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">31-Aug-1995</td><td align="left">NAVIGATION EQUIPMENT, AIRBORNE (S/S BY AFGS-87237)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41874" target="_self" title="Go to the Document Details.">N</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41874" target="_self" title="Go to the Document Details.">MS33527C</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">09-Nov-1954</td><td align="left">CRITERIA, JET ELECTRICAL STARTING SYSTEM, DC</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41916" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41916" target="_self" title="Go to the Document Details.">MS33573B NOT 0</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">27-Jun-1978</td><td align="left">DIMENSION, CLEARANCE, COCKPIT, FIXED WING AIRCRAFT (S/S BY MIL-STD-1333 FOR ARMY AND DH2-2 FOR AIR FORCE)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41917" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41917" target="_self" title="Go to the Document Details.">MS33574B NOT 3</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">30-Jan-2013</td><td align="left">Dimensions, Basic, Cockpit, Stick-Controlled, Fixed Wing Aircraft (No S/S Document)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41919" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=41919" target="_self" title="Go to the Document Details.">MS33576B NOT 0</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">27-Jan-1978</td><td align="left">DIMENSION, BASIC, COCKPIT, WHEEL CONTROLLED, FIXED WING AIRCRAFT (USE MIL-STD1333 FOR ARMY &amp; NAVY AND DH2-2 FOR AIR FORCE)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=35613" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=35613" target="_self" title="Go to the Document Details.">MIL-STD-203G</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">01-Mar-1991</td><td align="left">Aircrew Station Controls and Displays: Location, Arrangement and Actuation of, for Fixed Wing Aircraft</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=73135" target="_self" title="Go to the Document Details.">N</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=73135" target="_self" title="Go to the Document Details.">MIL-STD-832(2)</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">03-Jun-1963</td><td align="left">PREPARATION OF DETAIL SPECIFICATIONS FOR AIRCRAFT (FIXED AND ROTARY WING) (USE MIL-STD 490)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=37147" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=37147" target="_self" title="Go to the Document Details.">MIL-STD-1791A NOT 1</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">11-Jun-2014</td><td align="left">Designing for Internal Aerial Delivery in Fixed Wing Aircraft</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=37149" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=37149" target="_self" title="Go to the Document Details.">MIL-STD-1793(1) NOT 2</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">19-Dec-1997</td><td align="left">FLIGHT PERFORMANCE, A1R VEHICLE (S/S BY MIL-HDBK-1793)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=37223" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=37223" target="_self" title="Go to the Document Details.">MIL-STD-2066(1) NOT 2</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">17-Mar-1999</td><td align="left">CATAPULTING AND ARRESTING GEAR FORCING FUNCTIONS FOR AIRCRAFT STRUCTURAL DESIGN (S/S BY MIL-HDBK-2066)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=203789" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=203789" target="_self" title="Go to the Document Details.">MIL-HDBK-1791(2) NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">19-Nov-2012</td><td align="left">Designing for Internal Aerial Delivery in Fixed Wing Aircraft (S/S by MIL-STD-1791)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=208712" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=208712" target="_self" title="Go to the Document Details.">MIL-HDBK-1793 NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">29-May-2003</td><td align="left">Flight Performance, Air Vehicle (Refer to MIL-STD-3013)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=205687" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=205687" target="_self" title="Go to the Document Details.">MIL-HDBK-2066 NOT 2</a></td><td align="center" style="white-space:nowrap;">A</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">07-Jan-2004</td><td align="left">Catapulting and Arresting Gear Forcing Functions for Aircraft Structural Design</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=98713" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=98713" target="_self" title="Go to the Document Details.">AFGS-87221A NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">01-Jun-1999</td><td align="left">Aircraft Structures, General Specification for (S/S by JSSG-2006)</td>
+				</tr><tr class="grid_alternate" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=98715" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=98715" target="_self" title="Go to the Document Details.">AFGS-87235B(1) NOT 1</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">08-Oct-1999</td><td align="left">Emergency Escape, Aircraft (S/S by JSSG-2010-11)</td>
+				</tr><tr class="grid_item" style="border-color:White;border-width:0px;font-family:Arial;font-size:8pt;">
+					<td align="center" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=98716" target="_self" title="Go to the Document Details.">Y</a></td><td align="left" style="white-space:nowrap;"><a href="http://quicksearch.dla.mil/qsDocDetails.aspx?ident_number=98716" target="_self" title="Go to the Document Details.">AFGS-87237A(1) NOT 2</a></td><td align="center" style="white-space:nowrap;">C</td><td align="center">1510</td><td align="center" style="white-space:nowrap;">12-Mar-2004</td><td align="left">Navigation Equipment, Airborne (NO S/S Document)</td>
+				</tr>
+			</tbody></table>
+		</div>
+</td> 
+</tr>
+</tbody></table>
+
+
+	</div>
+
+</div>
+         </div>
+    
+  <div id="UpdateProgressProject" style="display: none;" role="status" aria-hidden="true">
+	
+                    
+                   
+                    <div id="divProgressBar" class="divProgressBar">
+
+	</div>
+                    <div id="divMessage" class="divProgressMessage">
+		
+                        Wait...<img id="ImageRoll" src="./ASSIST-QuickSearch Basic Search_files/LoadingProgressBar.gif" style="border-width:0px;">
+                    
+	</div>
+        
+</div>
+    
+    </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":"UpdatePanelWhole","displayAfter":500,"dynamicLayout":true}, null, null, $get("UpdateProgressProject"));
+});
+//]]>
+</script>
+<span style="display: none !important;"><input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="LCyYPbiWSYyXn6ZtYxmUpBCujnM1md1a4EFCUuKFMKpm5MWLTYDzWfy7MS7i9HzSOlemkHETRiuizj+whYIDE0SSdjhQI9Tt2b1TFSr5E9+FiyXDBJkDxYDrRx+6mk4h4v6BhJrKyFGWIbH4sChyit6cJYAmecbw43XyPVvGWhmy0dHlBUV5HB4oi2mejsPj25ngF/rkSDfHLejOA6J4xGJcxWT4YhNlIkVwgKv7P+OFh6kcsFrHNtkoOvoohLrdpjNfDQGp90X5a7l99GTyrMj/IbpZMT+7aaOsQ1jd8+wWkzXOR9zCiD+HEjtvl5r/tpPTmk+ItPrvSIKNgItMIWtE0BuVMyibPjDUzxTcNhejdXA7OKRsO1FeXzcrk93Lgcnr6ReoFDrKUtooGYSEHV6Yg8eCT9CfzTSY4amwHrXfjNLfXozoot9cse7YeYuj+t7vu8pgbW6pkO3c2qFRQ4HncxqInN0z1dlm5pJt+g1hUJx4ce40VZEb/hhdr0t8szDH/ebDpm9wHA7Kl5swHWPhQsDntgNJ/WvGKlww6NlIWzbk65ySBX77bnex1xdyYbooNoRejxobV7uON9wjgeGOkxlLq3jutCNOr7xH/1qjt7X1jyOB6XrSi+EpqcyTHi2BWAIGteFSXtZPOHoOE6ji+zNdpgVCVHJ9w5ANnlJu34GVhG8YYSwLqsAt12Ns1Gq8d0x/jgyK4i7K/uoeXelSXMYBcP+uysJj2cr5fgiLfYE7gaR8fh7Qil5a7f7oCEU+UH7AIX4zB4hD4b5KR8grDn3XOORwjAAaXq/ZC8UL3DOGuBANROBeoqdROUAwtHUqN0hEXiYIHVh1p3dL7j/uKWmwKbhFumnPb8zbMBRzJY6ZmOBSnX1wXyBs59brgeJk4zvQUNgYAbcRwtzDHY1p2GnpdpTG5EcZJouv+/Mx4G1/ICeE5dFY5aWgCxIzTKQ4smPGUHVoI4MMYkWhJCR8sFvE+4MPja8jKZJ8LOARfPYAWVk8cMOB0D5GycsQSo8O7Vgpw9A4gdqzYF0ruzjeiO2S4EyBT367d0dtS6o4TGypMm+MCj0E4cj8rhDsc864WF8FIPc+YEjl4ekFnqgLTVjgXZb1nYG6NfrWmp2L1+odpNrArYOjGIUtTiCBMa0jUzFHpVkJzKhwqDtN1MbvB8ZVyVBC5jgqJMtAecHpYyPbYOeRkKLa2s3aHs5jiFt/ADG+rnyB6CSb99dAsvX/KtAEClPtxiDv6if1nmYOTvA9o92zLwwcDdN/now7eecGUYMCWJJCA+rHoCO+GVL/mHoVh2DHR2OK4fd9wuT1Uk3lARI687g4VheJc7N1YwOXCY1n+8PbtVnm9yf0EyONkRC7JBQIHB8wJe83ZIYCt8fiaH7U1y5uZsR5jHxD1WGQrKZfgMTfAzNlB2r5lGgzZu0kXK/aLs3qFATvwNZy9x/gmuUZkdg4lgHRjzS2uR0z64BcgSV3O8podngZRXK1nE7qe608sCqvCUmehJA7OUZ1qpzUtCcV3+QpzhqW1S+DLon9U41g67g6x8cwZCPvxnJBtCHx7kD9H8K6AY4tAMMoeZMgaxRRnGdbosSzYXVkInXC79TE9SeSaY1H4u5l0jiNcaW9vqWKpjTd60uuGTFEwbVfqrV6W+PkfOLz8vd23KKotPTL6QOQthB3LX6pbqJ4+SaYTulZi1TEfa1PKNud1jk5NucZ+U3a8ovrEJNkiDbcEV2Ye52HYVpD1cWQ3Gminjv0P3QxnnJ6uL9GRFNwXHGiWdqyu0SGiJq8nmgzrdQxE3ou/FA9hOEInxTdzqfMuqBIstRpfCKK/2AcP+kjfuto/Zt1BPGlqpwVlYsX8+VblLJlETRouMileiehfbZzm4uXAvnO2zYoW5dHjjYFiW4reR4lDKDt6oefpxoEA4LGyg/KC6tnnCnuqpKwbZmD2/GpBpm9RtvNsdhJevaeVrks+jZS21npxpv68vo95jkFIqtcHzmMoTCit3aTVFP8mBApkLjAWIRZaySYyLcsaBQZR65a7tQTM3XbFmrz/NLR7bc1KxqDn7W8qCMsoE1Ez68uavJHthE2Ezxawe8ePHlSI7bphF2ml3uFwYBQPXmgobgGeO42ojXFnse71zH+QOcWnGk5z7271JJE65j+Razjz/e/qQeyY5xPvaju5nkW2doI8tMyq/WzAJEziOeXlmcfCZBdOI8CugFCt0sS+eqXUepTpikUPB8zEBJGvhAh1/QrJmJpKb4fD7H7xvCnztS7yMYlHxKG0FcmDG746l0CPRjOJ9QZ7DB0tvceuPCGylnmqehPFR8aFdtdEy/znfrl/bIe01jhcHfeOUua65TN4vTe2wPB5OsWu6h/TM6qwqNWVH+KyKK1xDqpcH2nHlVO10z54/3N55NoOMFfkz4yVBf8CQJGxVDaxY/xh3/xp4SQQD5AjHtuvuhv32URBFAOjsQU2e0eEyKEhk2V6kPC8cymWxYtjN0xP/rCJSHSwiQPGWhYJjrDwXmUmN8bvbc1hDL+BRDEsJTloXF0bRZCx61OtMNcK6ks"></span><span style="display: none !important;"><input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="wzAYMMf2tDg+g8yEQZtZcyLPh7wGT2xOcaDYYjTBKI1J1haIEtplGH0SmNzGkUFPNLVAdG5Mvv8I7N045RMqHgSEieQx/c4W7Xo3mJYtJpVWbX7cT767nCxruiSxsg7ZIt7SyfY7lyrKpTwnfRMbjX/A9v6hMs/beSwx0mUEGImmhCIQE1SL5TYrgnrnwDQ/fTh12vLQMMEj5zh+JDsrhd84HpWHBiH47gvlcKgwZH9w5FavUEp9Wgy+CP3pkD0lSkmdmttYx5AdEs7mFqoTBOtAuMnqxtk2rWU1MaQ75BEUgGHLDwtuPyERDeWgLNlw5CMAoo012+ErODfhdWeufx1CZE5xh7Dk+nDEGizYq5DT9ZXS+UWkHhcbbGcyH9FDILEt1saIHdHNy8cIhGqVv3eSXB1MstLA2MGH9GznbDpK7scmMMpx5bgU93VPhlnvAlEMmj47++AsYG5nnvkBvGDe1XxVyP9n0zTREaoHCtXuk9rbYRAsiZUuW98W9OJz5874oKzTX5btZzUk8qBxd0ke6nzSsjfO32BdaPodEJ3Oob+W4Byt/XreaJoU+iwoZyLwbfNT8EdQ3C5BiWmRGtdi0UEF2vaDTNLY3Rr/pErJN///yRlG6s7g+JkDVepQvlRh3SeiGc+CpgQrMdQzWrvBPRgmaGf/cKu8jsuzW2/y9dX34G37vL87Z64K5VfP5VaxL3A/p+t2k9XeXTaBzR96g7AgLP4P6TusslOn6wJir7ZwAg47J3UmLc14jTQxSOno4hmfbhqKY8znXSLm9RKtBOmkjn+7myKt9fp6ByVBAqQAE4fhpvnXhM7lDbH6zrT9i9yEhl8q6P5EEnotOlD+RjZ7eaRsILt2XyNnOp4qePsYMCC1P/Thl1P0ekvkiVHXuBoxn69yVzUFP9NmJZ3jCpknwoNcXXEaZ2D4dylGUTP6Av4uulNsak3S8ogv/0aPa77Tf62e+p64uQzXdtG9pW85tilCw724iFTrjXE81MSQ2KMINqAyX+8GphD2yK2SNhkifShhdv6A7v8wxyBO5uiylTfJgDFfZoy/nNVe910plb/34jBwAa0d5kAEHjkDksXmcYdQ68ofwPrzSUs+vQoZX5/YMKrRic2DfmawbFCvNQOzKmloZsyzudeQ/eu6W9wXDePshziUkL6WlRN1Si3TYU/bu8OLYcUQtO0="></span><span style="display: none !important;"><input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""></span><span style="display: none !important;"><input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""></span><span style="display: none !important;"><input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value=""></span></form>
+
+
+
+
+    <center>
+ <table width="800" cellspacing="0">
+    <tbody><tr>
+        <td align="center">
+            <font face="Arial" size="-2"><a href="http://quicksearch.dla.mil/qsOverview.htm" target="top" onmouseover="window.status=&#39;Click here to see an overview about ASSIST.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to see an overview about ASSIST">
+                About ASSIST</a>&nbsp;|&nbsp; <a href="https://assist.dla.mil/online/start/index.cfm" target="top" onmouseover="window.status=&#39;Click here to go to ASSIST Online.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to go to ASSIST Online">ASSIST
+                    Online</a>&nbsp;|&nbsp; <a href="http://www.assistdocs.com/" target="top" onmouseover="window.status=&#39;Click here to go to assistdocs.com.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to go to assistdocs.com">assistdocs.com</a>&nbsp;|&nbsp;
+                <a href="https://assist.dla.mil/wizard/index.cfm" target="top" onmouseover="window.status=&#39;Click here to go to ASSIST Shopping Wizard.&#39;;return true" onmouseout="window.status=&#39;&#39;" title="Click here to go to ASSIST Shopping Wizard">
+                    ASSIST Shopping Wizard</a> </font>
+        </td>
+    </tr>
+</tbody></table>
+ 
+<hr width="800" color="navy">
+<table width="800" cellspacing="0">
+    <tbody><tr>
+        <td width="87" align="center" valign="top" nowrap="nowrap">
+                <img src="./ASSIST-QuickSearch Basic Search_files/dod_logo_new.gif" alt="Department of Defense" border="0" width="55" height="55" align="top" title="Department of Defense">
+        </td>
+        <td width="2" align="center" valign="top" nowrap="nowrap">
+            <img src="./ASSIST-QuickSearch Basic Search_files/linevertical.gif" width="2" height="53" border="0" alt="">
+        </td>
+        <td align="center" valign="top">
+            <font face="Arial" size="-3" color="Black">DLA Document Services, Building 4/D, 700
+                Robbins Avenue, Philadelphia, PA 19111-5094.<br>
+                If you have any questions, please contact the ASSIST-Help Desk team at<br>
+                215-697-6396 [DSN: 442-6396 ].<br>
+                <a onmouseover="window.status=&#39;Click here for more information about Privacy and Security.&#39;;return true" onmouseout="window.status=&#39;&#39;" style="text-decoration: underline; color: blue" href="http://quicksearch.dla.mil/qsPrivacy.htm" title="Click here for more information about Privacy and Security">
+                    Privacy and Security Information</a> and <a onmouseover="window.status=&#39;Click here for more information about Section 508 Compliance.&#39;;return true" onmouseout="window.status=&#39;&#39;" style="text-decoration: underline; color: blue" href="http://dodcio.defense.gov/DoDSection508/Std_Stmt.aspx" title="Click here for more information about Section 508 Compliance">
+                        Section 508 Compliance Information</a>. Questions or comments: <a onmouseover="window.status=&#39;Click here for more information about ASSIST Feedback.&#39;;return true" onmouseout="window.status=&#39;&#39;" style="text-decoration: underline; color: blue" href="https://assist.dla.mil/feedback/index.cfm" title="Click here for more information about ASSIST Feedback" target="_top">ASSIST Feedback</a>.<br>
+            </font>
+        </td>
+        <td width="2" align="center" valign="top" nowrap="nowrap">
+            <img src="./ASSIST-QuickSearch Basic Search_files/linevertical(1).gif" width="2" height="53" border="0" alt="">
+        </td>
+        <td width="87" align="center" valign="top" nowrap="nowrap">
+            <a href="http://www.dsp.dla.mil/" onmouseover="window.status=&#39;Go to Defense Standardization Program.&#39;;return true" onmouseout="window.status=&#39;&#39;" target="top">
+                <img src="./ASSIST-QuickSearch Basic Search_files/dspo_logo_new.gif" alt="Go to Defense Standardization Program" border="0" width="55" height="55" align="top" title="Go to Defense Standardization Program">
+                    </a>
+        </td>
+    </tr>
+</tbody></table>
+<hr width="800" color="navy">
+<table width="800" border="0" cellspacing="0" cellpadding="0" align="center">
+    <tbody><tr>
+        <td>
+            <table width="100%" border="0" align="center">
+                <tbody><tr>
+                    <td>
+                        <font face="Arial" size="-3" color="Black">WARNING: UNAUTHORIZED ACCESS TO THIS UNITED
+                            STATES GOVERNMENT COMPUTER SYSTEM AND SOFTWARE IS PROHIBITED BY PUBLIC LAW 99-474
+                            (THE COMPUTER FRAUD AND ABUSE ACT OF 1986) AND CAN RESULT IN ADMINISTRATIVE, DISCIPLINARY
+                            OR CRIMINAL PROCEEDINGS. </font>
+                    </td>
+                </tr>
+            </tbody></table>
+        </td>
+    </tr>
+</tbody></table>
+</center>
+
+    </td>
+</tr>
+
+    
+
+    
+ 
+
+
+</tbody></table>
+    </center>
+ </div>
+
+
+</body></html>

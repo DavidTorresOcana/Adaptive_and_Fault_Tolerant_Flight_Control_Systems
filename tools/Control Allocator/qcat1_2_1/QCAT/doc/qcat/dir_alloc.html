@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dir_alloc</title>
+  <meta name="keywords" content="dir_alloc">
+  <meta name="description" content="DIR_ALLOC - Direct control allocation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>dir_alloc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>DIR_ALLOC - Direct control allocation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,a] = dir_alloc(B,v,umin,umax) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DIR_ALLOC - Direct control allocation.
+
+  [u,a] = dir_alloc(B,v,umin,umax)
+
+ Performs direct control allocation by solving the LP
+
+   max a   subj. to  Bu = av
+   a,u               umin &lt;= u &lt;= umax
+
+ If a &gt; 1, set u = u/a.
+
+ Note: This function has not been optimized for speed.
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ v     commanded virtual control (k x 1)
+ umin  lower position limits (m x 1)
+ umax  upper position limits (m x 1)
+ 
+  Outputs:
+  -------
+ u     optimal control
+ a     scaling factor
+
+ See also: <a href="dir_sim.html" class="code" title="function [u,W,time] = dir_sim(B,v,plim,varargin)">DIR_SIM</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,a] = dir_alloc(B,v,umin,umax)</a>
+0002   
+0003 <span class="comment">% DIR_ALLOC - Direct control allocation.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,a] = dir_alloc(B,v,umin,umax)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Performs direct control allocation by solving the LP</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   max a   subj. to  Bu = av</span>
+0010 <span class="comment">%   a,u               umin &lt;= u &lt;= umax</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% If a &gt; 1, set u = u/a.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Note: This function has not been optimized for speed.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  Inputs:</span>
+0017 <span class="comment">%  -------</span>
+0018 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0019 <span class="comment">% v     commanded virtual control (k x 1)</span>
+0020 <span class="comment">% umin  lower position limits (m x 1)</span>
+0021 <span class="comment">% umax  upper position limits (m x 1)</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%  Outputs:</span>
+0024 <span class="comment">%  -------</span>
+0025 <span class="comment">% u     optimal control</span>
+0026 <span class="comment">% a     scaling factor</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% See also: DIR_SIM.</span>
+0029     
+0030 <span class="comment">% Number of variables</span>
+0031   [k,m] = size(B);
+0032   
+0033   <span class="comment">% Reformulate problem to fit linprog format:</span>
+0034   <span class="comment">%</span>
+0035   <span class="comment">% min f'x subj. to A*x &lt;=b</span>
+0036   <span class="comment">%                  Aeq*b = beq</span>
+0037   <span class="comment">%             lb &lt;= x &lt;= ub</span>
+0038   
+0039   <span class="comment">% x = [a ; u]</span>
+0040   <span class="comment">% f' = [-1 0 ... 0] (min -a &lt;-&gt; max a)</span>
+0041   f = [-1 zeros(1,m)]';
+0042   <span class="comment">% A, b empty</span>
+0043   A = [];
+0044   b = [];
+0045   <span class="comment">% Bu = av &lt;=&gt; [-v B]x = 0</span>
+0046   Aeq = [-v B];
+0047   beq = zeros(k,1);
+0048   <span class="comment">% a &gt;= 0, umin &lt;= u &lt;= umax</span>
+0049   lb = [0 umin']';
+0050   ub = [1e4 umax']'; <span class="comment">% 1e4 should be infty but error if too large.</span>
+0051   
+0052   <span class="comment">% Solve linear program</span>
+0053   options = optimset(<span class="string">'Display'</span>, <span class="string">'off'</span>);
+0054   x = linprog(f,A,b,Aeq,beq,lb,ub,[],options);
+0055   a = x(1);
+0056   u = x(2:end);
+0057   
+0058   <span class="comment">% Scale down u if a&gt;1</span>
+0059   <span class="keyword">if</span> a&gt;1
+0060     u = u/a;
+0061   <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,477 @@
+﻿body
+{
+	background-color: white;
+    margin: 0 0 0 0;
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
+.button_default
+{
+    background-color: #6699FF;
+    font-family: Verdana,helvetica,sans-serif;
+    font-weight: bold; 
+    font-Size: X-Small; 
+    color:White ;
+}
+
+.alert_popup
+{
+    background-color:White;
+    font-Size: 0.7em; 
+    padding: 3px;
+    height: 88px;
+    width: 280px;
+}
+.confirm
+{
+    background-color:White;
+    font-Size: 0.7em; 
+    padding: 3px;
+    height: 100px;
+    width: 420px;
+}
+        
+.dynamic_menu
+{
+   text-align: left;
+   background-color: #666699;
+   font-Size: 0.6em; 
+}
+
+.alert_text
+{
+	font-family: Verdana, Helvetica, sans-serif;
+	text-align: justify;
+	color: Red; 
+	font-size: 0.7em;
+}
+
+.defaultLable
+{
+    color: Black;
+	font-family: Verdana,helvetica,sans-serif;
+	font-size: 0.7em;
+	font-weight: bold;
+}
+
+.deleteBackground
+{
+    background-color: DarkSalmon;
+    font-family: Verdana,helvetica,sans-serif;
+    font-size: 0.7em;
+	padding: 3px 3px 3px 3px;
+}
+
+.detailedView_header
+{
+   background-color: #284E98;
+   color: White;
+   font-family: Verdana,helvetica,sans-serif;
+   font-size: 0.7em;
+   font-weight: bold;
+   padding: 3px 3px 3px 3px;
+   text-align: center;
+}
+
+.detailedView_fieldheader
+{
+   font-family: Verdana,helvetica,sans-serif;
+   font-size: 0.8em;
+   font-weight: bold;
+   padding: 3px 3px 3px 3px;
+}
+
+.detailedView_field
+{
+   font-family: Verdana,helvetica,sans-serif;
+   font-size: 0.7em;
+   padding: 3px 3px 3px 3px;
+}
+
+.footer_text
+{
+	font-family: Verdana, Helvetica, sans-serif;
+	text-align: justify;
+	color: Gray; 
+	font-size: 0.6em;
+	height: 47px;
+}
+
+.grid_alternate
+{
+/*	background-color: #f5f5dc;*/
+	background-color: #E3E3FF;
+	color: Navy;
+	font-family: Verdana,helvetica,sans-serif;
+    font-size: 0.7em;
+	padding: 3px 3px 3px 3px;
+}
+
+.grid_header
+{
+   text-align: center;
+/*   background-color: #284E98;
+   color: White; */
+   background-color: Navy;
+   color: yellow;
+   font-family: Verdana,helvetica,sans-serif;
+   font-size: 0.7em;
+   font-weight: bold;
+   padding: 3px 3px 3px 3px;
+}
+
+.grid_item
+{
+   background-color: White;
+   color: Black;
+   font-family: Verdana,helvetica,sans-serif;
+   font-size: 0.7em;
+   padding: 3px 3px 3px 3px;
+}
+
+.grid_select
+{
+	background-color: #99ccFF;
+	font-family: Verdana,helvetica,sans-serif;
+    font-size: 0.7em;
+	padding: 3px 3px 3px 3px;
+}
+
+.grid_edit
+{
+    background-color: #99ccFF;
+	font-family: Verdana,helvetica,sans-serif;
+    font-size: 0.7em;
+	padding: 3px 3px 3px 3px;
+}
+
+.print_tbl
+{
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+	padding: 0.2em 2ex 0.2em 2ex;
+	color: black;
+}
+
+.print_td
+{
+	border-color: black;
+    border-width: 1px 1px 0 0;
+    border-style: solid;
+    margin: 0;
+}
+.textToUpper
+{
+	text-transform: uppercase;
+}
+
+.popUpStyle
+    {
+        font: normal 11px auto "Trebuchet MS", Verdana;    
+        /*background-color: Gray;
+         filter:alpha(opacity=80);
+         opacity: 0.8;*/
+        background-color: #000;
+        padding:6px;  
+        filter: alpha(opacity=50);
+        opacity: 0.5;
+    }
+    
+.drag
+{
+    background-color: #dddddd;
+    cursor: move;
+    border:solid 1px gray ;
+}
+
+.pnlOverview{
+    font-weight: bold;
+    font-family: Verdana;
+    font-size: 0.7em;
+    color: White;
+    background-color: #284E98;
+    cursor: pointer;
+    padding: 3px 3px 3px 3px;
+}  
+.popup_Titlebar
+{
+	background: url(../../Images/titlebar_bg.jpg);
+	height: 29px;
+}
+    
+.TitlebarLeft 
+{
+	float:left;
+	padding-left:5px;
+	padding-top:5px;
+	font-family:Verdana;
+	font-weight:bold;
+	font-size:12px;
+	color:#FFFFFF;
+}
+
+.TitlebarRight 
+{
+	background:url(../../Images/close_icon.png);
+	background-position:right;
+	background-repeat:no-repeat;
+	height:15px;
+	width:16px;
+	float:right;
+	cursor:pointer;
+	margin-right:5px;
+	margin-top:5px;
+}
+
+.UpperCase
+{
+    text-transform: uppercase;        
+}
+
+.google .ajax__tab_header 
+{
+	font-size:0.9em;
+	font-weight:bold;
+    font-family:Verdana;
+    border-bottom:solid 1px #dddddd;
+}
+.google .ajax__tab_body 
+{
+    font-family:Verdana;
+    font-size:1.1em;
+    padding:8px;
+    border:solid 1px #dddddd;
+    border-top:none;
+} 
+/* Active/Hover States */
+.google .ajax__tab_active .ajax__tab_outer
+{
+    margin-right:4px;
+	background:url(../../Images/active-tl.gif) no-repeat left top;    
+}
+.google .ajax__tab_active .ajax__tab_inner
+{
+    margin-left:4px;
+	background:url(../../Images/active-tr.gif) no-repeat right top;        
+}
+.google .ajax__tab_active .ajax__tab_tab
+{
+	margin-right:4px;	
+	padding:5px 3px;
+	color:#fff;
+	background:#666666;
+	text-decoration:none;
+}
+/* Regular States */
+.google .ajax__tab_outer
+{
+    margin-right:4px;
+	background:url(../../Images/inactive-tl.gif) no-repeat left top;   	
+}
+.google .ajax__tab_inner
+{
+    margin-left:4px;
+	background:url(../../Images/inactive-tr.gif) no-repeat right top;  	
+}
+.google .ajax__tab_tab
+{
+	margin-right:4px;
+	padding:5px 3px;
+	color:#0d4eb2;
+	background:url(../../Images/inactive-mid.gif) repeat-x;
+	text-decoration:underline;
+}
+
+.failed_text
+{
+    font-family: Verdana, Helvetica, sans-serif;
+	text-align: justify;
+	color: Red; 
+	font-size: 0.9em;
+}
+
+.succeed_text
+{
+    font-family: Verdana, Helvetica, sans-serif;
+	text-align: justify;
+	color: Navy; 
+	font-size: 0.9em;
+}
+
+.highlight
+{
+    background-color:Yellow;
+}
+
+.validation_text
+{
+	font-family: Verdana, Helvetica, sans-serif;
+	text-align: justify;
+	color: Red; 
+	font-size: 0.7em;
+}
+
+.watermark
+{
+    color:GrayText;
+}
+
+.reportViewerStyle
+ {
+   display: table !important; 
+   margin: 0px; 
+   overflow: auto !important;
+   font-family:Verdana;
+   font-size: 0.7em;
+ }
+
+.header_label_ex
+{
+	color: Navy;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+}
+.name_labels
+{
+	color: navy;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+}
+.font_subheaders
+{
+	color: maroon;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-style: italic;
+	font-weight: bold;
+}
+.header_label
+{
+	color: Navy;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+}
+/*.font_quwestionsubheaders
+{
+	color: black;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-style: italic;
+	font-weight: bold;
+}
+*/
+.font_quwestionsubheaders
+{
+	color: navy;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+}
+.font_panel
+{
+	color: black;
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+.qsfont_panel
+{
+	color: black;
+	background-color: white;
+	font-family:  Arial, Verdana, Helvetica, sans-serif;
+	font-size: 0.8em;
+}
+.qsfontTableHeader
+{
+	color:  Yellow;
+	background-color: Navy;
+	font-family:  Arial, Verdana, Helvetica, sans-serif;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 1.5em;
+}
+.divProgressBar
+{
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    /*background-color: #000;*/
+    background-color: #fff;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    z-index: 1000;
+}
+.divProgressMessage
+{
+    position: fixed;
+    top: 30%;
+    left: 43%;
+    padding: 10px;
+    width: 14%;
+    z-index: 1001;
+    background-color: #fff;
+    border: solid 1px #000;
+    vertical-align: middle;
+}
+
+.buttonNav
+        {
+            color: Blue;
+        }
+        input[disabled="disabled"][type="button"]
+        {
+            color: Gray;
+        }
+        input[disabled="disabled"][type="submit"]
+        {
+            color: Gray;
+        }
+.gridviewDef
+   {
+   	
+   }        
+.gridviewDef td
+    {
+       border: solid 1px #c1c1c1;    
+	}
+.gridviewDef th
+    {
+       border: solid 1px #c1c1c1;    
+	}  
+	
+	.gridviewDefNoBorder
+   {
+   	
+   }        
+.gridviewDefNoBorder td
+    {
+       border: solid 0px #c1c1c1;    
+	}
+.gridviewDefNoBorder th
+    {
+       border: solid 0px #c1c1c1;    
+	}  
+	
+	
+table.padded-table-2 td 
+{ 
+	padding-top:0px;
+	padding-right:0px; 
+	padding-bottom:0px;
+	padding-left:0px; 
+}
+       

@@ -6,11 +6,11 @@ For flight control systems, this paper proposes an adaptive control approach bas
 
 ## Docs and publications 
 See here Thesis Doc, which explain the theory behind the submission:
->   [Plain (PDF)](https://dl.bintray.com/matej/thesis/thesis-master.pdf)
+>   [Thesis PDF](https://dl.bintray.com/matej/thesis/thesis-master.pdf)
 
 See here IFAC submition, which explain the the plant model and Adaptive Neural Networks theory and implementation:
 
->   [Sample Clean (PDF)](https://dl.bintray.com/matej/thesis/clean-master.pdf)
+>   [IFAC publication PDF](https://dl.bintray.com/matej/thesis/clean-master.pdf)
 
 ## Motivation
 

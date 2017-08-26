@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of vview_demo</title>
+  <meta name="keywords" content="vview_demo">
+  <meta name="description" content="VVIEW_DEMO - Demo of the VVIEW command.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>vview_demo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>VVIEW_DEMO - Demo of the VVIEW command.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function vview_demo </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> VVIEW_DEMO - Demo of the VVIEW command.
+
+ Choose between a number of examples illustrating VVIEW. Issues
+ the command VVIEW(B,plim,pinv(B)) for various choices of B.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="vview.html" class="code" title="function ratio = vview(B,plim,P)">vview</a>	VVIEW - View the attainable virtual control set.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vview_demo</a>
+0002   
+0003 <span class="comment">% VVIEW_DEMO - Demo of the VVIEW command.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Choose between a number of examples illustrating VVIEW. Issues</span>
+0006 <span class="comment">% the command VVIEW(B,plim,pinv(B)) for various choices of B.</span>
+0007   
+0008   <span class="keyword">while</span> 1
+0009   disp(<span class="string">' '</span>)
+0010   disp(<span class="string">' 1. Random control effectiveness matrix B (1x5)'</span>)
+0011   disp(<span class="string">' 2.                                       (2x5)'</span>)
+0012   disp(<span class="string">' 3.                                       (3x5)'</span>)
+0013   disp(<span class="string">' 4. Admire flight data'</span>)
+0014   disp(<span class="string">' 5. HARV flight data'</span>)
+0015   disp(<span class="string">' '</span>)
+0016   ch = input(<span class="string">'Select example (leave blank to exit): '</span>,<span class="string">'s'</span>);
+0017   disp(<span class="string">' '</span>)
+0018   
+0019   <span class="keyword">switch</span> ch
+0020     
+0021    <span class="keyword">case</span> {<span class="string">'1'</span>,<span class="string">'2'</span>,<span class="string">'3'</span>} <span class="comment">% Randomize</span>
+0022     k = str2num(ch);
+0023     m = 5; <span class="comment">% No. of actuators</span>
+0024     B=randn(k,m);
+0025     plim=[-ones(m,1),ones(m,1)];
+0026     ratio = <a href="vview.html" class="code" title="function ratio = vview(B,plim,P)">vview</a>(B,plim,pinv(B));
+0027     title(<span class="string">'Random B'</span>)
+0028     
+0029    <span class="keyword">case</span> <span class="string">'4'</span> <span class="comment">% Admire data - Härkegård PhD thesis, Sec 10.4</span>
+0030     B = [0    -4.24  4.24  1.48;
+0031      1.65 -1.27 -1.27  0;
+0032      0    -0.28  0.28 -0.88];
+0033     
+0034     plim = [-55 -30 -30 -30;
+0035         25  30  30  30]'*pi/180;
+0036     
+0037     ratio = <a href="vview.html" class="code" title="function ratio = vview(B,plim,P)">vview</a>(B,plim,pinv(B));
+0038     xlabel(<span class="string">'Cl'</span>)
+0039     ylabel(<span class="string">'Cm'</span>)
+0040     zlabel(<span class="string">'Cn'</span>)
+0041     title(<span class="string">'Admire (3000 m, Mach 0.22)'</span>)
+0042     
+0043    <span class="keyword">case</span> <span class="string">'5'</span> <span class="comment">% HARV data - Bordignon PhD thesis, Example 5-2</span>
+0044     B = [-4.382e-2 -5.330e-1 -1.100e-2;
+0045      4.382e-2 -5.330e-1  1.100e-2;
+0046      -5.841e-2 -6.486e-2  3.911e-3;
+0047      5.841e-2 -6.486e-2 -3.911e-3;
+0048      1.674e-2     0     -7.428e-2;
+0049      -6.280e-2  6.234e-2     0    ;
+0050      6.280e-2  6.234e-2     0    ;
+0051      2.920e-2  1.000e-5  3.000e-4;
+0052      1.000e-5  3.553e-1  1.000e-5;
+0053      1.000e-2  1.000e-5  1.485e-1]';
+0054     
+0055     plim = [-4.189 1.833;
+0056         -4.189 1.833;
+0057         -5.236 5.236;
+0058         -5.236 5.236;
+0059         -5.236 5.236;
+0060         -1.396 7.854;
+0061         -1.396 7.854;
+0062         -5.236 5.236;
+0063         -5.236 5.236;
+0064         -5.236 5.236]*1e-1;
+0065     ratio = <a href="vview.html" class="code" title="function ratio = vview(B,plim,P)">vview</a>(B,plim,pinv(B)); <span class="comment">% Ok, same result (13.7%)</span>
+0066     xlabel(<span class="string">'Cl'</span>)
+0067     ylabel(<span class="string">'Cm'</span>)
+0068     zlabel(<span class="string">'Cn'</span>)
+0069     title(<span class="string">'HARV (10000 ft, Mach 0.3, \alpha=12.5^o)'</span>)
+0070   
+0071     <span class="keyword">otherwise</span> <span class="keyword">break</span>
+0072   <span class="keyword">end</span>  
+0073   
+0074   disp(<span class="string">'---------------------------------------------------------------'</span>)
+0075   disp(<span class="string">' '</span>);
+0076   disp(<span class="string">' Control effectiveness matrix: B ='</span>),disp(<span class="string">' '</span>),disp(B)
+0077   disp(<span class="string">' Position limits: [umin umax]'' ='</span>),disp(<span class="string">' '</span>),disp(plim')
+0078   disp(<span class="string">' Blue (outer) set: { v : v = B*u, umin &lt; u &lt; umax }'</span>)
+0079   disp(<span class="string">'  Feasible virtual control set with constrained allocation'</span>)
+0080   disp(<span class="string">' '</span>)
+0081   disp(<span class="string">' Red (inner) set: { v : umin &lt; P*v &lt; umax } where P = pinv(B)'</span>)
+0082   disp(<span class="string">'  Feasible virtual control set with linear allocation, u = P*v'</span>)
+0083   disp(<span class="string">' '</span>)
+0084   disp(sprintf(<span class="string">' Red to blue size ratio: %0.3g%%'</span>,ratio*100))
+0085   disp(<span class="string">' '</span>)
+0086   disp(<span class="string">'---------------------------------------------------------------'</span>)
+0087   
+0088   <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

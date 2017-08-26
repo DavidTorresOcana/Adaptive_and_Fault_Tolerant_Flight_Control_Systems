@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ca2lq</title>
+  <meta name="keywords" content="ca2lq">
+  <meta name="description" content="CA2LQ - Incorporate control allocator into LQ controller.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>ca2lq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>CA2LQ - Incorporate control allocator into LQ controller.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function R1 = ca2lq(B,R2,Wu) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CA2LQ - Incorporate control allocator into LQ controller.
+ 
+  R1 = ca2lq(B,R2,Wu)
+ 
+ Given a dynamic system
+  .                             .
+  x = Ax + B1u, B1 = B2*B  &lt;=&gt;  x = Ax + B2v, v = Bu
+
+ this function calculates the weighting matrix R1 such that the
+ design criterium
+ 
+  min Integral (x'Qx + u'R1u) dt   (LQ control)
+   u
+
+ gives the same linear optimal control law as
+ 
+  min Integral (x'Qx + v'R2v) dt   (LQ control)
+   v
+ 
+  min ||Wu u||  subj. to  Bu = v   (control allocation)
+   u
+
+ Controller structures:
+
+    x   -------  u           x   -------  v   ----  u
+   ---&gt;| Q, R1 |---&gt;   &lt;=&gt;  ---&gt;| Q, R2 |---&gt;| Wu |---&gt;
+        -------                  -------      ----
+        LQ ctl                   LQ ctl     Ctl alloc
+
+ See also <a href="lq2ca.html" class="code" title="function [R2,Wu] = lq2ca(B,R1)">LQ2CA</a>, LQR, <a href="wpinv.html" class="code" title="function [G,F] = wpinv(A,W)">WPINV</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function R1 = ca2lq(B,R2,Wu)</a>
+0002   
+0003 <span class="comment">% CA2LQ - Incorporate control allocator into LQ controller.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  R1 = ca2lq(B,R2,Wu)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Given a dynamic system</span>
+0008 <span class="comment">%  .                             .</span>
+0009 <span class="comment">%  x = Ax + B1u, B1 = B2*B  &lt;=&gt;  x = Ax + B2v, v = Bu</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% this function calculates the weighting matrix R1 such that the</span>
+0012 <span class="comment">% design criterium</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  min Integral (x'Qx + u'R1u) dt   (LQ control)</span>
+0015 <span class="comment">%   u</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% gives the same linear optimal control law as</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  min Integral (x'Qx + v'R2v) dt   (LQ control)</span>
+0020 <span class="comment">%   v</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%  min ||Wu u||  subj. to  Bu = v   (control allocation)</span>
+0023 <span class="comment">%   u</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Controller structures:</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%    x   -------  u           x   -------  v   ----  u</span>
+0028 <span class="comment">%   ---&gt;| Q, R1 |---&gt;   &lt;=&gt;  ---&gt;| Q, R2 |---&gt;| Wu |---&gt;</span>
+0029 <span class="comment">%        -------                  -------      ----</span>
+0030 <span class="comment">%        LQ ctl                   LQ ctl     Ctl alloc</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% See also LQ2CA, LQR, WPINV.</span>
+0033   
+0034 <span class="comment">% Thesis, Theorem 10.4:</span>
+0035   R1 = Wu^2+B'*(R2-inv(B*inv(Wu)^2*B'))*B;</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

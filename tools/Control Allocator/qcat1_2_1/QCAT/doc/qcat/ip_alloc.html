@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ip_alloc</title>
+  <meta name="keywords" content="ip_alloc">
+  <meta name="description" content="IP_ALLOC - Control allocation using interior point method.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>ip_alloc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>IP_ALLOC - Control allocation using interior point method.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,iter] = ip_alloc(B,v,umin,umax,ud,gam,tol,imax) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> IP_ALLOC - Control allocation using interior point method.
+
+  [u,iter] = ip_alloc(B,v,umin,umax,[ud,gamma,tol,imax])
+
+ Solves the weighted, bounded least-squares problem
+
+   min ||u-ud||^2 + gamma ||Bu-v||^2   (unit weighting matrices)
+
+   subj. to  umin &lt;= u &lt;= umax
+
+ using a primal dual interior point method.
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ v     commanded virtual control (k x 1)
+ umin  lower position limits (m x 1)
+ umax  upper position limits (m x 1)
+ ud    desired control (m x 1) [0]
+ gamma weight (scalar) [1e4]
+ tol   tolerance used in stopping criterion [1e-4]
+ imax  max no. of iterations [100]
+ 
+  Outputs:
+  -------
+ u     optimal control
+ iter  no. of iterations
+
+ See also: <a href="wls_alloc.html" class="code" title="function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax)">WLS_ALLOC</a>, <a href="wlsc_alloc.html" class="code" title="">WLSC_ALLOC</a>, <a href="fxp_alloc.html" class="code" title="function [u,iter] = fxp_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,imax)">FXP_ALLOC</a>, <a href="qp_sim.html" class="code" title="function [u,W,time,iter] = qp_sim(B,v,plim,varargin)">QP_SIM</a>.
+
+ Contributed by John Petersen.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li><li><a href="qp_ca_sl.html" class="code" title="function u = qp_ca_sl(arg,B,plim,rlim,T,Wv,Wu,ud,alg,imax,gam,tol)">qp_ca_sl</a>	Wrapper used in the QP control allocation Simulink block.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [x,iter] = pdq(A,b,c,u,wc,tol,imax);</a></li><li><a href="#_sub2" class="code">function [s,w,x,z] = startpt(A,b,c,u,wc);</a></li><li><a href="#_sub3" class="code">function [ds,dw,dx,dz] = direct(d,As2,rb,rc,ru,rxs,rwz,ix,iw,ixs,iwz,z);</a></li><li><a href="#_sub4" class="code">function alpha = stepsize(dx,ds,dw,dz,x,s,w,z);</a></li><li><a href="#_sub5" class="code">function X = csm(B);</a></li><li><a href="#_sub6" class="code">function		 H = smwf(A,B);</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,iter] = ip_alloc(B,v,umin,umax,ud,gam,tol,imax)</a>
+0002   
+0003 <span class="comment">% IP_ALLOC - Control allocation using interior point method.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,iter] = ip_alloc(B,v,umin,umax,[ud,gamma,tol,imax])</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Solves the weighted, bounded least-squares problem</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   min ||u-ud||^2 + gamma ||Bu-v||^2   (unit weighting matrices)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   subj. to  umin &lt;= u &lt;= umax</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% using a primal dual interior point method.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  Inputs:</span>
+0016 <span class="comment">%  -------</span>
+0017 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0018 <span class="comment">% v     commanded virtual control (k x 1)</span>
+0019 <span class="comment">% umin  lower position limits (m x 1)</span>
+0020 <span class="comment">% umax  upper position limits (m x 1)</span>
+0021 <span class="comment">% ud    desired control (m x 1) [0]</span>
+0022 <span class="comment">% gamma weight (scalar) [1e4]</span>
+0023 <span class="comment">% tol   tolerance used in stopping criterion [1e-4]</span>
+0024 <span class="comment">% imax  max no. of iterations [100]</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  Outputs:</span>
+0027 <span class="comment">%  -------</span>
+0028 <span class="comment">% u     optimal control</span>
+0029 <span class="comment">% iter  no. of iterations</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% See also: WLS_ALLOC, WLSC_ALLOC, FXP_ALLOC, QP_SIM.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Contributed by John Petersen.</span>
+0034 
+0035 <span class="comment">% Set default values of optional arguments</span>
+0036   <span class="keyword">if</span> nargin &lt; 8
+0037     imax = 100; <span class="comment">% Heuristic value</span>
+0038     [k,m] = size(B);
+0039     <span class="keyword">if</span> nargin &lt; 7, tol = 1e-4; <span class="keyword">end</span>
+0040     <span class="keyword">if</span> nargin &lt; 6, gam = 1e4; <span class="keyword">end</span>
+0041     <span class="keyword">if</span> nargin &lt; 5, ud = zeros(m,1); <span class="keyword">end</span>
+0042   <span class="keyword">end</span>
+0043 
+0044   <span class="comment">% Reformulate   min  ||u-ud||^2 + gamma ||Bu-v||^2</span>
+0045   <span class="comment">%               s.t. umin &lt;= u &lt;= umax</span>
+0046   <span class="comment">%</span>
+0047   <span class="comment">% as            min  ||Ax-b||^2 + h ||x-xd||^2</span>
+0048   <span class="comment">%               s.t. 0 &lt;= x &lt;= xmax</span>
+0049   <span class="comment">%</span>
+0050   <span class="comment">% where x=u-umin, h=1/gamma, A=B, b=v-B*umin, xd=ud-umin, xmax=umax-umin</span>
+0051   h = 1/gam; A = B; b = v - B*umin; xd = ud - umin; xmax = umax - umin;
+0052   
+0053   <span class="comment">% ||Ax-b||^2 + h ||x-xd||^2 = 1/2x'Hx + c'x + f(xd)</span>
+0054   c = -2*(b'*A + h*xd');
+0055   
+0056   <span class="comment">% Solve QP problem.</span>
+0057   [x,iter] = <a href="#_sub1" class="code" title="subfunction [x,iter] = pdq(A,b,c,u,wc,tol,imax);">pdq</a>(A,b,c',xmax,h,tol,imax);
+0058   
+0059   <span class="comment">% Optimal control.</span>
+0060   u = x + umin;
+0061   
+0062 <a name="_sub1" href="#_subfunctions" class="code">function [x,iter] = pdq(A,b,c,u,wc,tol,imax);</a>
+0063   <span class="comment">% Primal dual IP solver</span>
+0064   
+0065   [k,m] = size(A);    <span class="comment">% k = #constraints , m = #variables</span>
+0066   As2=A*sqrt(2);
+0067   [s,w,x,z] = <a href="#_sub2" class="code" title="subfunction [s,w,x,z] = startpt(A,b,c,u,wc);">startpt</a>(A,b,c,u,wc);
+0068   rho = .9995; sig = 0.1; m2 = 2*m;
+0069   xs = x.*s; wz = w.*z;
+0070   mu = sig*(sum(xs + wz))/m2; <span class="comment">% eq. (7)</span>
+0071   nxl=norm(x,1); iHd = 0; 
+0072   ru = 0; rc = 0; rb = 0;
+0073   
+0074   <span class="keyword">for</span> iter = 1:imax+1
+0075     <span class="keyword">if</span> (mu &lt; tol) 
+0076       <span class="comment">% Close enough to optimum, bail out.</span>
+0077       <span class="keyword">break</span>;
+0078     <span class="keyword">end</span>;   
+0079     rxs = (xs - mu);
+0080     iw = 1./w; rwz = (wz - mu);
+0081     ix = 1./x; ixs = ix.*s;
+0082     iwz = iw.*z;
+0083     d = 2*wc + ixs + iwz;                         
+0084     [ds,dw,dx,dz] = <a href="#_sub3" class="code" title="subfunction [ds,dw,dx,dz] = direct(d,As2,rb,rc,ru,rxs,rwz,ix,iw,ixs,iwz,z);">direct</a>(d,As2,rb,rc,ru,rxs,rwz,ix,iw,ixs,iwz,z);
+0085     alpha = <a href="#_sub4" class="code" title="subfunction alpha = stepsize(dx,ds,dw,dz,x,s,w,z);">stepsize</a>(dx,ds,dw,dz,x,s,w,z);
+0086     ralpha = rho*alpha;
+0087     s = s + ralpha*ds;
+0088     w = w + ralpha*dw;
+0089     x = x + ralpha*dx;
+0090     z = z + ralpha*dz;
+0091 
+0092     xs = x.*s; wz = w.*z;
+0093     gap = sum(xs + wz)/m2;
+0094     mu = min(.1,100*gap)*gap;
+0095   
+0096   <span class="keyword">end</span>
+0097   
+0098   iter=iter-1;  <span class="comment">%True number of iterations is one less</span>
+0099 
+0100 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0101 <span class="comment">% Initial starting point</span>
+0102 <a name="_sub2" href="#_subfunctions" class="code">function [s,w,x,z] = startpt(A,b,c,u,wc);</a>
+0103   
+0104   m = size(A,2);
+0105   en = ones(m,1);
+0106   <span class="comment">% Start at the center of the constraint box</span>
+0107   x = u/2; w = u - x; z = en; s = en; 
+0108   <span class="keyword">if</span> 0 
+0109     AA = <a href="#_sub5" class="code" title="subfunction X = csm(B);">csm</a>(A');  <span class="comment">% csm efficiently computes cb'*cb</span>
+0110     <span class="keyword">for</span> i=1:m
+0111       AA(i,i) = AA(i,i) + wc;
+0112     <span class="keyword">end</span> <span class="comment">% H = 2(A'A+wcI);</span>
+0113   <span class="keyword">else</span>
+0114     AA = A'*A + wc*eye(m);
+0115   <span class="keyword">end</span>
+0116   ec = c + 2*AA*x;  <span class="comment">%initial residual error used to initialize z,s;</span>
+0117   g = .1;  sg = 1+g;
+0118   i = find(ec&gt;0); s(i) =  sg*ec(i); z(i) =  g*ec(i); <span class="comment">% Hx + c + z - s = 0;</span>
+0119   i = find(ec&lt;0); z(i) = -sg*ec(i); s(i) = -g*ec(i);
+0120   
+0121 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0122 <span class="comment">% Compute step direction</span>
+0123 <a name="_sub3" href="#_subfunctions" class="code">function [ds,dw,dx,dz] = direct(d,As2,rb,rc,ru,rxs,rwz,ix,iw,ixs,iwz,z);</a>
+0124   
+0125   ixrxs = ix.*rxs; iwrwz = iw.*rwz;
+0126   rr = iwrwz - ixrxs;
+0127 
+0128   <span class="keyword">if</span> 0
+0129     iHd = <a href="#_sub6" class="code" title="subfunction         H = smwf(A,B);">smwf</a>(d,As2);  <span class="comment">% smwf is a fast smw for the specific form used here</span>
+0130     dx = iHd*rr;
+0131   <span class="keyword">else</span>
+0132     <span class="comment">% iHd = inv(diag(d)+As2'*As2);</span>
+0133     dx = (diag(d)+As2'*As2)\rr;
+0134   <span class="keyword">end</span>
+0135   ds = -ixs.*dx - ixrxs;    dw = -dx;
+0136   dz = -iwz.*dw - iwrwz;
+0137   
+0138 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0139 <span class="comment">% Compute stepsize</span>
+0140 <a name="_sub4" href="#_subfunctions" class="code">function alpha = stepsize(dx,ds,dw,dz,x,s,w,z);</a>
+0141   i = find(ds&lt;0); as = min(-s(i)./ds(i));    
+0142   i = find(dw&lt;0); aw = min(-w(i)./dw(i));    
+0143   i = find(dx&lt;0); ax = min(-x(i)./dx(i));    
+0144   i = find(dz&lt;0); az = min(-z(i)./dz(i));    
+0145   alpha = min([aw ax as az 1]);    
+0146 
+0147   
+0148   
+0149   
+0150   
+0151   
+0152 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0153 <span class="comment">%  csm.m  compute symmetric matrix from X = B*B'</span>
+0154 <a name="_sub5" href="#_subfunctions" class="code">function X = csm(B);</a>
+0155   
+0156   [m,n] = size(B);
+0157   <span class="keyword">for</span> i=1:m-1
+0158     <span class="keyword">for</span> j=i+1:m
+0159       X(i,j) = B(i,:)*B(j,:)';
+0160       X(j,i) = X(i,j);
+0161     <span class="keyword">end</span>;    
+0162   <span class="keyword">end</span>;
+0163   <span class="keyword">for</span> i = 1:m;    X(i,i) = B(i,:)*B(i,:)'; <span class="keyword">end</span>;
+0164   
+0165 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0166 <span class="comment">% smwf.m  computes the inverse of (A + B'B) using Sherman-Morrison-Woodbury formula</span>
+0167 <span class="comment">%    Fast version for specific matrices.</span>
+0168 <span class="comment">%           where A is a diagonal matrix, but designated only by a vector</span>
+0169 <span class="comment">%                                                    i.e. the input is the vector of the diagonal</span>
+0170 <span class="comment">%                B is non-square matrices</span>
+0171 <span class="comment">%   H = inv(A) - inv(A)B'*inv(B*inv(A)B' + I)*B*inv(A);</span>
+0172 <span class="comment">%</span>
+0173 <a name="_sub6" href="#_subfunctions" class="code">function         H = smwf(A,B);</a>
+0174   
+0175   [k,m] = size(B);
+0176   iA = 1./A; iAB = zeros(m,k); BiA = zeros(k,m);  BAB = zeros(k);
+0177   <span class="keyword">for</span> i = 1:k    iAB(:,i) = iA.*B(i,:)'; <span class="keyword">end</span>;
+0178   <span class="keyword">for</span> i = 1:k        BiA(i,:) = B(i,:).*iA';    <span class="keyword">end</span>;
+0179   <span class="keyword">for</span> i=1:k-1
+0180     <span class="keyword">for</span> j=i+1:k
+0181       BAB(i,j) = B(i,:)*iAB(:,j);
+0182       BAB(j,i) = BAB(i,j);
+0183     <span class="keyword">end</span>;
+0184   <span class="keyword">end</span>;
+0185   <span class="keyword">for</span> i = 1:k;    BAB(i,i) = B(i,:)*iAB(:,i); <span class="keyword">end</span>;
+0186   Q = BAB;
+0187   <span class="keyword">for</span> i = 1:k;    Q(i,i) = Q(i,i) + 1; <span class="keyword">end</span>
+0188   QBA = Q\iAB';
+0189   <span class="keyword">for</span> i=1:m-1
+0190     <span class="keyword">for</span> j=i+1:m
+0191       ABQBA(i,j) = iAB(i,:)*QBA(:,j);
+0192       ABQBA(j,i) = ABQBA(i,j);
+0193     <span class="keyword">end</span>;
+0194   <span class="keyword">end</span>;
+0195   <span class="keyword">for</span> i = 1:m;  ABQBA(i,i) = iAB(i,:)*QBA(:,i); <span class="keyword">end</span>
+0196   H = -ABQBA;
+0197   <span class="keyword">for</span> i = 1:m
+0198     H(i,i) = iA(i) + H(i,i);
+0199   <span class="keyword">end</span>
+0200</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

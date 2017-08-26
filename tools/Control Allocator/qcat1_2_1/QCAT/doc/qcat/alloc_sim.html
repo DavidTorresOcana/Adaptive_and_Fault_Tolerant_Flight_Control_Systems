@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of alloc_sim</title>
+  <meta name="keywords" content="alloc_sim">
+  <meta name="description" content="ALLOC_SIM - Control allocation simulation.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>alloc_sim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>ALLOC_SIM - Control allocation simulation.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ALLOC_SIM - Control allocation simulation.
+
+  [u,A,iter,time] = alloc_sim(method,B,v,plim,rlim,T,varargin)
+
+ Subroutine not intended to be called directly by user.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="cgi_alloc.html" class="code" title="function [u,iter] = cgi_alloc(B,v,umin,umax,Wv,Wu,ud,imax)">cgi_alloc</a>	CGI_ALLOC - Control allocation based on cascading generalized inverses.</li><li><a href="dir_alloc.html" class="code" title="function [u,a] = dir_alloc(B,v,umin,umax)">dir_alloc</a>	DIR_ALLOC - Direct control allocation.</li><li><a href="fxp_alloc.html" class="code" title="function [u,iter] = fxp_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,imax)">fxp_alloc</a>	FXP_ALLOC - Control allocation using a fixed-point iterations.</li><li><a href="ip_alloc.html" class="code" title="function [u,iter] = ip_alloc(B,v,umin,umax,ud,gam,tol,imax)">ip_alloc</a>	IP_ALLOC - Control allocation using interior point method.</li><li><a href="iscoplanar.html" class="code" title="function [c,cols] = iscoplanar(B)">iscoplanar</a>	ISCOPLANAR - Test for coplanar controls.</li><li><a href="mls_alloc.html" class="code" title="function [u,W,iter] = mls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax)">mls_alloc</a>	MLS_ALLOC - Control allocation using minimal least squares.</li><li><a href="sls_alloc.html" class="code" title="function [u,W,iter] = sls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax)">sls_alloc</a>	SLS_ALLOC - Control allocation using sequential least squares.</li><li><a href="wls_alloc.html" class="code" title="function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax)">wls_alloc</a>	WLS_ALLOC - Control allocation using weighted least squares.</li><li><a href="wlsc_alloc.html" class="code" title="">wlsc_alloc</a>	WLSC_ALLOC - C implementation of WLS_ALLOC.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="dir_sim.html" class="code" title="function [u,W,time] = dir_sim(B,v,plim,varargin)">dir_sim</a>	DIR_SIM - Direct control allocation simulation.</li><li><a href="dyn_sim.html" class="code" title="function [u,W,time,iter] = dyn_sim(B,v,plim,varargin)">dyn_sim</a>	DYN_SIM - Dynamic control allocation simulation.</li><li><a href="qp_sim.html" class="code" title="function [u,W,time,iter] = qp_sim(B,v,plim,varargin)">qp_sim</a>	QP_SIM - QP control allocation simulation.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)</a>
+0002 
+0003 <span class="comment">% ALLOC_SIM - Control allocation simulation.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,A,iter,time] = alloc_sim(method,B,v,plim,rlim,T,varargin)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Subroutine not intended to be called directly by user.</span>
+0008   
+0009 <span class="comment">% Performs control allocation for a sequence of virtual control</span>
+0010 <span class="comment">% commands stored in v.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  Inputs:</span>
+0013 <span class="comment">%  -------</span>
+0014 <span class="comment">% method   control allocation method: 'qp'   l2-optimal allocation</span>
+0015 <span class="comment">%                      'dyn'  dynamic allocation</span>
+0016 <span class="comment">%                      'dir'  direct allocation</span>
+0017 <span class="comment">% B       control effectiveness matrix (k x m)</span>
+0018 <span class="comment">% v        commanded virtual control trajectory (k x N)</span>
+0019 <span class="comment">% plim     position limits [min max] (m x 2)</span>
+0020 <span class="comment">% rlim       rate limit = [min max] (m x 2)</span>
+0021 <span class="comment">% T       sampling time</span>
+0022 <span class="comment">% options  options, see code</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%  Outputs:</span>
+0025 <span class="comment">%  -------</span>
+0026 <span class="comment">% u     optimal control</span>
+0027 <span class="comment">% A     active constraints in u</span>
+0028 <span class="comment">% iter  no. of iterations</span>
+0029 <span class="comment">% time  average computation time per sample</span>
+0030   
+0031 <span class="comment">% Number of variables</span>
+0032   [k,m] = size(B);
+0033   <span class="comment">% Coplanar controls? Only in SLS_ALLOC</span>
+0034   copl = <a href="iscoplanar.html" class="code" title="function [c,cols] = iscoplanar(B)">iscoplanar</a>(B);
+0035   <span class="comment">% Number of samples</span>
+0036   N = size(v,2);
+0037   <span class="comment">% Allocate output variables</span>
+0038   u = zeros(m,N);
+0039   A = zeros(m,N);
+0040   iter = zeros(1,N);
+0041   time = zeros(1,N);
+0042   
+0043   <span class="comment">% Set default values of optional arguments</span>
+0044   <span class="keyword">switch</span> method
+0045    <span class="keyword">case</span> {<span class="string">'qp'</span>,<span class="string">'dyn'</span>}
+0046     alg  = <span class="string">'wls'</span>;
+0047    <span class="keyword">case</span> <span class="string">'dir'</span>
+0048     alg = <span class="string">'dir'</span>;
+0049   <span class="keyword">end</span>
+0050   M    = 1;         <span class="comment">% no of repetitions</span>
+0051   imax = 100;         <span class="comment">% no of iterations</span>
+0052   gam  = 1e6;         <span class="comment">% weight</span>
+0053   tol  = 1e-6;       <span class="comment">% tolerance in IP solver</span>
+0054   hs   = 1;         <span class="comment">% hotstart</span>
+0055   ui   = [];         <span class="comment">% initial control</span>
+0056   Wi   = zeros(m,1); <span class="comment">% initial working set</span>
+0057   Wv   = eye(k);     <span class="comment">% QP allocation</span>
+0058   Wu   = eye(m);
+0059   ud   = zeros(m);
+0060   W1   = eye(m);     <span class="comment">% Dynamic allocation</span>
+0061   W2   = zeros(m);
+0062   S    = pinv(B);
+0063   
+0064   <span class="keyword">for</span> i=1:2:length(varargin)
+0065     <span class="keyword">switch</span>(varargin{i})
+0066       <span class="comment">% --- General options ---</span>
+0067      <span class="keyword">case</span> <span class="string">'alg'</span>  <span class="comment">% solver, algorithm</span>
+0068       alg = varargin{i+1};
+0069      <span class="keyword">case</span> <span class="string">'rep'</span>  <span class="comment">% no of repetitions</span>
+0070       M = varargin{i+1};
+0071 
+0072       <span class="comment">% --- Method specific options ---</span>
+0073      <span class="keyword">case</span> <span class="string">'imax'</span> <span class="comment">% number of iterations</span>
+0074       imax = varargin{i+1};
+0075      <span class="keyword">case</span> <span class="string">'gam'</span>  <span class="comment">% LS weight</span>
+0076       gam = varargin{i+1};
+0077      <span class="keyword">case</span> <span class="string">'tol'</span>  <span class="comment">% IP tolerance</span>
+0078       tol = varargin{i+1};
+0079      <span class="keyword">case</span> <span class="string">'hot'</span>  <span class="comment">% hotstart</span>
+0080       hs = varargin{i+1};
+0081      <span class="keyword">case</span> <span class="string">'ui'</span>   <span class="comment">% active set (also fix-point)</span>
+0082       ui = varargin{i+1};
+0083      <span class="keyword">case</span> <span class="string">'Wi'</span>
+0084       Wi = varargin{i+1};
+0085      <span class="keyword">case</span> <span class="string">'Wv'</span>   <span class="comment">% QP allocation</span>
+0086       Wv = varargin{i+1};
+0087      <span class="keyword">case</span> <span class="string">'Wu'</span>
+0088       Wu = varargin{i+1};
+0089      <span class="keyword">case</span> <span class="string">'ud'</span>
+0090       ud = varargin{i+1};
+0091      <span class="keyword">case</span> <span class="string">'W1'</span>   <span class="comment">% dynamic allocation</span>
+0092       W1 = varargin{i+1};
+0093      <span class="keyword">case</span> <span class="string">'W2'</span>
+0094       W2 = varargin{i+1};
+0095      <span class="keyword">case</span> <span class="string">'S'</span>
+0096       S = varargin{i+1};
+0097      
+0098      <span class="keyword">otherwise</span>
+0099       error(sprintf(<span class="string">'Unknown option: %s'</span>,varargin{i}));
+0100     <span class="keyword">end</span>
+0101   <span class="keyword">end</span>
+0102 
+0103   <span class="keyword">if</span> strcmp(alg,<span class="string">'ip'</span>)
+0104     <span class="comment">% Weighting matrices must be unit matrices.</span>
+0105     <span class="keyword">if</span> any(any(Wv ~= eye(k))) | any(any(Wu ~= eye(m)))
+0106       disp(<span class="string">' '</span>)
+0107       disp([<span class="string">'** Warning: Non-unit matrices Wv and Wu not handled by'</span> <span class="keyword">...</span>
+0108         <span class="string">' IP_ALLOC **'</span>]) 
+0109       disp(<span class="string">' '</span>)
+0110     <span class="keyword">end</span>
+0111     <span class="comment">% Dynamic allocation almost always requires non-unit matrix Wu.</span>
+0112     <span class="keyword">if</span> strcmp(method,<span class="string">'dyn'</span>)
+0113       disp(<span class="string">' '</span>)
+0114       disp([<span class="string">'** Warning: Dynamic allocation not handled by IP_ALLOC,'</span> <span class="keyword">...</span>
+0115         <span class="string">' resorting to WLS_ALLOC **'</span>])
+0116       disp(<span class="string">' '</span>);
+0117       alg = <span class="string">'wls'</span>;
+0118     <span class="keyword">end</span>
+0119   <span class="keyword">end</span>
+0120   
+0121   <span class="keyword">if</span> isempty(ui)
+0122     <span class="comment">% Set default initial conditions</span>
+0123     <span class="keyword">switch</span> method
+0124      <span class="keyword">case</span> <span class="string">'qp'</span>
+0125       [ui,Wi] = <a href="wls_alloc.html" class="code" title="function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax)">wls_alloc</a>(B,v(:,1),plim(:,1),plim(:,2),Wv,Wu,ud);
+0126      <span class="keyword">case</span> <span class="string">'dyn'</span>
+0127       [ui,Wi] = <a href="wls_alloc.html" class="code" title="function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax)">wls_alloc</a>(B,v(:,1),plim(:,1),plim(:,2),Wv,W1,S*v(:,1));
+0128      <span class="keyword">case</span> <span class="string">'dir'</span>
+0129       ui = <a href="dir_alloc.html" class="code" title="function [u,a] = dir_alloc(B,v,umin,umax)">dir_alloc</a>(B,v(:,1),plim(:,1),plim(:,2));
+0130     <span class="keyword">end</span>
+0131   <span class="keyword">end</span>
+0132   
+0133   <span class="comment">% Hotstart?</span>
+0134   <span class="keyword">if</span> hs
+0135     u0 = ui;
+0136     W0 = Wi;
+0137   <span class="keyword">end</span>
+0138   
+0139   <span class="comment">% Precompute matrices used in dynamic allocation</span>
+0140   <span class="keyword">if</span> strcmp(method,<span class="string">'dyn'</span>)
+0141     W1sq = W1^2;
+0142     W2sq = W2^2;
+0143     Wu = sqrtm(W1sq+W2sq);
+0144     invWusq = inv(W1sq+W2sq);
+0145   <span class="keyword">end</span>
+0146   
+0147   <span class="comment">% Allocate control signals to produce the demanded virtual</span>
+0148   <span class="comment">% control trajectory.</span>
+0149   uprev = ui;
+0150   <span class="keyword">for</span> i=1:N
+0151     <span class="comment">% Compute feasible upper and lower bounds.</span>
+0152     <span class="keyword">if</span> isempty(rlim)
+0153       umin = plim(:,1);
+0154       umax = plim(:,2);
+0155     <span class="keyword">else</span>
+0156       umin = max(plim(:,1),uprev+rlim(:,1)*T);
+0157       umax = min(plim(:,2),uprev+rlim(:,2)*T);
+0158     <span class="keyword">end</span>
+0159     <span class="keyword">if</span> ~hs
+0160       u0 = (umin+umax)/2;
+0161       W0 = zeros(m,1);
+0162     <span class="keyword">end</span>
+0163     <span class="comment">% Update u0 to reflect working set. Crucial when rate limits</span>
+0164     <span class="comment">% are included and hotstart is used.</span>
+0165     i_min = W0 == -1;
+0166     i_max = W0 == +1;
+0167     u0(i_min) = umin(i_min);
+0168     u0(i_max) = umax(i_max);
+0169     <span class="comment">% For dynamic allocation, merge the position and rate terms</span>
+0170     <span class="comment">% into one term ||Wu(u-ud)||.</span>
+0171     <span class="keyword">if</span> strcmp(method,<span class="string">'dyn'</span>)
+0172       us = S*v(:,i);
+0173       ud = invWusq*(W1sq*us+W2sq*uprev);
+0174     <span class="keyword">end</span>
+0175     <span class="comment">% Solve control allocation problem M times</span>
+0176     tic;
+0177     <span class="keyword">for</span> l = 1:M
+0178       <span class="keyword">switch</span> alg
+0179        <span class="keyword">case</span> <span class="string">'sls'</span>
+0180     [u(:,i),W,iter(i)] = <span class="keyword">...</span>
+0181         <a href="sls_alloc.html" class="code" title="function [u,W,iter] = sls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax)">sls_alloc</a>(B+copl*j,v(:,i),umin,umax,Wv,Wu,ud,u0,W0,imax);
+0182        <span class="keyword">case</span> <span class="string">'mls'</span>
+0183     [u(:,i),W,iter(i)] = <span class="keyword">...</span>
+0184         <a href="mls_alloc.html" class="code" title="function [u,W,iter] = mls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax)">mls_alloc</a>(B,v(:,i),umin,umax,Wv,Wu,ud,u0,W0,imax);
+0185        <span class="keyword">case</span> <span class="string">'wls'</span>
+0186     [u(:,i),W,iter(i)] = <span class="keyword">...</span>
+0187         <a href="wls_alloc.html" class="code" title="function [u,W,iter] = wls_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,W,imax)">wls_alloc</a>(B,v(:,i),umin,umax,Wv,Wu,ud,gam,u0,W0,imax);
+0188     <span class="comment">% --- FoT25 allocation routine, not in standard QCAT ---</span>
+0189        <span class="keyword">case</span> <span class="string">'wls_c'</span>
+0190     [u(:,i),W,iter(i)] = <span class="keyword">...</span>
+0191         wls_alloc_c(B,v(:,i),umin,umax,Wv,Wu,ud,gam,u0,W0,imax);
+0192     <span class="comment">% ------------------------------------------------------</span>
+0193        <span class="keyword">case</span> <span class="string">'wlsc'</span>
+0194     [u(:,i),W,iter(i)] = <span class="keyword">...</span>
+0195         <a href="wlsc_alloc.html" class="code" title="">wlsc_alloc</a>(B,v(:,i),umin,umax,Wv,Wu,ud,gam,u0,W0,imax);
+0196        <span class="keyword">case</span> <span class="string">'ip'</span>
+0197     [u(:,i),iter(i)] = <span class="keyword">...</span>
+0198         <a href="ip_alloc.html" class="code" title="function [u,iter] = ip_alloc(B,v,umin,umax,ud,gam,tol,imax)">ip_alloc</a>(B,v(:,i),umin,umax,ud,gam,tol,imax);
+0199        <span class="keyword">case</span> <span class="string">'fxp'</span>
+0200     u(:,i) = <a href="fxp_alloc.html" class="code" title="function [u,iter] = fxp_alloc(B,v,umin,umax,Wv,Wu,ud,gam,u,imax)">fxp_alloc</a>(B,v(:,i),umin,umax,Wv,Wu,ud,gam,u0,imax);
+0201        <span class="keyword">case</span> <span class="string">'cgi'</span>
+0202     u(:,i) = <a href="cgi_alloc.html" class="code" title="function [u,iter] = cgi_alloc(B,v,umin,umax,Wv,Wu,ud,imax)">cgi_alloc</a>(B,v(:,i),umin,umax,Wv,Wu,ud,imax);
+0203        <span class="keyword">case</span> <span class="string">'dir'</span>
+0204     u(:,i) = <a href="dir_alloc.html" class="code" title="function [u,a] = dir_alloc(B,v,umin,umax)">dir_alloc</a>(B,v(:,i),plim(:,1),plim(:,2));
+0205        <span class="keyword">otherwise</span>
+0206     error(sprintf(<span class="string">'Unknown allocation algorithm: %s'</span>,alg));
+0207       <span class="keyword">end</span>
+0208     <span class="keyword">end</span>
+0209     <span class="comment">% Register elapsed time</span>
+0210     time(i) = toc/M;
+0211     <span class="comment">% Limit control (only necessary with rate limits and direct alloc)</span>
+0212     u(:,i) = max(umin,min(umax,u(:,i)));
+0213     <span class="comment">% Determine active constraints in the final point.</span>
+0214     <span class="comment">% +/- : max or min</span>
+0215     <span class="comment">% 1/2 : position or rate limit</span>
+0216     A(:,i) = - 2*(u(:,i)==umin) + (u(:,i)==plim(:,1)) <span class="keyword">...</span>
+0217          + 2*(u(:,i)==umax) - (u(:,i)==plim(:,2));
+0218     <span class="comment">% Update uprev</span>
+0219     uprev = u(:,i);
+0220     <span class="comment">% Hotstart?</span>
+0221     <span class="keyword">if</span> hs
+0222       u0 = u(:,i);
+0223       <span class="keyword">if</span> any(strcmp(alg,{<span class="string">'sls'</span>,<span class="string">'wls'</span>,<span class="string">'wls_c'</span>,<span class="string">'wlsc'</span>,<span class="string">'mls'</span>}))
+0224     W0 = W;
+0225       <span class="keyword">end</span>
+0226     <span class="keyword">end</span>
+0227   <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

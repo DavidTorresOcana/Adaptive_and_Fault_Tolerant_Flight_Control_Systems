@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wpinv</title>
+  <meta name="keywords" content="wpinv">
+  <meta name="description" content="WPINV - Compute weighted pseudoinverse.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>wpinv
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>WPINV - Compute weighted pseudoinverse.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [G,F] = wpinv(A,W) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WPINV - Compute weighted pseudoinverse.
+ 
+  [G,F] = wpinv(A,W)
+ 
+ Computes the optimal solution x = Gy + Fx0 to the least squares
+ problem
+ 
+  min ||W(x-x0)||  subj. to  Ax = y
+   x
+
+ See also PINV.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [G,F] = wpinv(A,W)</a>
+0002   
+0003 <span class="comment">% WPINV - Compute weighted pseudoinverse.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [G,F] = wpinv(A,W)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Computes the optimal solution x = Gy + Fx0 to the least squares</span>
+0008 <span class="comment">% problem</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  min ||W(x-x0)||  subj. to  Ax = y</span>
+0011 <span class="comment">%   x</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% See also PINV.</span>
+0014   
+0015   [m,n] = size(A);
+0016   <span class="keyword">if</span> nargin &lt; 2
+0017     W = eye(n);
+0018   <span class="keyword">end</span>
+0019   
+0020   <span class="comment">% Thesis, Lemma B.1</span>
+0021   G = inv(W)*pinv(A*inv(W));
+0022   F = eye(n) - G*A;</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

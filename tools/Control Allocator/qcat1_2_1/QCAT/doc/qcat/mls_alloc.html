@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mls_alloc</title>
+  <meta name="keywords" content="mls_alloc">
+  <meta name="description" content="MLS_ALLOC - Control allocation using minimal least squares.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>mls_alloc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>MLS_ALLOC - Control allocation using minimal least squares.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [u,W,iter] = mls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> MLS_ALLOC - Control allocation using minimal least squares.
+
+  [u,W,iter] = mls_alloc(B,v,umin,umax,[Wv,Wu,ud,u0,W0,imax])
+
+ Solves the bounded sequential least-squares problem
+
+   min ||Wu(u-ud)||   subj. to   u in M
+
+ where M is the set of control signals solving
+
+   min ||Wv(Bu-v)||   subj. to   umin &lt;= u &lt;= umax
+
+ using a two stage active set method. Wu must be diagonal since the
+ problem is reformulated as a minimal least squares problem. The
+ implementation does not handle the case of coplanar controls.
+
+  Inputs:
+  -------
+ B     control effectiveness matrix (k x m)
+ v     commanded virtual control (k x 1)
+ umin  lower position limits (m x 1)
+ umax  upper position limits (m x 1)
+ Wv    virtual control weighting matrix (k x k) [I]
+ Wu    control weighting matrix (m x m), diagonal [I]
+ ud    desired control (m x 1) [0]
+ u0    initial point (m x 1)
+ W0    initial working set (m x 1) [empty]
+ imax  max no. of iterations [100]
+ 
+  Outputs:
+  -------
+ u     optimal control
+ W     optimal active set
+ iter  no. of iterations (= no. of changes in the working set + 1)
+
+                           0 if u_i not saturated
+ Active set syntax: W_i = -1 if u_i = umin_i
+                          +1 if u_i = umax_i
+
+ See also: <a href="sls_alloc.html" class="code" title="function [u,W,iter] = sls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax)">SLS_ALLOC</a>, <a href="cgi_alloc.html" class="code" title="function [u,iter] = cgi_alloc(B,v,umin,umax,Wv,Wu,ud,imax)">CGI_ALLOC</a>, <a href="qp_sim.html" class="code" title="function [u,W,time,iter] = qp_sim(B,v,plim,varargin)">QP_SIM</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li><li><a href="qp_ca_sl.html" class="code" title="function u = qp_ca_sl(arg,B,plim,rlim,T,Wv,Wu,ud,alg,imax,gam,tol)">qp_ca_sl</a>	Wrapper used in the QP control allocation Simulink block.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,W,iter] = mls_alloc(B,v,umin,umax,Wv,Wu,ud,u,W,imax)</a>
+0002   
+0003 <span class="comment">% MLS_ALLOC - Control allocation using minimal least squares.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [u,W,iter] = mls_alloc(B,v,umin,umax,[Wv,Wu,ud,u0,W0,imax])</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Solves the bounded sequential least-squares problem</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   min ||Wu(u-ud)||   subj. to   u in M</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% where M is the set of control signals solving</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   min ||Wv(Bu-v)||   subj. to   umin &lt;= u &lt;= umax</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% using a two stage active set method. Wu must be diagonal since the</span>
+0016 <span class="comment">% problem is reformulated as a minimal least squares problem. The</span>
+0017 <span class="comment">% implementation does not handle the case of coplanar controls.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  Inputs:</span>
+0020 <span class="comment">%  -------</span>
+0021 <span class="comment">% B     control effectiveness matrix (k x m)</span>
+0022 <span class="comment">% v     commanded virtual control (k x 1)</span>
+0023 <span class="comment">% umin  lower position limits (m x 1)</span>
+0024 <span class="comment">% umax  upper position limits (m x 1)</span>
+0025 <span class="comment">% Wv    virtual control weighting matrix (k x k) [I]</span>
+0026 <span class="comment">% Wu    control weighting matrix (m x m), diagonal [I]</span>
+0027 <span class="comment">% ud    desired control (m x 1) [0]</span>
+0028 <span class="comment">% u0    initial point (m x 1)</span>
+0029 <span class="comment">% W0    initial working set (m x 1) [empty]</span>
+0030 <span class="comment">% imax  max no. of iterations [100]</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%  Outputs:</span>
+0033 <span class="comment">%  -------</span>
+0034 <span class="comment">% u     optimal control</span>
+0035 <span class="comment">% W     optimal active set</span>
+0036 <span class="comment">% iter  no. of iterations (= no. of changes in the working set + 1)</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%                           0 if u_i not saturated</span>
+0039 <span class="comment">% Active set syntax: W_i = -1 if u_i = umin_i</span>
+0040 <span class="comment">%                          +1 if u_i = umax_i</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% See also: SLS_ALLOC, CGI_ALLOC, QP_SIM.</span>
+0043   
+0044 <span class="comment">% k = number of virtual controls</span>
+0045 <span class="comment">% m = number of variables (actuators)</span>
+0046   [k,m] = size(B);
+0047   
+0048   <span class="comment">% Set default values of optional arguments</span>
+0049   <span class="keyword">if</span> nargin &lt; 10
+0050     imax = 100; <span class="comment">% Heuristic value</span>
+0051     <span class="keyword">if</span> nargin &lt; 9, u = (umin+umax)/2; W = zeros(m,1); <span class="keyword">end</span>
+0052     <span class="keyword">if</span> nargin &lt; 7,  ud = zeros(m,1); <span class="keyword">end</span>
+0053     <span class="keyword">if</span> nargin &lt; 6,  Wu = eye(m);     <span class="keyword">end</span>
+0054     <span class="keyword">if</span> nargin &lt; 5,  Wv = eye(k);     <span class="keyword">end</span>
+0055   <span class="keyword">end</span>
+0056 
+0057   <span class="comment">% Start with phase one.</span>
+0058   phase = 1;
+0059   
+0060   <span class="comment">% Reformulate as a minimal least squares problem. See 2002-03-08 (1).</span>
+0061   A = Wv*B/Wu;
+0062   b = Wv*(v-B*ud); <span class="comment">% Note sign convention: min ||Ax-b||</span>
+0063   xmin = Wu*(umin-ud);
+0064   xmax = Wu*(umax-ud);
+0065   <span class="comment">% Compute initial point and residual.</span>
+0066   x = Wu*(u-ud);
+0067   r = A*x-b;
+0068   <span class="comment">% Determine indeces of free variables</span>
+0069   i_free = W==0;
+0070   <span class="comment">% and number of free variables.</span>
+0071   m_free = sum(i_free);
+0072   
+0073   <span class="comment">% Iterate until optimum is found or maximum number of iterations</span>
+0074   <span class="comment">% is reached.</span>
+0075   <span class="keyword">for</span> iter = 1:imax
+0076     <span class="comment">% ----------------------------------------</span>
+0077     <span class="comment">%  Compute optimal perturbation vector p.</span>
+0078     <span class="comment">% ----------------------------------------</span>
+0079     
+0080     <span class="keyword">if</span> phase == 1
+0081       <span class="comment">% ---------</span>
+0082       <span class="comment">%  Phase 1</span>
+0083       <span class="comment">% ---------</span>
+0084 
+0085       <span class="comment">% Eliminate saturated variables.</span>
+0086       A_free = A(:,i_free);
+0087 
+0088       <span class="comment">% Solve the reduced optimization problem for free variables.</span>
+0089       <span class="comment">% Under the assumption that no n actuators produce coplanar</span>
+0090       <span class="comment">% control efforts, A_free will allways be of full rank. This</span>
+0091       <span class="comment">% leads to two different cases:</span>
+0092       <span class="keyword">if</span> m_free &lt;= k
+0093     <span class="comment">% --------------------------------------------------</span>
+0094     <span class="comment">%  min ||A_free p_free + r|| has a unique solution.</span>
+0095     <span class="comment">% --------------------------------------------------</span>
+0096     p_free = -A_free\r;
+0097       <span class="keyword">else</span>
+0098     <span class="comment">% ---------------------------------------------------</span>
+0099     <span class="comment">%  min ||A_free p_free + r|| has no unique solution.</span>
+0100     <span class="comment">%</span>
+0101     <span class="comment">%  Pick the minimal solution.</span>
+0102     <span class="comment">% ---------------------------------------------------</span>
+0103 
+0104     <span class="comment">% QR decompose: A_free' = QR = (Q1 Q2)(R1)</span>
+0105     <span class="comment">%                                     ( 0)</span>
+0106     [Q1,R1] = qr(A_free',0);
+0107     p_free = -Q1*(R1'\r);
+0108       <span class="keyword">end</span>
+0109       
+0110       <span class="comment">% Insert perturbations from p_free into free the variables.</span>
+0111       p = zeros(m,1);
+0112       p(i_free) = p_free;
+0113 
+0114     <span class="keyword">else</span>
+0115       <span class="comment">% ---------</span>
+0116       <span class="comment">%  Phase 2</span>
+0117       <span class="comment">% ---------</span>
+0118       
+0119       <span class="comment">% Determine indeces of fixed variables,</span>
+0120       i_fixed = ~i_free;
+0121       <span class="comment">% and number of fixed variables.</span>
+0122       m_fixed = m - m_free;
+0123 
+0124       <span class="comment">% HT' = rows of U in working set.</span>
+0125       <span class="comment">% HT = (m - n) x i_fixed</span>
+0126       HT = U(i_fixed,:)';
+0127       <span class="comment">% QR decompose: HT = VRtot = (V1 V2)(R)</span>
+0128       <span class="comment">%                          (0)</span>
+0129       <span class="comment">% Note that the computation of lambda also uses this</span>
+0130       <span class="comment">% decomposition.</span>
+0131       [V,Rtot] = qr(HT);
+0132       V1 = V(:,1:m_fixed);
+0133       V2 = V(:,m_fixed+1:end);
+0134       R = Rtot(1:m_fixed,:);
+0135       <span class="comment">% Optimal solution:</span>
+0136       s = -V2'*z;
+0137       pz = V2*s;
+0138       p = U*pz;
+0139       
+0140     <span class="keyword">end</span> <span class="comment">% Optimal perturbation p computed.</span>
+0141     
+0142     <span class="comment">% --------------------------------</span>
+0143     <span class="comment">%  Is the optimal point feasible?</span>
+0144     <span class="comment">% --------------------------------</span>
+0145     
+0146     x_opt = x + p;
+0147     infeasible = (x_opt &lt; xmin) | (x_opt &gt; xmax);
+0148 
+0149     <span class="keyword">if</span> ~any(infeasible(i_free))
+0150     
+0151       <span class="comment">% ------</span>
+0152       <span class="comment">%  Yes.</span>
+0153       <span class="comment">% ------</span>
+0154       
+0155       <span class="comment">% Update point and residual</span>
+0156       x = x_opt;
+0157       <span class="keyword">if</span> phase == 1
+0158     r = r + A*p;
+0159       <span class="keyword">else</span>
+0160     z = z + pz;
+0161       <span class="keyword">end</span>
+0162       
+0163       <span class="keyword">if</span> (phase == 1) &amp; (m_free &gt;= k)
+0164     <span class="comment">% If u is feasible, then Bu=v must hold, by construction.</span>
+0165     <span class="comment">% Move to phase 2.</span>
+0166     phase = 2;
+0167 
+0168     <span class="comment">% QR decompose A'.</span>
+0169     [Utot,Stot] = qr(A');
+0170     U = Utot(:,k+1:end);
+0171     <span class="comment">% Initial point.</span>
+0172     z = U'*x;
+0173     
+0174       <span class="keyword">else</span>
+0175     
+0176     <span class="comment">% Check for optimality by computing the Lagrange multipliers.</span>
+0177     <span class="comment">% Compute lambda for all bounds (including inactive ones).</span>
+0178     lambda = zeros(m,1);
+0179 
+0180     <span class="keyword">if</span> m_free &lt; m
+0181       <span class="keyword">if</span> phase == 1
+0182         <span class="comment">% Compute gradient of optimization criterion.</span>
+0183         g = A'*r;
+0184         <span class="comment">% Compute Lagrange variables.</span>
+0185         lambda = -W.*g;
+0186         
+0187       <span class="keyword">else</span>
+0188         <span class="comment">% Insert multipliers related to active bounds.</span>
+0189         lambda(i_fixed) = -W(i_fixed).*(R\(V1'*z));
+0190       <span class="keyword">end</span>
+0191     <span class="keyword">end</span>
+0192       
+0193     <span class="keyword">if</span> lambda &gt;= -eps
+0194       <span class="comment">% / ------------------------ \</span>
+0195       <span class="comment">% | Optimum found, bail out. |</span>
+0196       <span class="comment">% \ ------------------------ /</span>
+0197 
+0198       <span class="comment">% Compute solution in original coordinates.</span>
+0199       u = Wu\x + ud;
+0200       <span class="keyword">return</span>;
+0201     <span class="keyword">end</span>
+0202     
+0203     <span class="comment">% --------------------------------------------------</span>
+0204     <span class="comment">%  Optimum not found, remove one active constraint.</span>
+0205     <span class="comment">% --------------------------------------------------</span>
+0206     
+0207     <span class="comment">% Remove constraint with most negative lambda from the</span>
+0208         <span class="comment">% working set.</span>
+0209     [lambda_neg,i_neg] = min(lambda);
+0210     W(i_neg) = 0;
+0211     i_free(i_neg) = 1;
+0212     m_free = m_free + 1;
+0213       <span class="keyword">end</span>
+0214     <span class="keyword">else</span>
+0215       
+0216       <span class="comment">% ------------------------------------------------------------</span>
+0217       <span class="comment">%  No (point not feasible), find primary bounding constraint.</span>
+0218       <span class="comment">% ------------------------------------------------------------</span>
+0219       
+0220       <span class="comment">% Compute distances to the different boundaries. Since alpha &lt; 1</span>
+0221       <span class="comment">% is the maximum step length, initiate with ones.</span>
+0222       dist = ones(m,1);
+0223       i_min = i_free &amp; p&lt;0;
+0224       i_max = i_free &amp; p&gt;0;
+0225       
+0226       dist(i_min) = (xmin(i_min) - x(i_min)) ./ p(i_min);
+0227       dist(i_max) = (xmax(i_max) - x(i_max)) ./ p(i_max);
+0228       
+0229       <span class="comment">% Proportion of p to travel.</span>
+0230       [alpha,i_alpha] = min(dist);
+0231 
+0232       <span class="comment">% Update point (and residual).</span>
+0233       x = x + alpha*p;
+0234       <span class="keyword">if</span> phase == 1
+0235     r = r + A*alpha*p;
+0236       <span class="keyword">else</span>
+0237     z = z + alpha*pz;
+0238       <span class="keyword">end</span>
+0239     
+0240       <span class="comment">% Add corresponding constraint to working set.</span>
+0241       W(i_alpha) = sign(p(i_alpha));
+0242       i_free(i_alpha) = 0;
+0243       m_free = m_free - 1;
+0244       
+0245     <span class="keyword">end</span>
+0246     
+0247   <span class="keyword">end</span>
+0248   
+0249   <span class="comment">% Compute solution in original coordinates.</span>
+0250   u = Wu\x + ud;</pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

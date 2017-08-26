@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wlsc_alloc</title>
+  <meta name="keywords" content="wlsc_alloc">
+  <meta name="description" content="WLSC_ALLOC - C implementation of WLS_ALLOC.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<!-- m2html_menu.html qcat -->
+<h1>wlsc_alloc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>WLSC_ALLOC - C implementation of WLS_ALLOC.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WLSC_ALLOC - C implementation of WLS_ALLOC.
+
+  [u,W,iter] = wlsc_alloc(B,v,umin,umax,Wv,Wu,ud,gamma,u0,W0,imax)
+
+ See WLS_ALLOC for documentation. All input arguments are required.
+
+ To build WLSC_ALLOC, see the instructions in the wlsc_alloc.c
+ source file.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="alloc_sim.html" class="code" title="function [u,A,time,iter] = alloc_sim(method,B,v,plim,rlim,T,varargin)">alloc_sim</a>	ALLOC_SIM - Control allocation simulation.</li><li><a href="qp_ca_sl.html" class="code" title="function u = qp_ca_sl(arg,B,plim,rlim,T,Wv,Wu,ud,alg,imax,gam,tol)">qp_ca_sl</a>	Wrapper used in the QP control allocation Simulink block.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% WLSC_ALLOC - C implementation of WLS_ALLOC.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%  [u,W,iter] = wlsc_alloc(B,v,umin,umax,Wv,Wu,ud,gamma,u0,W0,imax)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% See WLS_ALLOC for documentation. All input arguments are required.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% To build WLSC_ALLOC, see the instructions in the wlsc_alloc.c</span>
+0008 <span class="comment">% source file.</span></pre></div>
+<hr><address>Generated on Wed 25-Aug-2004 14:38:35 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

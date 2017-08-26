@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Control allocation intro</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="m2html.css">
+</head>
+<body>
+<!-- menu.html qcat -->
+<h1>Introduction to QCAT</h1>
+
+<!--    <ul style="list-style-image:url(book.gif)">-->
+    <dl><dt><b>Index</b></dt>
+      <dd><a href="#_alloc">Control allocation</a>
+      <dd><a href="#_notation">Notation and terminology</a>
+      <dd><a href="#_qp">QP formulation</a>
+      <dd><a href="#_solvers">Implemented solvers</a>
+      <dd><a href="#_overview">Toolbox overview</a>
+      <dd><a href="#_start">Get started</a>
+    </dl>
+	
+
+<h2><a name="_alloc"></a>CONTROL ALLOCATION</h2>
+
+    The <b>control allocation problem</b> is that of distributing a
+    desired total control effort among a redundant set of actuators.
+    In flight control, for example, the total control effort
+    corresponds to the aerodynamic moments (and sometimes also forces)
+    to be produced, and the actuators are the control surfaces
+    available on the aircraft.
+
+<h2><a name="_notation"></a>NOTATION AND TERMINOLOGY</h2>
+    
+    We will refer to the total control effort as the <b>virtual
+    control input</b>, v(t), while the actuator positions constitute
+    the <b>true control input</b>, u(t). The total control effort
+    produced by the actuators is decided by the <b>control
+    effectiveness matrix</b>, B:
+    <p>
+    <div class="box"><center><b>v(t) = B u(t)</b></center></div>
+    <p>
+      Here, dim(v) = k, dim(u) = m, and B is a (k x m)-matrix.
+
+    <p>
+      Each actuator is assumed to be physically limited by upper and
+      lower <b>position and rate limits</b>. Using a digital
+      controller, the rate constraint can be viewed as a time-varying
+      position constraint ("how far can the actuator move during the
+      next sampling interval?"). This gives the following overall box
+      constraint:
+    </p>
+
+    <p>
+    <div class="box"><center><b>umin(t) &lt;= u(t) &lt;=
+	  umax(t)</b></center></div></p>
+    
+    <p>
+      Combining the equations, we see that different commanded values
+      of v(t) lead to different cases - there can either be an
+      infinite set of solutions u(t), one unique solution, or no
+      feasible solution at all.
+    </p>
+
+<h2><a name="_qp"></a>QP FORMULATION</h2>
+    
+    In the quadratic programming approach to control allocation, also
+    known as <b>l2-optimal control allocation</b>, the control
+    allocation problem is posed as the following sequential
+    least-squares (sls) problem:
+    <p>
+    <div class="box"><center>
+	<b>min ||Wu(u-ud)||</b>&nbsp&nbsp&nbsp subj. to&nbsp&nbsp u in M <p>
+	  
+	  <b>M = arg min ||Wv(Bu-v)||</b>&nbsp&nbsp&nbsp subj. to
+	  &nbsp&nbsp umin &lt;= u &lt;= umax
+      </center></div>
+    <p>
+      
+      This optimization problem should be interpreted as follows:
+      Given M, the set of feasible control inputs that minimize Bu-v
+      (weighted by Wv), pick the control input that minimizes u-ud
+      (weighted by Wu).
+    <p>
+      Above, ud is the <b>desired control input</b> (typically zero)
+      and Wu and Wv are <b>weighting matrices</b>. Wu affects the
+      control distribution among the actuators and Wv affects the
+      prioritization among the virtual control components when Bu=v
+      cannot be attained due to the actuator constraints.
+    <p>
+      The problem can be reformulated as a weighted least-squares (wls)
+      problem:
+    <p>
+    <div class="box"><center>
+	<b>min ||Wu(u-ud)||^2 + gamma
+	  ||Wv(Bu-v)||^2</b>&nbsp&nbsp&nbsp subj. to &nbsp&nbsp
+	umin &lt;= u &lt;= umax 
+      </center></div>
+    <p>
+      As gamma goes to infinity, the two formulations have the same
+      optimal solution, u(t).
+
+<h2><a name="_solvers"></a>IMPLEMENTED SOLVERS</h2>
+
+    Six different solvers have been implemented:
+    <dl>
+      <dt><b>SLS</b></dt>
+      <dd>Active set solver for the <b>sequential least-squares</b>
+	formulation above. Determines the optimal solution in a
+	finite number of iterations. Based on <p>
+	  <font color="#006699">
+	  O. Härkegård. Efficient active set algorithms for solving
+	  constrained least squares problems in aircraft control
+	  allocation. In IEEE CDC, 2002.</font>
+      </dd>
+      <dt><b>WLS</b></dt>
+      <dd>Active set based solver for the <b>weighted
+	  least-squares</b> formulation. Determines the optimal solution in a
+	finite number of iterations. Based on the same reference. This
+	solver is also available as a C MEX-file.
+      <dt><b>MLS</b></dt>
+      <dd>Active set based solver for the sls problem reformulated as
+	a <b>minimal least-squares</b> problem. This requires Wu to be
+	diagonal. Based on <p><font color="#006699">
+	  P. Lötstedt. Solving the minimum least squares problem subject to
+	  bounds on the variables. BIT, 24:206-224, 1984.</font>
+      <dt><b>IP</b></dt>
+      <dd><b>Interior point solver</b> for the wls formulation.
+	Converges uniformly to the optimum in the number of
+	iterations. Contributed by John Petersen, based on
+	<p><font color="#006699">
+	    J.A.M. Petersen and M. Bodson. Constrained Quadratic
+	    Programming Techniques for Control Allocation. In IEEE
+	    CDC, 2003.</font>
+      </dd>
+      <dt><b>CGI</b></dt>
+      <dd>Heuristic method based on <b>cascading generalized
+	  inverses</b> (or redistributing pseudoinverses) for the sls
+	formulation. Requires only a finite number of iterations but
+	does not guarantee that the optimal solution is found. Based
+	on<p><font color="#006699">
+	  K.A. Bordignon. Constrained Control Allocation for Systems with
+	  Redundant Control Effectors. PhD thesis, Virginia Tech, 1996
+	<p>
+	  J.C. Virnig and D.S. Bodden. Multivariable control allocation
+	  and control law conditioning when control effectors limit. In
+	  AIAA GNCC, 1994.</font>
+      <dt><b>FXP</b></dt>
+      <dd><b>Fixed-point interation</b> algorithm for the wls
+	formulation. Converges to the optimal solution as the number
+	of iterations goes to infinity. Based on<p><font color="#006699">
+	  J.J. Burken et al. Two reconfigurable flight-control design
+	  methods: Robust servomechanism and control allocation. Journal
+	  of Guidance, Control, and Dynamics, 24(3):482-493, 2001.</font>
+    </dl>
+
+<h2><a name="_overview"></a>TOOLBOX OVERVIEW</h2>
+
+    The toolbox functions are grouped into different categories:
+
+    <dl>
+      <dt><b>QP allocation</b></dt>
+      <dd>Contains the <b>core functions</b> of the toolbox - Matlab
+	implementations of the five solvers listed above. These
+	functions solve the allocation problem for a single virtual
+	control input v, given B, umin, umax, and (optionally) the
+	tuning variables Wv, Wu and ud.
+	<p>
+	  These functions have been implemented as efficiently as
+	  possible (to the author's ability).
+
+      <dt><b>Direct allocation</b></dt>
+      <dd>For comparison, a simple algorithm for direct allocation has
+      also been implemented (not optimized for speed). The solver is
+      based on the LP formulation presented in<p> <font	color="#006699">
+	    M. Bodson.
+      Evaluation of optimization methods for control allocation.
+      Journal of Guidance, Control, and Dynamics, 25(4):703-711,
+      2002.</dd></font>
+	  
+      <dt><b>Dynamic allocation</b></dt>
+      <dd>In dynamic control allocation, a term that penalizes the
+	actuator rates is added to the objective function. The
+	resulting <b>frequency dependent control distribution</b> can be
+	computed using the dca command. See also<p><font color="#006699">
+	  O. Härkegård. Dynamic control allocation using constrained
+	  quadratic programming. In AIAA Guidance, Navigation, and
+	  Control Conf., 2002.  </dd></font>
+
+      <dt><b>Simulation</b></dt>
+      <dd>These functions simulate the time response of different
+      types of allocators to arbitrary inputs (much like the standard
+      LSIM command). They also output the <b>computation time</b> per
+      sample for the selected solver, averaged over a number of
+      repetitions set by the user. The qcatlib <b>Simulink</b> library
+      contains blocks for QP and dynamic control allocation. <p> 
+
+      <dt><b>Linear control</b></dt>
+      <dd>Features two conversion functions for extracting the control
+	allocation part of a given <b>LQ controller</b>, and for merging an
+	allocator with an LQ controller, respectively. See <p><font color="#006699">
+	  O. Härkegård. Resolving actuator redundancy - control
+	  allocation vs. linear quadratic control. In European Control
+	  Conf., 2003.<p></font>
+	  
+	  The vview function allows the user to evaluate the gain of
+	  using constrained control allocation rather than a linear
+	  allocation control law (as in LQ, for example). This is done
+	  by visualizing the <b>feasible virtual control set</b>.
+	  Screenshot from vview_demo:
+	  <center>
+	  <img src="vview.gif">
+	  </center><p>
+
+      <dt><b>Other</b></dt>
+      <dd>Collection of various utility functions.<p>
+
+      <dt><a name="_data"></a><b>Aircraft data</b></dt>
+      <dd>Matlab data files containing test data (B, v, plim, rlim, T, t)
+	for two different aircraft models:
+	<ul>
+	  <li> The <b><a target="_parent" href="http://www.foi.se/admire/">Admire</a></b>
+	    model (used extensively in my 
+	    <b><a target="_parent"
+		  href="http://www.control.isy.liu.se/publications/doc?id=1476">
+		PhD thesis</a></b>).
+	  <li> F-18 related data from<p><font color="#006699">
+	      W.C. Durham and K.A. Bordignon. Multiple control effector
+	      rate limiting. Journal of Guidance, Control, and Dynamics,
+	      19(1):30-37, 1996.
+	    <p></font>
+	      This is the data set that was used in<p><font color="#006699">
+	      O. Härkegård. Efficient active set algorithms for solving
+	      constrained least squares problems in aircraft control
+	      allocation. In IEEE CDC, 2002.<p></font>
+	      for evaluating some of the solvers listed above.
+	</ul></dd>
+    In both cases, the components of the virtual control v are the
+    aerodynamic moment coefficients Cl, Cm, and Cn. 
+    </dl>
+
+<h2><a name="_start"></a>GET STARTED</h2>
+
+    To get started using the toolbox, try the Simulink demos in
+    <b>qcatlib</b> or the examples in the help texts of <b>qp_sim</b>,
+    <b>dir_sim</b>, <b>dyn_sim</b>, and <b>dca</b>. You can also run
+    <b>vview_demo</b>.
+    <p>
+
+</body>
+</html>
