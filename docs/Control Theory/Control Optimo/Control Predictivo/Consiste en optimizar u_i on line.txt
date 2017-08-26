@@ -1,0 +1,3 @@
+Al igual que se hace con el LQR optimo de uno y dos pasos se optimiza tambien on line (tiempo real) pero aqui se optimiza en funcion de las SEÑALES DE CONTROL!!!!
+En cad apaso se hace una predicion del comportamiento y se optimiza una funcion de coste hallandose los valores de las señales de control optimas.
+
