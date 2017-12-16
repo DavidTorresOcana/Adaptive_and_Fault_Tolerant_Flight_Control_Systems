@@ -2,15 +2,15 @@
 
 ## Synopsis
 
-For flight control systems, this paper proposes an adaptive control approach based on a framework of Explicit Model Following Direct Adaptive Control scheme. As a first step, a modified F-16 dynamics model is developed to explore control surface redundancies, as well as to enable modelling of dynamics changes result from faults, failures and/or plant deviations. In this modified model, each control surface can be individually controlled. Next, this paper proposes a flight control framework that integrates adaptive neural network, non-linear dynamic inversion, control allocation, and model reference following to leverage their synergies. Then, the proposed approach is tested using the F-16 nonlinear model developed and its performance is validated via numerical simulations.
+For flight control systems, this paper proposes an adaptive control approach based on a framework of Explicit Model Following Direct Adaptive Control scheme. As a first step, a modified F-16 dynamics model is developed to explore control surface redundancies, as well as to enable modelling of dynamics changes result from faults, failures and/or plant deviations. In this modified model, each control surface can be individually controlled. Next, this paper proposes a flight control framework that integrates an Adaptive Neural Network, non-linear dynamic inversion, control allocation, System Identification with Uncested Kalman Filter and Model Reference Following scheme to leverage their synergies. Then, the proposed approach is tested using the F-16 nonlinear model developed and its performance is validated via numerical simulations.
 
 ## Docs and publications 
 See here Thesis Doc, which explain the theory behind the submission:
->   [Thesis PDF](https://dl.bintray.com/matej/thesis/thesis-master.pdf)
+>   [Thesis PDF](https://www.dropbox.com/s/ox657a3judc9a0o/DT%20MSc%20Thesis%20Aaptive%20and%20Fault-Tolerant%20Flight%20Control%20Systems.pdf)
 
 See here IFAC submition, which explain the the plant model and Adaptive Neural Networks theory and implementation:
 
->   [IFAC publication PDF](https://dl.bintray.com/matej/thesis/clean-master.pdf)
+>   [IFAC publication PDF](http://www.sciencedirect.com/science/article/pii/S2405896315009404)
 
 ## Motivation
 
