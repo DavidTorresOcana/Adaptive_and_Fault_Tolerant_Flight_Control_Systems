@@ -3,7 +3,7 @@
 close all
 clear all
 clc;
-addpath(genpath('aerodata'),genpath('Used Functions'))
+addpath(genpath('aerodata'),genpath('Used Functions'),addpath( genpath('../../lib')))
 % mex nlplantASYM.c
 % mex nlplantASYM_Reconf.c
 % mex Moms_Coeff_Reconf_estimator.c
