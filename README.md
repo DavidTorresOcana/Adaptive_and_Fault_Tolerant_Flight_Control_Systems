@@ -18,7 +18,7 @@ Current linear Flight Control Systems (FCS) algorithms are incapable of adapting
 
 ## Requirements
 
-* Requires Matlab 2015a or above
+* Requires Matlab 2015a (currently running) or above (some changes may be needed)
 * Requires Matlab mex compiler to be installed. See here https://www.mathworks.com/support/sysreq/previous_releases.html
 * Requires Flight Gear 2.6 or above
 * Requires gamepad or equivalent USB compatible Joystick 
