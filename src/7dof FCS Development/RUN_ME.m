@@ -12,7 +12,7 @@ addpath(genpath('aerodata'),genpath('Used Functions'),addpath( genpath('../../li
 %% General params
 T_sim=0.02; % Sample time of the simulation
 % T_sim=0.04643990929705216 ; % Sample time of stall warning
-
+ 
 %% Trim aircraft (Symetric model)
 % This rutine trim the aircraft at any flight condition
 runF16Sim;
