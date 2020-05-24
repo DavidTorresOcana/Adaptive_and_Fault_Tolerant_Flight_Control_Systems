@@ -5,9 +5,10 @@
 For flight control systems, this paper proposes an adaptive control approach based on a framework of Explicit Model Following Direct Adaptive Control scheme. As a first step, a modified F-16 dynamics model is developed to explore control surface redundancies, as well as to enable modelling of dynamics changes result from faults, failures and/or plant deviations. In this modified model, each control surface can be individually controlled. Next, this paper proposes a flight control framework that integrates an Adaptive Neural Network, non-linear dynamic inversion, control allocation, System Identification with Uncested Kalman Filter and Model Reference Following scheme to leverage their synergies. Then, the proposed approach is tested using the F-16 nonlinear model developed and its performance is validated via numerical simulations.
 
 ## Docs and publications 
-Thesis Doc explain all the theory behind this repository.It can be accessed through:
+Thesis Doc explain all the theory behind this repository. It can be accessed through:
 >   [Thesis PDF](https://cran.ent.sirsidynix.net.uk/client/en_GB/knl/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:365548/ada)
 
+For more help with the theory please [contact here](david.torres.ocana@gmail.com).
 
 See here IFAC submition, which explain the the plant model and Adaptive Neural Networks theory and implementation:
 
