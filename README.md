@@ -8,7 +8,7 @@ For flight control systems, this paper proposes an adaptive control approach bas
 Thesis Doc explain all the theory behind this repository. It can be accessed through:
 >   [Thesis PDF](https://cran.ent.sirsidynix.net.uk/client/en_GB/knl/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:365548/ada)
 
-For more help with the theory please [contact here](david.torres.ocana@gmail.com).
+For more help with the theory please [contact here](mailto:david.torres.ocana@gmail.com).
 
 See here IFAC submition, which explain the the plant model and Adaptive Neural Networks theory and implementation:
 
