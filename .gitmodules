@@ -1,0 +1,3 @@
+[submodule "lib/psomatlab"]
+	path = lib/psomatlab
+	url = https://github.com/sdnchen/psomatlab.git

@@ -27,7 +27,8 @@ Current linear Flight Control Systems (FCS) algorithms are incapable of adapting
 * Requires gamepad or equivalent USB compatible Joystick 
 
 ## Installation
-Navigate to ```src/7dof FCS Development``` and run ```RUN_ME.m``` with Matlab
+Navigate to ```src/7dof FCS Development``` and run ```RUN_ME.m``` with Matlab.
+Remember to add to the path all libraries in ```lib/```
 
 
 ## Tests
