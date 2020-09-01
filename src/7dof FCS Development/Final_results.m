@@ -64,14 +64,22 @@ ylabel('\fontsize{12} p (º/s)')
 title('\fontsize{14} Roll rates' )
 
 subplot(3,1,2)
-plot(NN_output.Time,NN_output.Data)
-title('\fontsize{14} NN outputs' )
+try
+    plot(NN_output.Time,NN_output.Data)
+catch
+    disp('Could nto load the data')
+end
+title('\fontsize{14} NN outputs: Only for Adaptive Configs' )
 legend('\fontsize{12} Roll channel','\fontsize{12} Long channel','\fontsize{12} Yaw channel')
 ylabel('\fontsize{12} Ang. acc. comm (rad/s^2)')
 
 subplot(3,1,3)
-plot(Comm_ang_acce.Time,Comm_ang_acce.Data)
-title('\fontsize{14} Total Comm. Ang. accelerations' )
+try
+    plot(Comm_ang_acce.Time,Comm_ang_acce.Data)
+catch
+    disp('Could nto load the data')
+end
+title('\fontsize{14} Total Comm. Ang. accelerations Only for Adaptive Configs' )
 legend('\fontsize{12} Roll channel','\fontsize{12} Long channel','\fontsize{12} Yaw channel')
 xlabel('\fontsize{12} Time (s)');ylabel('\fontsize{12} Ang. acc. comm (rad/s^2)')
 return
