@@ -24,12 +24,30 @@ Current linear Flight Control Systems (FCS) algorithms are incapable of adapting
 * Requires Matlab 2015a (currently running) or above (some changes may be needed)
 * Requires Matlab mex compiler to be installed. See here https://www.mathworks.com/support/sysreq/previous_releases.html
 * Requires Flight Gear 2.6 or above
-* Requires gamepad or equivalent USB compatible Joystick 
+* Requires gamepad or equivalent USB compatible Joystick. Tested with a Logitech G F310
 
-## Installation
-Navigate to ```src/7dof FCS Development``` and run ```RUN_ME.m``` with Matlab.
-Remember to add to the path all libraries in ```lib/```
+## Installation and execution
+### FlightGear (optional)
 
+* Install [FlightGear](https://www.flightgear.org/download/)   (FG). Version tested to work was 2.6 , but other versions may work as well
+* Install one of the [models in here](/tools/F16 Model/Fligth Gear/) into FlighGear. *f16_20120812.zip* is the recomended:
+    - Uncompress *f16_20120812.zip*, copy ```f16``` folder onto ```C:\Program Files\FlightGear\data\Aircraft``` or wherever you installed FG in your system
+* In *f16* folder, open *f16-set.xml* file and modify ```<flight-model>``` field to be ```network```. This will make FG listen ```localhost``` for simulator input
+* On the Simulink model (see next section):
+    * Configure the block on the image to match your FG configuration
+    ![Configure](bat_gen.png)
+    * Generate run script (see inside that block)
+    * Make sure that block and ```Send net_fdm Packet to FlightGear``` block have same configuration
+    * Before executing Simulink run FlightGear by running the generated *.bat* file. You can leave FG running independently of Simulink
+    
+### FCS
+
+* Add to the Matlab path all libraries in ```lib/```
+* Navigate to ```src/7dof FCS Development```
+* Run ```RUN_ME.m``` with Matlab and select a flight condition to start with
+* A Simulink model will open: press play to start the simulation
+
+In order to have a *real experience*, you could head to *Cockpit* block on the Simulink model and select to use a Joystick as Cockpit inputs. Most gamepads are compatible. 
 
 ## Tests
 
