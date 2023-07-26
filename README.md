@@ -6,7 +6,7 @@ For flight control systems, this paper proposes an adaptive control approach bas
 
 ## Docs and publications 
 Thesis Doc explain all the theory behind this repository. It can be accessed through:
->   [Thesis PDF](https://cran.ent.sirsidynix.net.uk/client/en_GB/knl/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:365548/ada)
+>   [Thesis PDF](https://cran.ent.sirsidynix.net.uk/client/en_GB/knl/search/results?qu=adaptive+flight+control&qf=CRAN_ITYPE%09Item+type%09EREPORT%09eReport+%7C%7C+ETHESIS%09eThesis&rw=24&st=PD&isd=true#)
 
 For more help with the theory please [contact here](mailto:david.torres.ocana@gmail.com).
 
